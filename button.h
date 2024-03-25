@@ -1,8 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-enum class Button
-{
+enum class Button {
     Brush,
     Eraser,
     ColorPicker,
