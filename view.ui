@@ -24,16 +24,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="test" native="true">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>400</y>
-      <width>120</width>
-      <height>80</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
