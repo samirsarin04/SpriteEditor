@@ -8,6 +8,11 @@ View::View(Model &model, QWidget *parent)
     , ui(new Ui::View)
 {
     ui->setupUi(this);
+    ui->test->setStyleSheet("background-color: rgb(255, 0, 0)");
+
+    connect(ui->canvas, &Canvas::canvasClickSignal, &model, &Model::canvasClick);
+
+
 }
 
 View::~View()

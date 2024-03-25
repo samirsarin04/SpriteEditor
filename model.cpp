@@ -1,5 +1,11 @@
 #include "model.h"
-#include "frame.h"
-#include "button.h"
 
-Model::Model() {}
+#include<iostream>
+
+Model::Model(QObject *parent)
+    : QObject{parent}
+{}
+
+void Model::canvasClick(int x, int y, bool click){
+  std::cout << "CLICK ON CANVAS" << std::endl;
+}
