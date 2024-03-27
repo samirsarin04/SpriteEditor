@@ -22,5 +22,11 @@ public:
 
 private:
     Ui::View *ui;
+
+private slots:
+    void updateRedSliderLabel();
+    void updateGreenSliderLabel();
+    void updateBlueSliderLabel();
+    void updateAlphaSliderLabel();
 };
 #endif // VIEW_H
