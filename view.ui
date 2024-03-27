@@ -34,7 +34,10 @@
      </rect>
     </property>
     <property name="maximum">
-     <number>256</number>
+     <number>255</number>
+    </property>
+    <property name="value">
+     <number>255</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -50,7 +53,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Red: 0</string>
+     <string>Red: 255</string>
     </property>
    </widget>
    <widget class="QSlider" name="greenSlider">
@@ -63,7 +66,7 @@
      </rect>
     </property>
     <property name="maximum">
-     <number>256</number>
+     <number>255</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -92,7 +95,10 @@
      </rect>
     </property>
     <property name="maximum">
-     <number>256</number>
+     <number>255</number>
+    </property>
+    <property name="value">
+     <number>255</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -108,7 +114,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Blue: 0</string>
+     <string>Blue: 255</string>
     </property>
    </widget>
    <widget class="QLabel" name="alphaSliderLabel">
@@ -121,7 +127,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Alpha: 0</string>
+     <string>Alpha: 255</string>
     </property>
    </widget>
    <widget class="QSlider" name="alphaSlider">
@@ -134,7 +140,10 @@
      </rect>
     </property>
     <property name="maximum">
-     <number>256</number>
+     <number>255</number>
+    </property>
+    <property name="value">
+     <number>255</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>

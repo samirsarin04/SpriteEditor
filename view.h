@@ -20,13 +20,16 @@ public:
     View(Model& model, QWidget *parent = nullptr);
     ~View();
 
+public slots:
+    void redSliderValueChanged();
+    void greenSliderValueChanged();
+    void blueSliderValueChanged();
+    void alphaSliderValueChanged();
+
+signals:
+    void sliderValueChanged(QString slider, int value);
+
 private:
     Ui::View *ui;
-
-private slots:
-    void updateRedSliderLabel();
-    void updateGreenSliderLabel();
-    void updateBlueSliderLabel();
-    void updateAlphaSliderLabel();
 };
 #endif // VIEW_H

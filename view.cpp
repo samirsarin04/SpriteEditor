@@ -13,14 +13,11 @@ View::View(Model &model, QWidget *parent)
     connect(ui->canvas, &Canvas::canvasClickSignal, &model, &Model::canvasClick);
     connect(&model, &Model::sendFrameToCanvas, ui->canvas, &Canvas::updateCanvas);
     connect(ui->canvas, &Canvas::canvasMoveSignal, &model, &Model::canvasMovement);
-    connect(ui->redSlider, &QSlider::sliderMoved, this, &View::updateRedSliderLabel);
-    connect(ui->redSlider, &QSlider::sliderReleased, this, &View::updateRedSliderLabel);
-    connect(ui->greenSlider, &QSlider::sliderMoved, this, &View::updateGreenSliderLabel);
-    connect(ui->greenSlider, &QSlider::sliderReleased, this, &View::updateGreenSliderLabel);
-    connect(ui->blueSlider, &QSlider::sliderMoved, this, &View::updateBlueSliderLabel);
-    connect(ui->blueSlider, &QSlider::sliderReleased, this, &View::updateBlueSliderLabel);
-    connect(ui->alphaSlider, &QSlider::sliderMoved, this, &View::updateAlphaSliderLabel);
-    connect(ui->alphaSlider, &QSlider::sliderReleased, this, &View::updateAlphaSliderLabel);
+    connect(ui->redSlider, &QSlider::sliderMoved, this, &View::redSliderValueChanged);
+    connect(ui->greenSlider, &QSlider::sliderMoved, this, &View::greenSliderValueChanged);
+    connect(ui->blueSlider, &QSlider::sliderMoved, this, &View::blueSliderValueChanged);
+    connect(ui->alphaSlider, &QSlider::sliderMoved, this, &View::alphaSliderValueChanged);
+    connect(this, &View::sliderValueChanged, &model, &Model::sliderChanged);
 }
 
 View::~View()
@@ -28,26 +25,30 @@ View::~View()
     delete ui;
 }
 
-void View::updateRedSliderLabel(){
+void View::redSliderValueChanged(){
     QString sliderValue = QString::number(ui->redSlider->value());
     QString labelText = "Red: " + sliderValue;
     ui->redSliderLabel->setText(labelText);
+    emit sliderValueChanged("red", ui->redSlider->value());
 }
 
-void View::updateGreenSliderLabel(){
+void View::greenSliderValueChanged(){
     QString sliderValue = QString::number(ui->greenSlider->value());
     QString labelText = "Green: " + sliderValue;
     ui->greenSliderLabel->setText(labelText);
+    emit sliderValueChanged("green", ui->greenSlider->value());
 }
 
-void View::updateBlueSliderLabel(){
+void View::blueSliderValueChanged(){
     QString sliderValue = QString::number(ui->blueSlider->value());
     QString labelText = "Blue: " + sliderValue;
     ui->blueSliderLabel->setText(labelText);
+    emit sliderValueChanged("blue", ui->blueSlider->value());
 }
 
-void View::updateAlphaSliderLabel(){
+void View::alphaSliderValueChanged(){
     QString sliderValue = QString::number(ui->alphaSlider->value());
     QString labelText = "Alpha: " + sliderValue;
     ui->alphaSliderLabel->setText(labelText);
+    emit sliderValueChanged("alpha", ui->alphaSlider->value());
 }

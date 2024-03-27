@@ -16,9 +16,11 @@ signals:
 public slots:
     void canvasClick(int x, int y, bool click);
     void canvasMovement(int x, int y, bool offCanvas);
+    void sliderChanged(QString slider, int value);
 private:
     Frame currentFrame;
     bool drawing;
+    QColor currentColor;
 };
 
 #endif // MODEL_H
