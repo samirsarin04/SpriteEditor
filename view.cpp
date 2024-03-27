@@ -9,6 +9,7 @@ View::View(Model &model, QWidget *parent)
 {
     ui->setupUi(this);
     this->setStyleSheet("background-color: rgb(60, 60, 60)");
+    ui->canvas->setVisible(false);
 
     //Canvas Signals/Slots
     connect(ui->canvas, &Canvas::canvasClickSignal, &model, &Model::canvasClick);
@@ -30,6 +31,10 @@ View::View(Model &model, QWidget *parent)
     connect(ui->blueSpinBox, &QSpinBox::valueChanged, this, &View::blueSpinBoxChanged);
     connect(ui->alphaSpinBox, &QSpinBox::valueChanged, this, &View::alphaSpinBoxChanged);
 
+    //Pixel dimension slider + confirm button signals/slots
+    connect(ui->pixelDimensionSlider, &QSlider::valueChanged, this, &View::pixelDimensionSliderChanged);
+    connect(ui->confirmDimensionButton, &QAbstractButton::clicked, this, &View::canvasSizeSelected);
+    connect(this, &View::canvasSizeSignal, &model, &Model::newCanvas);
 }
 
 View::~View()
@@ -75,4 +80,20 @@ void View::blueSpinBoxChanged(){
 void View::alphaSpinBoxChanged(){
     ui->alphaSlider->setValue(ui->alphaSpinBox->value());
     emit colorValueChanged("alpha", ui->alphaSpinBox->value());
+}
+
+void View::pixelDimensionSliderChanged(){
+    QString pixelLabel;
+    pixelLabel += std::to_string(ui->pixelDimensionSlider->value()) + " x " + std::to_string(ui->pixelDimensionSlider->value()) + " Pixels";
+    ui->pixelDimensionLabel->setText(pixelLabel);
+}
+
+void View::canvasSizeSelected(){
+    ui->canvas->setVisible(true);
+    ui->canvas->setGridSize(ui->pixelDimensionSlider->value());
+    ui->pixelDimensionSlider->setVisible(false);
+    ui->pixelDimensionLabel->setVisible(false);
+    ui->confirmDimensionButton->setVisible(false);
+
+    emit canvasSizeSignal(ui->pixelDimensionSlider->value());
 }

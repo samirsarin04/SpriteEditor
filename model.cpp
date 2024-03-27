@@ -3,33 +3,28 @@
 #include<iostream>
 
 Model::Model(QObject *parent)
-    : QObject{parent}, currentFrame(64), drawing(false), currentColor(255, 0, 255, 255)
+    : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255)
 {
 
 }
 
 void Model::canvasClick(int x, int y, bool click){
     drawing = click;
-
-    // WILL PASS IN CURRENT COLOR DEFAULT FOR NOW
-    currentFrame.addNewPixel(x, y, currentColor);
-    emit sendFrameToCanvas(currentFrame.getPixels());
+    emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
 }
 
 void Model::canvasMovement(int x, int y, bool offCanvas){
     if(offCanvas) {
-        emit sendFrameToCanvas(currentFrame.getPixels());
+        emit sendFrameToCanvas(currentFrame->getPixels());
         return;
     }
 
     if (drawing){
-        currentFrame.addNewPixel(x, y, currentColor);
-        // WILL PASS IN CURRENT COLOR DEFAULT FOR NOW
-        emit sendFrameToCanvas(currentFrame.getPixels());
-    } else {
-        // WILL PASS IN CURRENT COLOR DEFAULT FOR NOW
-        emit sendFrameToCanvas(currentFrame.getTemporaryPixels(x, y, currentColor));
+        emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+        return;
     }
+
+    emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, currentColor));
 }
 
 
@@ -46,4 +41,11 @@ void Model::colorChanged(QString color, int value) {
     else if (color == "alpha"){
         currentColor.setAlpha(value);
     }
+}
+
+void Model::newCanvas(int size){
+    frames.clear();
+    this->size = size;
+    frames.push_back(Frame(size));
+    currentFrame = &frames[0];
 }

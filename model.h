@@ -17,8 +17,11 @@ public slots:
     void canvasClick(int x, int y, bool click);
     void canvasMovement(int x, int y, bool offCanvas);
     void colorChanged(QString color, int value);
+    void newCanvas(int size);
 private:
-    Frame currentFrame;
+    int size;
+    QVector<Frame> frames;
+    Frame* currentFrame;
     bool drawing;
     QColor currentColor;
 };

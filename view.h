@@ -29,9 +29,12 @@ public slots:
     void greenSpinBoxChanged();
     void blueSpinBoxChanged();
     void alphaSpinBoxChanged();
+    void canvasSizeSelected();
+    void pixelDimensionSliderChanged();
 
 signals:
     void colorValueChanged(QString color, int value);
+    void canvasSizeSignal(int size);
 
 private:
     Ui::View *ui;

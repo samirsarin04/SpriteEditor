@@ -11,11 +11,13 @@ private:
     int canvasSize;
     int pixelSize;
     int pixelDimension;
+    QVector<QColor> modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color);
+
 public:
     Frame(int pixelDimension);
-    void addNewPixel(int x, int y, QColor color);
+    QVector<QColor> addNewPixel(int x, int y, QColor color);
     QVector<QColor> getPixels();
-    QVector<QColor> getTemporaryPixels(int x, int y, QColor color);
+    QVector<QColor> addTemporaryPixel(int x, int y, QColor color);
 };
 
 #endif // FRAME_H

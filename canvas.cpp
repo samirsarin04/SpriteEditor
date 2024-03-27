@@ -33,6 +33,7 @@ void Canvas::setGridSize(int pixelDimension){
     this->pixelDimension = pixelDimension;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
+    pixels.clear();
 
     //Default initializes canvas to be white for now
     // WILL BE CHANGED LATER

@@ -210,6 +210,59 @@
      <number>255</number>
     </property>
    </widget>
+   <widget class="QSlider" name="pixelDimensionSlider">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>290</y>
+      <width>581</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>2</number>
+    </property>
+    <property name="maximum">
+     <number>64</number>
+    </property>
+    <property name="sliderPosition">
+     <number>8</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pixelDimensionLabel">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>235</y>
+      <width>281</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>28</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>8 x 8 Pixels</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="confirmDimensionButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>363</y>
+      <width>301</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Confirm</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -217,7 +270,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
