@@ -11,14 +11,14 @@ public:
     explicit Model(QObject *parent = nullptr);
 
 signals:
-    void sendFrameToCanvas(QVector<int>);
+    void sendFrameToCanvas(QVector<QColor>);
 
 public slots:
-   void canvasClick(int x, int y, bool click);
-   void canvasMovement(int x, int y);
+    void canvasClick(int x, int y, bool click);
+    void canvasMovement(int x, int y, bool offCanvas);
 private:
-   Frame currentFrame;
-   bool drawing;
+    Frame currentFrame;
+    bool drawing;
 };
 
 #endif // MODEL_H
