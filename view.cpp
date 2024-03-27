@@ -19,10 +19,10 @@ View::View(Model &model, QWidget *parent)
     connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
 
     //RGBA Slider signals/slots
-    connect(ui->redSlider, &QSlider::sliderMoved, this, &View::redSliderValueChanged);
-    connect(ui->greenSlider, &QSlider::sliderMoved, this, &View::greenSliderValueChanged);
-    connect(ui->blueSlider, &QSlider::sliderMoved, this, &View::blueSliderValueChanged);
-    connect(ui->alphaSlider, &QSlider::sliderMoved, this, &View::alphaSliderValueChanged);
+    connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
+    connect(ui->greenSlider, &QSlider::valueChanged, this, &View::greenSliderValueChanged);
+    connect(ui->blueSlider, &QSlider::valueChanged, this, &View::blueSliderValueChanged);
+    connect(ui->alphaSlider, &QSlider::valueChanged, this, &View::alphaSliderValueChanged);
 
     //RGBA Spin box signals/slots
     connect(ui->redSpinBox, &QSpinBox::valueChanged, this, &View::redSpinBoxChanged);
