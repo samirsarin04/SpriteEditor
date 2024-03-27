@@ -25,9 +25,13 @@ public slots:
     void greenSliderValueChanged();
     void blueSliderValueChanged();
     void alphaSliderValueChanged();
+    void redSpinBoxChanged();
+    void greenSpinBoxChanged();
+    void blueSpinBoxChanged();
+    void alphaSpinBoxChanged();
 
 signals:
-    void sliderValueChanged(QString slider, int value);
+    void colorValueChanged(QString color, int value);
 
 private:
     Ui::View *ui;

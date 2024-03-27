@@ -17,7 +17,12 @@ View::View(Model &model, QWidget *parent)
     connect(ui->greenSlider, &QSlider::sliderMoved, this, &View::greenSliderValueChanged);
     connect(ui->blueSlider, &QSlider::sliderMoved, this, &View::blueSliderValueChanged);
     connect(ui->alphaSlider, &QSlider::sliderMoved, this, &View::alphaSliderValueChanged);
-    connect(this, &View::sliderValueChanged, &model, &Model::sliderChanged);
+    connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
+    connect(ui->redSpinBox, &QSpinBox::valueChanged, this, &View::redSpinBoxChanged);
+    connect(ui->greenSpinBox, &QSpinBox::valueChanged, this, &View::greenSpinBoxChanged);
+    connect(ui->blueSpinBox, &QSpinBox::valueChanged, this, &View::blueSpinBoxChanged);
+    connect(ui->alphaSpinBox, &QSpinBox::valueChanged, this, &View::alphaSpinBoxChanged);
+
 }
 
 View::~View()
@@ -26,29 +31,41 @@ View::~View()
 }
 
 void View::redSliderValueChanged(){
-    QString sliderValue = QString::number(ui->redSlider->value());
-    QString labelText = "Red: " + sliderValue;
-    ui->redSliderLabel->setText(labelText);
-    emit sliderValueChanged("red", ui->redSlider->value());
+    ui->redSpinBox->setValue(ui->redSlider->value());
+    emit colorValueChanged("red", ui->redSlider->value());
 }
 
 void View::greenSliderValueChanged(){
-    QString sliderValue = QString::number(ui->greenSlider->value());
-    QString labelText = "Green: " + sliderValue;
-    ui->greenSliderLabel->setText(labelText);
-    emit sliderValueChanged("green", ui->greenSlider->value());
+    ui->greenSpinBox->setValue(ui->greenSlider->value());
+    emit colorValueChanged("green", ui->greenSlider->value());
 }
 
 void View::blueSliderValueChanged(){
-    QString sliderValue = QString::number(ui->blueSlider->value());
-    QString labelText = "Blue: " + sliderValue;
-    ui->blueSliderLabel->setText(labelText);
-    emit sliderValueChanged("blue", ui->blueSlider->value());
+    ui->blueSpinBox->setValue(ui->blueSlider->value());
+    emit colorValueChanged("blue", ui->blueSlider->value());
 }
 
 void View::alphaSliderValueChanged(){
-    QString sliderValue = QString::number(ui->alphaSlider->value());
-    QString labelText = "Alpha: " + sliderValue;
-    ui->alphaSliderLabel->setText(labelText);
-    emit sliderValueChanged("alpha", ui->alphaSlider->value());
+    ui->alphaSpinBox->setValue(ui->alphaSlider->value());
+    emit colorValueChanged("alpha", ui->alphaSlider->value());
+}
+
+void View::redSpinBoxChanged(){
+    ui->redSlider->setValue(ui->redSpinBox->value());
+    emit colorValueChanged("red", ui->redSpinBox->value());
+}
+
+void View::greenSpinBoxChanged(){
+    ui->greenSlider->setValue(ui->greenSpinBox->value());
+    emit colorValueChanged("green", ui->greenSpinBox->value());
+}
+
+void View::blueSpinBoxChanged(){
+    ui->blueSlider->setValue(ui->blueSpinBox->value());
+    emit colorValueChanged("blue", ui->blueSpinBox->value());
+}
+
+void View::alphaSpinBoxChanged(){
+    ui->alphaSlider->setValue(ui->alphaSpinBox->value());
+    emit colorValueChanged("alpha", ui->alphaSpinBox->value());
 }

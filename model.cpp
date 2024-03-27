@@ -33,17 +33,17 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
 }
 
 
-void Model::sliderChanged(QString slider, int value) {
-    if (slider == "red"){
+void Model::colorChanged(QString color, int value) {
+    if (color == "red"){
         currentColor.setRed(value);
     }
-    else if (slider == "green"){
+    else if (color == "green"){
         currentColor.setGreen(value);
     }
-    else if (slider == "blue"){
+    else if (color == "blue"){
         currentColor.setBlue(value);
     }
-    else if (slider == "alpha"){
+    else if (color == "alpha"){
         currentColor.setAlpha(value);
     }
 }
