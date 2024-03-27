@@ -2,19 +2,20 @@
 #define FRAME_H
 
 #include <QVector>
+#include <QColor>
 
 class Frame
 {
 private:
-    QVector<int> pixels;
+    QVector<QColor> pixels;
     int canvasSize;
     int pixelSize;
     int pixelDimension;
 public:
     Frame(int pixelDimension);
-    void addNewPixel(int x, int y, int r, int g, int b, int a);
-    QVector<int> getPixels();
-    QVector<int> getTemporaryPixels(int x, int y, int r, int g, int b, int a);
+    void addNewPixel(int x, int y, QColor color);
+    QVector<QColor> getPixels();
+    QVector<QColor> getTemporaryPixels(int x, int y, QColor color);
 };
 
 #endif // FRAME_H

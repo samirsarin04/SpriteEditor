@@ -17,24 +17,25 @@ void Canvas::mousePressEvent(QMouseEvent *event){
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event){
     if (event->button() == Qt::LeftButton){
-       emit canvasClickSignal(event->pos().x(), event->pos().y(), false);
+        emit canvasClickSignal(event->pos().x(), event->pos().y(), false);
     }
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event){
-    emit canvasMoveSignal(event->pos().x(), event->pos().y());
+    emit canvasMoveSignal(event->pos().x(), event->pos().y(), false);
+}
+
+void Canvas::leaveEvent(QEvent *event){
+    emit canvasMoveSignal(0, 0, true);
 }
 
 void Canvas::setGridSize(int pixelDimension){
     this->pixelDimension = pixelDimension;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
-    for(int i = 0; i < (pixelDimension * pixelDimension * 4); i++){
-        pixels.push_back(0);
+    for(int i = 0; i < (pixelDimension * pixelDimension); i++){
+        pixels.push_back(QColor(0, 0, 0, 0));
     }
-
-    std::cout<< pixelSize << std::endl;
-   // std::cout<< pixels.size() << std::endl;
 }
 
 
@@ -44,18 +45,18 @@ void Canvas::paintEvent(QPaintEvent *event){
     int currentX = 0;
     int currentY = 0;
 
-    for (int i = 0; i < pixelDimension * pixelDimension * 4; i+=4){
-        painter.fillRect(QRect(currentX, currentY, pixelSize, pixelSize), QColor(pixels.at(i), pixels.at(i + 1), pixels.at(i + 2), pixels.at(i + 3)));
+    for (int i = 0; i < pixelDimension * pixelDimension; i++){
+        painter.fillRect(QRect(currentX, currentY, pixelSize, pixelSize), pixels.at(i));
         if (currentX >= canvasSize - pixelSize){
             currentX = 0;
             currentY += pixelSize;
         } else {
-            currentX+= pixelSize;
+            currentX += pixelSize;
         }
     }
 }
 
-void Canvas::updateCanvas(QVector<int> pixels){
+void Canvas::updateCanvas(QVector<QColor> pixels){
     this->pixels = pixels;
     update();
 }

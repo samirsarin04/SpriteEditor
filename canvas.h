@@ -12,7 +12,7 @@ class Canvas : public QWidget
 {
     Q_OBJECT
 private:
-    QVector<int> pixels;
+    QVector<QColor> pixels;
     int canvasSize;
     int pixelSize;
     int pixelDimension;
@@ -25,11 +25,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void leaveEvent(QEvent *event) override;
 signals:
     void canvasClickSignal(int x, int y, bool click);
-    void canvasMoveSignal(int x, int y);
+    void canvasMoveSignal(int x, int y, bool offCanvas);
 public slots:
-    void updateCanvas(QVector<int> pixels);
+    void updateCanvas(QVector<QColor> pixels);
 };
 
 #endif // CANVAS_H
