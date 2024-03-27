@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/toolBarIcons">
+        <file alias="cloneIcon">resourceFiles/clone.png</file>
+        <file alias="dropperIcon">resourceFiles/dropper.png</file>
+        <file alias="eraseIcon">resourceFiles/erase.png</file>
+        <file alias="paintBrushIcon">resourceFiles/paintbrush.png</file>
+        <file alias="undoIcon">resourceFiles/undo.png</file>
+    </qresource>
+</RCC>
