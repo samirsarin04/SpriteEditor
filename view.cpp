@@ -10,14 +10,21 @@ View::View(Model &model, QWidget *parent)
     ui->setupUi(this);
     this->setStyleSheet("background-color: rgb(60, 60, 60)");
 
+    //Canvas Signals/Slots
     connect(ui->canvas, &Canvas::canvasClickSignal, &model, &Model::canvasClick);
     connect(&model, &Model::sendFrameToCanvas, ui->canvas, &Canvas::updateCanvas);
     connect(ui->canvas, &Canvas::canvasMoveSignal, &model, &Model::canvasMovement);
+
+    //Update Color signal/slot
+    connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
+
+    //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::sliderMoved, this, &View::redSliderValueChanged);
     connect(ui->greenSlider, &QSlider::sliderMoved, this, &View::greenSliderValueChanged);
     connect(ui->blueSlider, &QSlider::sliderMoved, this, &View::blueSliderValueChanged);
     connect(ui->alphaSlider, &QSlider::sliderMoved, this, &View::alphaSliderValueChanged);
-    connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
+
+    //RGBA Spin box signals/slots
     connect(ui->redSpinBox, &QSpinBox::valueChanged, this, &View::redSpinBoxChanged);
     connect(ui->greenSpinBox, &QSpinBox::valueChanged, this, &View::greenSpinBoxChanged);
     connect(ui->blueSpinBox, &QSpinBox::valueChanged, this, &View::blueSpinBoxChanged);
