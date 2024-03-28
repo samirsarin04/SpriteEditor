@@ -27,7 +27,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>5</y>
+      <y>50</y>
       <width>640</width>
       <height>640</height>
      </rect>
@@ -511,6 +511,14 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
     </rect>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
+    <property name="geometry">
+     <rect>
+      <x>257</x>
+      <y>103</y>
+      <width>135</width>
+      <height>100</height>
+     </rect>
+    </property>
     <property name="title">
      <string>Save</string>
     </property>
