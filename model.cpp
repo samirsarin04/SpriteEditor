@@ -5,7 +5,8 @@
 Model::Model(QObject *parent)
     : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255)
 {
-    currentTool = dropper;
+    // initial tool
+    currentTool = paint;
 }
 
 void Model::canvasClick(int x, int y, bool click){
@@ -18,6 +19,7 @@ void Model::canvasClick(int x, int y, bool click){
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
         break;
     case dropper:
+        // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
         break;
     default:
@@ -41,6 +43,7 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
             break;
         case dropper:
+            // Dropper logic here
             //set current color to the color of what is clicked on
             currentColor = currentFrame->getPixelColor(x, y);
             break;
