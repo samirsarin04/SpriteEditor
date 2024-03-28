@@ -21,6 +21,7 @@ void Model::canvasClick(int x, int y, bool click){
     case dropper:
         // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
+        currentTool = paint;
         break;
     default:
 
