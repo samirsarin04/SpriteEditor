@@ -95,10 +95,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>241</width>
-      <height>721</height>
+      <x>20</x>
+      <y>50</y>
+      <width>220</width>
+      <height>648</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -389,33 +389,42 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <item>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="1">
-        <widget class="QPushButton" name="savedColorButton2">
-         <property name="styleSheet">
-          <string notr="true">max-height: 40px;
-max-width: 40px;</string>
-         </property>
+        <widget class="QPushButton" name="swatch2">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QPushButton" name="savedColorButton1">
-         <property name="styleSheet">
-          <string notr="true">max-height: 40px;
-max-width: 40px;</string>
+        <widget class="QPushButton" name="swatch1">
+         <property name="text">
+          <string/>
          </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="swatch3">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QPushButton" name="savedColorButton3">
-         <property name="styleSheet">
-          <string notr="true">max-height: 40px;
-max-width: 40px;</string>
+        <widget class="QPushButton" name="swatch4">
+         <property name="text">
+          <string/>
          </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="swatch5">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="swatch6">
          <property name="text">
           <string/>
          </property>
@@ -507,18 +516,10 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
-    <property name="geometry">
-     <rect>
-      <x>257</x>
-      <y>103</y>
-      <width>135</width>
-      <height>100</height>
-     </rect>
-    </property>
     <property name="title">
      <string>Save</string>
     </property>
