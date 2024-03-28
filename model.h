@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "frame.h"
-#include "tool.h"
 
 class Model : public QObject
 {
@@ -19,7 +18,11 @@ public slots:
     void canvasMovement(int x, int y, bool offCanvas);
     void colorChanged(QString color, int value);
     void newCanvas(int size);
+    void toolToPaint();
+    void toolToEraser();
+    void toolToDropper();
 private:
+    enum Tool {paint, eraser, dropper};
     Tool currentTool;
     int size;
     QVector<Frame> frames;

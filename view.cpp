@@ -26,6 +26,11 @@ View::View(Model &model, QWidget *parent)
     //Update Color signal/slot
     connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
 
+    //Toolbar buttons signals/slots
+    connect(ui->brushButton, &QPushButton::clicked, &model, &Model::toolToPaint);
+    connect(ui->eraseButton, &QPushButton::clicked, &model, &Model::toolToEraser);
+    connect(ui->dropperButton, &QPushButton::clicked, &model, &Model::toolToDropper);
+
     //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
     connect(ui->greenSlider, &QSlider::valueChanged, this, &View::greenSliderValueChanged);

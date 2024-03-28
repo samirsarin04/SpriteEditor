@@ -1,5 +1,4 @@
 #include "model.h"
-#include "tool.h"
 
 #include<iostream>
 
@@ -7,19 +6,19 @@ Model::Model(QObject *parent)
     : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255)
 {
     // initial tool
-    currentTool = Tool::paint;
+    currentTool = paint;
 }
 
 void Model::canvasClick(int x, int y, bool click){
     drawing = click;
     switch(currentTool){
-    case Tool::paint:
+    case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
         break;
-    case Tool::erase:
+    case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
         break;
-    case Tool::dropper:
+    case dropper:
         // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
         break;
@@ -37,13 +36,13 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
 
     if (drawing){
         switch(currentTool){
-        case Tool::paint:
+        case paint:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
             break;
-        case Tool::erase:
+        case eraser:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
             break;
-        case Tool::dropper:
+        case dropper:
             // Dropper logic here
             //set current color to the color of what is clicked on
             currentColor = currentFrame->getPixelColor(x, y);
@@ -80,4 +79,16 @@ void Model::newCanvas(int size){
     this->size = size;
     frames.push_back(Frame(size));
     currentFrame = &frames[0];
+}
+
+void Model::toolToPaint(){
+    currentTool = paint;
+}
+
+void Model::toolToEraser(){
+    currentTool = eraser;
+}
+
+void Model::toolToDropper(){
+    currentTool = dropper;
 }
