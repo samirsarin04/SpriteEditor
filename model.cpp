@@ -5,12 +5,25 @@
 Model::Model(QObject *parent)
     : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255)
 {
-
+    currentTool = dropper;
 }
 
 void Model::canvasClick(int x, int y, bool click){
     drawing = click;
-    emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+    switch(currentTool){
+    case paint:
+        emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+        break;
+    case erase:
+        emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
+        break;
+    case dropper:
+        currentColor = currentFrame->getPixelColor(x, y);
+        break;
+    default:
+
+        break;
+    }
 }
 
 void Model::canvasMovement(int x, int y, bool offCanvas){
@@ -20,13 +33,28 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
     }
 
     if (drawing){
-        emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+        switch(currentTool){
+        case paint:
+            emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+            break;
+        case erase:
+            emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
+            break;
+        case dropper:
+            //set current color to the color of what is clicked on
+            currentColor = currentFrame->getPixelColor(x, y);
+            break;
+        default:
+            // throw _exception("No tool selected");
+            break;
+
+        }
+
         return;
     }
 
     emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, currentColor));
 }
-
 
 void Model::colorChanged(QString color, int value) {
     if (color == "red"){

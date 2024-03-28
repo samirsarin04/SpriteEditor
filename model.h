@@ -19,6 +19,8 @@ public slots:
     void colorChanged(QString color, int value);
     void newCanvas(int size);
 private:
+    enum Tool {paint, erase, dropper};
+    Tool currentTool;
     int size;
     QVector<Frame> frames;
     Frame* currentFrame;
