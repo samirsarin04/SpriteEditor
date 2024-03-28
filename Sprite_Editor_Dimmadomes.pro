@@ -21,6 +21,7 @@ HEADERS += \
     canvas.h \
     frame.h \
     model.h \
+    tool.h \
     view.h
 
 FORMS += \
