@@ -27,7 +27,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>50</y>
+      <y>5</y>
       <width>640</width>
       <height>640</height>
      </rect>
@@ -96,9 +96,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
-      <width>336</width>
-      <height>560</height>
+      <y>20</y>
+      <width>241</width>
+      <height>721</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -430,7 +430,7 @@ max-width: 40px;</string>
      <rect>
       <x>930</x>
       <y>240</y>
-      <width>259</width>
+      <width>260</width>
       <height>317</height>
      </rect>
     </property>
@@ -489,8 +489,8 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>253</width>
-            <height>226</height>
+            <width>254</width>
+            <height>197</height>
            </rect>
           </property>
          </widget>
@@ -507,7 +507,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>18</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
