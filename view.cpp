@@ -11,6 +11,13 @@ View::View(Model &model, QWidget *parent)
     this->setStyleSheet("background-color: rgb(60, 60, 60)");
     ui->canvas->setVisible(false);
 
+    //Set Tool Icons
+    ui->brushButton->setIcon(QIcon(":/toolBarIcons/paintBrushIcon"));
+    ui->eraseButton->setIcon(QIcon(":/toolBarIcons/eraseIcon"));
+    ui->dropperButton->setIcon(QIcon(":/toolBarIcons/dropperIcon"));
+    ui->cloneButton->setIcon(QIcon(":/toolBarIcons/cloneIcon"));
+    ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
+
     //Canvas Signals/Slots
     connect(ui->canvas, &Canvas::canvasClickSignal, &model, &Model::canvasClick);
     connect(&model, &Model::sendFrameToCanvas, ui->canvas, &Canvas::updateCanvas);
