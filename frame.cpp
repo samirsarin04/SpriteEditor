@@ -36,3 +36,13 @@ QVector<QColor> Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor
     pixels[location] = color;
     return pixels;
 }
+
+QColor Frame::getPixelColor(int x, int y){
+    int xPixel = ((double)pixelDimension * ((double)x / canvasSize));
+    int yPixel = ((double)pixelDimension * ((double)y / canvasSize));
+
+    int location = xPixel + (yPixel * pixelDimension);
+
+    return pixels[location];
+}
+

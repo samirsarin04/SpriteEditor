@@ -18,6 +18,7 @@ public:
     QVector<QColor> addNewPixel(int x, int y, QColor color);
     QVector<QColor> getPixels();
     QVector<QColor> addTemporaryPixel(int x, int y, QColor color);
+    QColor getPixelColor(int x, int y);
 };
 
 #endif // FRAME_H
