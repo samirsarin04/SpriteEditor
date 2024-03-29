@@ -15,6 +15,9 @@ signals:
     void fillSwatch(int swatch, QString styleString);
     void updateColorSliders(QColor currentColor);
     void updateColorPreview(QString styleString);
+    void toggleBrush(bool enabled);
+    void toggleEraser(bool enabled);
+    void togglePicker(bool enabled);
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -41,6 +44,7 @@ private:
     QColor currentColor;
     QColor swatches[6];
     void addSwatch(int swatchNumber);
+    void detoggleActiveButton(Tool tool);
     QString getStyleString(QColor color);
 };
 

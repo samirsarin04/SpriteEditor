@@ -22,6 +22,14 @@ View::View(Model &model, QWidget *parent)
     ui->cloneButton->setIcon(QIcon(":/toolBarIcons/cloneIcon"));
     ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
 
+    //Set brush to active tool visually
+    ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+
+    //Tool Signal/Slots
+    connect(&model, &Model::toggleBrush, this, &View::setBrush);
+    connect(&model, &Model::toggleEraser, this, &View::setEraser);
+    connect(&model, &Model::togglePicker, this, &View::setPicker);
+
     //set all swatches to black on initialization
     ui->swatch1->setStyleSheet("background-color: rgb(0, 0, 0)");
     ui->swatch2->setStyleSheet("background-color: rgb(0, 0, 0)");
@@ -168,4 +176,32 @@ void View::updateSwatchColor(int swatch, QString styleString){
 
 void View::updateColorPreview(QString styleString){
     ui->colorPreview->setStyleSheet(styleString);
+}
+
+void View::setBrush(bool enabled){
+    // WE MAY NEED TO ADD A PORTION TO STYLE SHEET THAT EXPLICITLY SETS THE DIMENSIONS OF BUTTON EACH TIME
+    if (enabled){
+        ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+        return;
+    }
+
+    ui->brushButton->setStyleSheet("background-color: rgba(60, 60, 60, 255)");
+}
+
+void View::setEraser(bool enabled){
+    if (enabled){
+        ui->eraseButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+        return;
+    }
+
+    ui->eraseButton->setStyleSheet("background-color: rgba(60, 60, 60, 255)");
+}
+
+void View::setPicker(bool enabled){
+    if (enabled){
+        ui->dropperButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+        return;
+    }
+
+    ui->dropperButton->setStyleSheet("background-color: rgba(60, 60, 60, 255)");
 }

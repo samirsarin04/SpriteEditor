@@ -27,18 +27,19 @@ void Model::canvasClick(int x, int y, bool click){
     switch(currentTool){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-        break;
+        return;
     case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-        break;
+        return;
     case dropper:
         // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
-        currentTool = paint;
-        break;
+        emit updateColorPreview(getStyleString(currentColor));
+        emit updateColorSliders(currentColor);
+        toolToPaint();
+        return;
     default:
-
-        break;
+        return;
     }
 }
 
@@ -52,21 +53,30 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         switch(currentTool){
         case paint:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-            break;
+            return;
         case eraser:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-            break;
+            return;
         case dropper:
             // Dropper logic here
             //set current color to the color of what is clicked on
             //currentColor = currentFrame->getPixelColor(x, y);
-            break;
+            emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
+            emit sendFrameToCanvas(currentFrame->getPixels());
+            return;
         default:
             // throw _exception("No tool selected");
-            break;
-
+            return;
         }
+    }
 
+    if(currentTool == dropper){
+        emit updateColorSliders(currentFrame->getPixelColor(x, y));
+        emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
+        emit sendFrameToCanvas(currentFrame->getPixels());
+        return;
+    } else if (currentTool == eraser){
+        emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, QColor(0, 0, 0, 0)));
         return;
     }
 
@@ -97,15 +107,23 @@ void Model::newCanvas(int size){
 }
 
 void Model::toolToPaint(){
+    detoggleActiveButton(paint);
     currentTool = paint;
+    emit toggleBrush(true);
+
 }
 
 void Model::toolToEraser(){
+    detoggleActiveButton(eraser);
     currentTool = eraser;
+    emit toggleEraser(true);
+
 }
 
 void Model::toolToDropper(){
+    detoggleActiveButton(dropper);
     currentTool = dropper;
+    emit togglePicker(true);
 }
 
 void Model::swatch1Clicked(){
@@ -165,3 +183,23 @@ QString Model::getStyleString(QColor color){
 void Model::undoAction(){
     emit sendFrameToCanvas(currentFrame->undoAction());
 }
+void Model::detoggleActiveButton(Tool tool){
+    if (tool == currentTool){
+        return;
+    }
+
+    switch(currentTool){
+    case paint:
+        emit toggleBrush(false);
+        return;
+    case eraser:
+        emit toggleEraser(false);
+        return;
+    case dropper:
+        emit togglePicker(false);
+        return;
+    default:
+        break;
+    }
+}
+
