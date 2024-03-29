@@ -18,18 +18,18 @@ void Model::canvasClick(int x, int y, bool click){
     switch(currentTool){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-        break;
+        return;
     case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-        break;
+        return;
     case dropper:
         // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
-        currentTool = paint;
-        break;
+        emit updateColorPreview(getStyleString(currentColor));
+        toolToPaint();
+        return;
     default:
-
-        break;
+        return;
     }
 }
 
@@ -43,21 +43,26 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         switch(currentTool){
         case paint:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-            break;
+            return;
         case eraser:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-            break;
+            return;
         case dropper:
             // Dropper logic here
             //set current color to the color of what is clicked on
             //currentColor = currentFrame->getPixelColor(x, y);
-            break;
+            emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
+            emit sendFrameToCanvas(currentFrame->getPixels());
+            return;
         default:
             // throw _exception("No tool selected");
-            break;
-
+            return;
         }
+    }
 
+    if(currentTool == dropper){
+        emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
+        emit sendFrameToCanvas(currentFrame->getPixels());
         return;
     }
 
@@ -177,7 +182,6 @@ void Model::detoggleActiveButton(Tool tool){
         emit togglePicker(false);
         return;
     default:
-        // throw _exception("No tool selected");
         break;
     }
 }

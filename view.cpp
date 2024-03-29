@@ -22,6 +22,9 @@ View::View(Model &model, QWidget *parent)
     ui->cloneButton->setIcon(QIcon(":/toolBarIcons/cloneIcon"));
     ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
 
+    //Set brush to active tool visually
+    ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+
     //Tool Signal/Slots
     connect(&model, &Model::toggleBrush, this, &View::setBrush);
     connect(&model, &Model::toggleEraser, this, &View::setEraser);
@@ -174,6 +177,7 @@ void View::updateColorPreview(QString styleString){
 }
 
 void View::setBrush(bool enabled){
+    // WE MAY NEED TO ADD A PORTION TO STYLE SHEET THAT EXPLICITLY SETS THE DIMENSIONS OF BUTTON EACH TIME
     if (enabled){
         ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
         return;
