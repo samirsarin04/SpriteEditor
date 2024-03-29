@@ -3,7 +3,7 @@
 #include<iostream>
 
 Model::Model(QObject *parent)
-    : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255)
+    : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255), activeSwatch(0)
 {
     // initial tool
     currentTool = paint;
@@ -11,6 +11,8 @@ Model::Model(QObject *parent)
     for(int i = 0; i < 6; i++) {
         swatches[i] = defaultSwatch;
     }
+
+    swatches[activeSwatch] = currentColor;
 }
 
 void Model::canvasClick(int x, int y, bool click){
@@ -36,6 +38,8 @@ void Model::canvasClick(int x, int y, bool click){
         currentColor = currentFrame->getPixelColor(x, y);
         emit updateColorPreview(getStyleString(currentColor));
         emit updateColorSliders(currentColor);
+        swatches[activeSwatch] = currentColor;
+        emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
         toolToPaint();
         return;
     default:
@@ -58,11 +62,6 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
             return;
         case dropper:
-            // Dropper logic here
-            //set current color to the color of what is clicked on
-            //currentColor = currentFrame->getPixelColor(x, y);
-            emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
-            emit sendFrameToCanvas(currentFrame->getPixels());
             return;
         default:
             // throw _exception("No tool selected");
@@ -84,6 +83,10 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
 }
 
 void Model::colorChanged(QString color, int value) {
+    if(currentTool == dropper){
+        return;
+    }
+
     if (color == "red"){
         currentColor.setRed(value);
     }
@@ -96,6 +99,8 @@ void Model::colorChanged(QString color, int value) {
     else if (color == "alpha"){
         currentColor.setAlpha(value);
     }
+    swatches[activeSwatch] = currentColor;
+    emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
     emit updateColorPreview(getStyleString(currentColor));
 }
 
@@ -109,8 +114,11 @@ void Model::newCanvas(int size){
 void Model::toolToPaint(){
     detoggleActiveButton(paint);
     currentTool = paint;
+    emit updateColorPreview(getStyleString(currentColor));
+    emit updateColorSliders(currentColor);
+    swatches[activeSwatch] = currentColor;
+    emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
     emit toggleBrush(true);
-
 }
 
 void Model::toolToEraser(){
@@ -150,26 +158,35 @@ void Model::swatch6Clicked(){
     addSwatch(5);
 }
 
+// void Model::addSwatch(int swatchNumber) {
+//     currentTool = paint;
+//     if (swatches[swatchNumber]!=currentColor && swatches[swatchNumber] == QColor(0,0,0)){
+//         swatches[swatchNumber] = currentColor;
+//         QString styleString = getStyleString(currentColor);
+//         emit fillSwatch(swatchNumber+1, styleString);
+//     }
+//     else if (swatches[swatchNumber] == currentColor)
+//     {
+//         swatches[swatchNumber] = QColor(0,0,0);
+//         QString styleString = getStyleString(swatches[swatchNumber]);
+//         emit fillSwatch(swatchNumber+1, styleString);
+//     }
+//     else if (swatches[swatchNumber] != currentColor)
+//     {
+//         currentColor = swatches[swatchNumber];
+//         QString styleString = getStyleString(currentColor);
+//         emit fillSwatch(swatchNumber+1, styleString);
+//         emit updateColorSliders(currentColor);
+//     }
+// }
+
 void Model::addSwatch(int swatchNumber) {
     currentTool = paint;
-    if (swatches[swatchNumber]!=currentColor && swatches[swatchNumber] == QColor(0,0,0)){
-        swatches[swatchNumber] = currentColor;
-        QString styleString = getStyleString(currentColor);
-        emit fillSwatch(swatchNumber+1, styleString);
-    }
-    else if (swatches[swatchNumber] == currentColor)
-    {
-        swatches[swatchNumber] = QColor(0,0,0);
-        QString styleString = getStyleString(swatches[swatchNumber]);
-        emit fillSwatch(swatchNumber+1, styleString);
-    }
-    else if (swatches[swatchNumber] != currentColor)
-    {
-        currentColor = swatches[swatchNumber];
-        QString styleString = getStyleString(currentColor);
-        emit fillSwatch(swatchNumber+1, styleString);
-        emit updateColorSliders(currentColor);
-    }
+    activeSwatch = swatchNumber;
+    currentColor = swatches[activeSwatch];
+    emit updateColorSliders(swatches[activeSwatch]);
+    emit updateColorPreview(getStyleString(swatches[activeSwatch]));
+    emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
 }
 
 QString Model::getStyleString(QColor color){
@@ -187,7 +204,6 @@ void Model::detoggleActiveButton(Tool tool){
     if (tool == currentTool){
         return;
     }
-
     switch(currentTool){
     case paint:
         emit toggleBrush(false);

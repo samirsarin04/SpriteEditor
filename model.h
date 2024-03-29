@@ -46,6 +46,7 @@ private:
     void addSwatch(int swatchNumber);
     void detoggleActiveButton(Tool tool);
     QString getStyleString(QColor color);
+    int activeSwatch;
 };
 
 #endif // MODEL_H
