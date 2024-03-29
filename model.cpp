@@ -123,6 +123,7 @@ void Model::swatch6Clicked(){
 }
 
 void Model::addSwatch(int swatchNumber) {
+    currentTool = paint;
     if (swatches[swatchNumber]!=currentColor && swatches[swatchNumber] == QColor(0,0,0)){
         swatches[swatchNumber] = currentColor;
         QString styleString = getStyleString(currentColor);
