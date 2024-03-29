@@ -30,6 +30,7 @@ public slots:
     void swatch4Clicked();
     void swatch5Clicked();
     void swatch6Clicked();
+    void undoAction();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;

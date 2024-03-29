@@ -1,7 +1,9 @@
 #include "frame.h"
 #include <iostream>
+#include <QDebug>
 
 Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension) {
+    firstStroke = true;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
     //Default initializes frame to white, will be changed later
@@ -27,7 +29,6 @@ QVector<QColor> Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor
     if (x < 0 || x > canvasSize - 1 || y < 0 || y > canvasSize - 1) {
         return pixels;
     }
-
     int xPixel = ((double)pixelDimension * ((double)x / canvasSize));
     int yPixel = ((double)pixelDimension * ((double)y / canvasSize));
 
@@ -46,3 +47,28 @@ QColor Frame::getPixelColor(int x, int y){
     return pixels[location];
 }
 
+void Frame::addToHistory(QVector<QColor> pixels){
+    history.push(pixels);
+}
+
+bool Frame::getFirstStroke(){
+    return firstStroke;
+}
+
+void Frame::setFirstStroke(bool firstStroke){
+    this->firstStroke = firstStroke;
+}
+
+QVector<QColor> Frame::undoAction(){
+    if(history.size() > 1){
+        while(history.top() == pixels && history.size() > 1){
+            history.pop();
+        }
+        auto lastVersion = history.top();
+        pixels = lastVersion;
+        return pixels;
+    }
+    else{
+        return pixels;
+    }
+}

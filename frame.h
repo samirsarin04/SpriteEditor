@@ -3,15 +3,18 @@
 
 #include <QVector>
 #include <QColor>
+#include <stack>
 
 class Frame
 {
 private:
+    bool firstStroke;
     QVector<QColor> pixels;
     int canvasSize;
     int pixelSize;
     int pixelDimension;
     QVector<QColor> modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color);
+    std::stack<QVector<QColor>> history;
 
 public:
     Frame(int pixelDimension);
@@ -19,6 +22,10 @@ public:
     QVector<QColor> getPixels();
     QVector<QColor> addTemporaryPixel(int x, int y, QColor color);
     QColor getPixelColor(int x, int y);
+    QVector<QColor> undoAction();
+    void addToHistory(QVector<QColor> pixels);
+    bool getFirstStroke();
+    void setFirstStroke(bool firstStroke);
 };
 
 #endif // FRAME_H

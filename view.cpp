@@ -42,6 +42,7 @@ View::View(Model &model, QWidget *parent)
     connect(ui->brushButton, &QPushButton::clicked, &model, &Model::toolToPaint);
     connect(ui->eraseButton, &QPushButton::clicked, &model, &Model::toolToEraser);
     connect(ui->dropperButton, &QPushButton::clicked, &model, &Model::toolToDropper);
+    connect(ui->undoButton, &QPushButton::clicked, &model, &Model::undoAction);
 
     //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
@@ -70,6 +71,7 @@ View::View(Model &model, QWidget *parent)
     connect(ui->swatch4, &QAbstractButton::clicked, &model, &Model::swatch4Clicked);
     connect(ui->swatch5, &QAbstractButton::clicked, &model, &Model::swatch5Clicked);
     connect(ui->swatch6, &QAbstractButton::clicked, &model, &Model::swatch6Clicked);
+
 }
 
 View::~View()

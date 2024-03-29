@@ -1,5 +1,5 @@
 #include "model.h"
-
+#include <QDebug>
 #include<iostream>
 
 Model::Model(QObject *parent)
@@ -15,6 +15,15 @@ Model::Model(QObject *parent)
 
 void Model::canvasClick(int x, int y, bool click){
     drawing = click;
+    //if we are not drawing and the first brush stroke is waiting to be made
+    if(drawing == false && currentFrame->getFirstStroke()){
+        currentFrame->addToHistory(currentFrame->getPixels());
+        currentFrame->setFirstStroke(false);
+    }
+    //add the frame as we start drawing to the frame's history stack
+    else if(drawing == true){
+        currentFrame->addToHistory(currentFrame->getPixels());
+    }
     switch(currentTool){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
@@ -153,3 +162,6 @@ QString Model::getStyleString(QColor color){
         + QString::number(color.alpha()) + ");");
     }
 
+void Model::undoAction(){
+    emit sendFrameToCanvas(currentFrame->undoAction());
+}
