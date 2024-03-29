@@ -12,7 +12,11 @@ Model::Model(QObject *parent)
         swatches[i] = defaultSwatch;
     }
 
+    imageIndex = 0;
+
     swatches[activeSwatch] = currentColor;
+
+    connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
 }
 
 void Model::canvasClick(int x, int y, bool click){
@@ -108,7 +112,16 @@ void Model::newCanvas(int size){
     frames.clear();
     this->size = size;
     frames.push_back(Frame(size));
+    // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
+    frames.push_back(Frame(size));
     currentFrame = &frames[0];
+    tick.setInterval(1500);
+    tick.start();
+}
+
+void Model::generatePreview(){
+    imageIndex = imageIndex == 0 ? 1 : 0;
+    emit sendImage(frames[imageIndex].generateImage());
 }
 
 void Model::toolToPaint(){
@@ -125,8 +138,6 @@ void Model::toolToEraser(){
     detoggleActiveButton(eraser);
     currentTool = eraser;
     emit toggleEraser(true);
-    emit sendImage(currentFrame->generateImage());
-
 }
 
 void Model::toolToDropper(){

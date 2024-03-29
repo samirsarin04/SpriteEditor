@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "frame.h"
+#include <QTimer>
 
 class Model : public QObject
 {
@@ -35,6 +36,7 @@ public slots:
     void swatch5Clicked();
     void swatch6Clicked();
     void undoAction();
+    void generatePreview();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
@@ -48,6 +50,8 @@ private:
     void detoggleActiveButton(Tool tool);
     QString getStyleString(QColor color);
     int activeSwatch;
+    QTimer tick;
+    int imageIndex;
 };
 
 #endif // MODEL_H
