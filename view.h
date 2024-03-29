@@ -38,10 +38,13 @@ public slots:
     void setEraser(bool enabled);
     void setPicker(bool enabled);
     void setImagePreview(QImage image);
+    void imagePreviewSliderChanged();
+    void imagePreviewSpinBoxChanged();
 
 signals:
     void colorValueChanged(QString color, int value);
     void canvasSizeSignal(int size);
+    void fpsChanged(int fps);
 
 private:
     Ui::View *ui;

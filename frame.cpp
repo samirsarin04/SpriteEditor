@@ -17,12 +17,14 @@ QVector<QColor> Frame::getPixels() {
 }
 
 QVector<QColor> Frame::addNewPixel(int x, int y, QColor color){
-    return modifyPixel(pixels, x, y, color);
+    modifyPixel(pixels, x, y, color);
+    return pixels;
 }
 
 QVector<QColor> Frame::addTemporaryPixel(int x, int y, QColor color){
     QVector<QColor> tempPixels = pixels;
-    return modifyPixel(tempPixels, x, y, color);
+    modifyPixel(tempPixels, x, y, color);
+    return tempPixels;
 }
 
 QImage Frame::generateImage(){
@@ -40,9 +42,9 @@ QImage Frame::generateImage(){
     return frameImage;
 }
 
-QVector<QColor> Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color){
+void Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color){
     if (x < 0 || x > canvasSize - 1 || y < 0 || y > canvasSize - 1) {
-        return pixels;
+        return;
     }
     int xPixel = ((double)pixelDimension * ((double)x / canvasSize));
     int yPixel = ((double)pixelDimension * ((double)y / canvasSize));
@@ -50,7 +52,6 @@ QVector<QColor> Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor
     int location = xPixel + (yPixel * pixelDimension);
 
     pixels[location] = color;
-    return pixels;
 }
 
 QColor Frame::getPixelColor(int x, int y){

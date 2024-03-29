@@ -83,6 +83,9 @@ View::View(Model &model, QWidget *parent)
 
     //Connect image preview signal/slot
     connect(&model, &Model::sendImage, this, &View::setImagePreview);
+    connect(ui->playbackSpeedSlider, &QSlider::valueChanged, this, &View::imagePreviewSliderChanged);
+    connect(ui->playbackSpeedSpinBox, &QSpinBox::valueChanged, this, &View::imagePreviewSpinBoxChanged);
+    connect(this, &View::fpsChanged, &model, &Model::updateFPS);
 }
 
 View::~View()
@@ -92,6 +95,17 @@ View::~View()
 
 void View::setImagePreview(QImage image){
     ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
+}
+
+
+void View::imagePreviewSliderChanged(){
+    ui->playbackSpeedSpinBox->setValue(ui->playbackSpeedSlider->value());
+    emit fpsChanged(ui->playbackSpeedSlider->value());
+}
+
+void View::imagePreviewSpinBoxChanged(){
+    ui->playbackSpeedSlider->setValue(ui->playbackSpeedSpinBox->value());
+    emit fpsChanged(ui->playbackSpeedSpinBox->value());
 }
 
 void View::redSliderValueChanged(){

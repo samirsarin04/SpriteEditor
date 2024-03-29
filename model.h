@@ -26,6 +26,7 @@ public slots:
     void canvasMovement(int x, int y, bool offCanvas);
     void colorChanged(QString color, int value);
     void newCanvas(int size);
+    void updateFPS(int fps);
     void toolToPaint();
     void toolToEraser();
     void toolToDropper();
@@ -52,6 +53,7 @@ private:
     int activeSwatch;
     QTimer tick;
     int imageIndex;
+    std::mutex lock;
 };
 
 #endif // MODEL_H

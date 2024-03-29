@@ -5,6 +5,8 @@
 #include <QColor>
 #include <stack>
 #include <QImage>
+#include<mutex>
+
 
 class Frame
 {
@@ -14,7 +16,7 @@ private:
     int canvasSize;
     int pixelSize;
     int pixelDimension;
-    QVector<QColor> modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color);
+    void modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color);
     std::stack<QVector<QColor>> history;
     QImage frameImage;
 

@@ -20,6 +20,7 @@ Model::Model(QObject *parent)
 }
 
 void Model::canvasClick(int x, int y, bool click){
+    lock.lock();
     drawing = click;
     //if we are not drawing and the first brush stroke is waiting to be made
     if(drawing == false && currentFrame->getFirstStroke()){
@@ -33,9 +34,11 @@ void Model::canvasClick(int x, int y, bool click){
     switch(currentTool){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+        lock.unlock();
         return;
     case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
+        lock.unlock();
         return;
     case dropper:
         // Dropper logic here
@@ -45,10 +48,13 @@ void Model::canvasClick(int x, int y, bool click){
         swatches[activeSwatch] = currentColor;
         emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
         toolToPaint();
+        lock.unlock();
         return;
     default:
+        lock.unlock();
         return;
     }
+    lock.unlock();
 }
 
 void Model::canvasMovement(int x, int y, bool offCanvas){
@@ -115,13 +121,23 @@ void Model::newCanvas(int size){
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
     frames.push_back(Frame(size));
     currentFrame = &frames[0];
-    tick.setInterval(1500);
+    tick.setInterval(1000);
+    tick.start();
+}
+
+void Model::updateFPS(int fps){
+    tick.stop();
+    tick.setInterval(double(1000 / fps));
     tick.start();
 }
 
 void Model::generatePreview(){
+    lock.lock();
+    // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
     imageIndex = imageIndex == 0 ? 1 : 0;
-    emit sendImage(frames[imageIndex].generateImage());
+    QImage temp = frames[imageIndex].generateImage();
+    lock.unlock();
+    emit sendImage(temp);
 }
 
 void Model::toolToPaint(){
