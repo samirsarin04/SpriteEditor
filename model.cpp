@@ -26,6 +26,7 @@ void Model::canvasClick(int x, int y, bool click){
         // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
         emit updateColorPreview(getStyleString(currentColor));
+        emit updateColorSliders(currentColor);
         toolToPaint();
         return;
     default:
@@ -61,8 +62,12 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
     }
 
     if(currentTool == dropper){
+        emit updateColorSliders(currentFrame->getPixelColor(x, y));
         emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
         emit sendFrameToCanvas(currentFrame->getPixels());
+        return;
+    } else if (currentTool == eraser){
+        emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, QColor(0, 0, 0, 0)));
         return;
     }
 
