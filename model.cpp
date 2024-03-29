@@ -83,7 +83,7 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
 }
 
 void Model::colorChanged(QString color, int value) {
-    if(currentTool == dropper){
+    if(currentTool == dropper || currentTool == eraser){
         return;
     }
 
