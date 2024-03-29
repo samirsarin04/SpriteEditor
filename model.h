@@ -12,7 +12,7 @@ public:
 
 signals:
     void sendFrameToCanvas(QVector<QColor>);
-    void fillSwatch(int swatch, QColor color);
+    void fillSwatch(int swatch, QString styleString);
     void updateColorSliders(QColor currentColor);
 
 public slots:
@@ -37,8 +37,9 @@ private:
     Frame* currentFrame;
     bool drawing;
     QColor currentColor;
-    QVector<QColor> swatches;
+    QColor swatches[6];
     void addSwatch(int swatchNumber);
+    QString getStyleString(QColor color);
 };
 
 #endif // MODEL_H

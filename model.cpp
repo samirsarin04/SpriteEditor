@@ -8,7 +8,9 @@ Model::Model(QObject *parent)
     // initial tool
     currentTool = paint;
     QColor defaultSwatch(0,0,0);
-    swatches = {defaultSwatch, defaultSwatch, defaultSwatch, defaultSwatch, defaultSwatch, defaultSwatch};
+    for(int i = 0; i < 6; i++) {
+        swatches[i] = defaultSwatch;
+    }
 }
 
 void Model::canvasClick(int x, int y, bool click){
@@ -120,45 +122,32 @@ void Model::swatch6Clicked(){
     addSwatch(5);
 }
 
-
 void Model::addSwatch(int swatchNumber) {
-    if (swatches.at(swatchNumber)!=currentColor && swatches.at(swatchNumber) == QColor(0,0,0)){
-        swatches.replace(swatchNumber,currentColor);
-        emit fillSwatch(swatchNumber + 1, currentColor);
+    if (swatches[swatchNumber]!=currentColor && swatches[swatchNumber] == QColor(0,0,0)){
+        swatches[swatchNumber] = currentColor;
+        QString styleString = getStyleString(currentColor);
+        emit fillSwatch(swatchNumber+1, styleString);
     }
-    else if (swatches.at(swatchNumber) == currentColor)
+    else if (swatches[swatchNumber] == currentColor)
     {
-        swatches.replace(swatchNumber, QColor(0,0,0));
-        emit fillSwatch(swatchNumber + 1, swatches.at(swatchNumber));
+        swatches[swatchNumber] = QColor(0,0,0);
+        QString styleString = getStyleString(swatches[swatchNumber]);
+        emit fillSwatch(swatchNumber+1, styleString);
     }
-    else if (swatches.at(swatchNumber) != currentColor)
+    else if (swatches[swatchNumber] != currentColor)
     {
-        currentColor = swatches.at(swatchNumber);
-        emit fillSwatch(swatchNumber, currentColor);
+        currentColor = swatches[swatchNumber];
+        QString styleString = getStyleString(currentColor);
+        emit fillSwatch(swatchNumber+1, styleString);
         emit updateColorSliders(currentColor);
     }
-
-
-    /*
-    if(swatches.size() > 0){
-        if(swatches.at(swatchNumber) != currentColor){
-            currentColor = swatches.at(swatchNumber);
-            emit updateColorSliders(currentColor);
-            emit fillSwatch(swatchNumber, currentColor);
-        }
-        else{
-            if(swatches.at(swatchNumber)==currentColor){
-                swatches.remove(swatchNumber);
-                emit fillSwatch(swatchNumber, QColor(0,0,0,0));
-            }
-        }
-    }
-    else{
-        swatches.push_back(currentColor);
-        emit fillSwatch(swatchNumber, currentColor);
-    }
-    */
 }
 
-
+QString Model::getStyleString(QColor color){
+    return QString("QPushButton {background-color: rgba("
+        + QString::number(color.red()) + ","
+        + QString::number(color.green()) + ","
+        + QString::number(color.blue()) + ","
+        + QString::number(color.alpha()) + ");}");
+    }
 

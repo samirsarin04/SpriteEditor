@@ -136,48 +136,26 @@ void View::updateColorSliders(QColor currentColor){
     ui->alphaSlider->setValue(currentColor.alpha());
 }
 
-void View::updateSwatchColor(int swatch, QColor color){
+
+
+void View::updateSwatchColor(int swatch, QString styleString){
     switch(swatch){
     case 1:
-        ui->swatch1->setStyleSheet(QString("QPushButton {background-color: rgba("
-                                           + QString::number(color.red()) + ","
-                                           + QString::number(color.green()) + ","
-                                           + QString::number(color.blue()) + ","
-                                           + QString::number(color.alpha()) + ");}"));
+        ui->swatch1->setStyleSheet(styleString);
         break;
     case 2:
-        ui->swatch2->setStyleSheet(QString("QPushButton {background-color: rgba("
-                                           + QString::number(color.red()) + ","
-                                           + QString::number(color.green()) + ","
-                                           + QString::number(color.blue()) + ","
-                                           + QString::number(color.alpha()) + ");}"));
+        ui->swatch2->setStyleSheet(styleString);
         break;
     case 3:
-        ui->swatch3->setStyleSheet(QString("QPushButton {background-color: rgba("
-                                           + QString::number(color.red()) + ","
-                                           + QString::number(color.green()) + ","
-                                           + QString::number(color.blue()) + ","
-                                           + QString::number(color.alpha()) + ");}"));
+        ui->swatch3->setStyleSheet(styleString);
         break;
     case 4:
-        ui->swatch4->setStyleSheet(QString("QPushButton {background-color: rgba("
-                                           + QString::number(color.red()) + ","
-                                           + QString::number(color.green()) + ","
-                                           + QString::number(color.blue()) + ","
-                                           + QString::number(color.alpha()) + ");}"));
+        ui->swatch4->setStyleSheet(styleString);
         break;
     case 5:
-        ui->swatch5->setStyleSheet(QString("QPushButton {background-color: rgba("
-                                           + QString::number(color.red()) + ","
-                                           + QString::number(color.green()) + ","
-                                           + QString::number(color.blue()) + ","
-                                           + QString::number(color.alpha()) + ");}"));
+        ui->swatch5->setStyleSheet(styleString);
         break;
     case 6:
-        ui->swatch6->setStyleSheet(QString("QPushButton {background-color: rgba("
-                                           + QString::number(color.red()) + ","
-                                           + QString::number(color.green()) + ","
-                                           + QString::number(color.blue()) + ","
-                                           + QString::number(color.alpha()) + ");}"));
+        ui->swatch6->setStyleSheet(styleString);
     }
 }
