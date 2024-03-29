@@ -37,6 +37,7 @@ public slots:
     void setBrush(bool enabled);
     void setEraser(bool enabled);
     void setPicker(bool enabled);
+    void setImagePreview(QImage image);
 
 signals:
     void colorValueChanged(QString color, int value);

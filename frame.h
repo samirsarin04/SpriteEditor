@@ -4,6 +4,7 @@
 #include <QVector>
 #include <QColor>
 #include <stack>
+#include <QImage>
 
 class Frame
 {
@@ -15,6 +16,7 @@ private:
     int pixelDimension;
     QVector<QColor> modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color);
     std::stack<QVector<QColor>> history;
+    QImage frameImage;
 
 public:
     Frame(int pixelDimension);
@@ -26,6 +28,7 @@ public:
     void addToHistory(QVector<QColor> pixels);
     bool getFirstStroke();
     void setFirstStroke(bool firstStroke);
+    QImage generateImage();
 };
 
 #endif // FRAME_H

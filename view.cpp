@@ -80,11 +80,18 @@ View::View(Model &model, QWidget *parent)
     connect(ui->swatch5, &QAbstractButton::clicked, &model, &Model::swatch5Clicked);
     connect(ui->swatch6, &QAbstractButton::clicked, &model, &Model::swatch6Clicked);
 
+
+    //Connect image preview signal/slot
+    connect(&model, &Model::sendImage, this, &View::setImagePreview);
 }
 
 View::~View()
 {
     delete ui;
+}
+
+void View::setImagePreview(QImage image){
+    ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
 }
 
 void View::redSliderValueChanged(){

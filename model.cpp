@@ -125,6 +125,7 @@ void Model::toolToEraser(){
     detoggleActiveButton(eraser);
     currentTool = eraser;
     emit toggleEraser(true);
+    emit sendImage(currentFrame->generateImage());
 
 }
 

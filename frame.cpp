@@ -2,7 +2,7 @@
 #include <iostream>
 #include <QDebug>
 
-Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension) {
+Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pixelDimension, pixelDimension, QImage::Format_RGB16) {
     firstStroke = true;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
@@ -23,6 +23,21 @@ QVector<QColor> Frame::addNewPixel(int x, int y, QColor color){
 QVector<QColor> Frame::addTemporaryPixel(int x, int y, QColor color){
     QVector<QColor> tempPixels = pixels;
     return modifyPixel(tempPixels, x, y, color);
+}
+
+QImage Frame::generateImage(){
+    int currentX = 0;
+    int currentY = 0;
+    for (int i = 0; i < pixelDimension * pixelDimension; i++){
+        frameImage.setPixelColor(QPoint(currentX, currentY), pixels.at(i));
+        if (currentX >= pixelDimension - 1){
+            currentX = 0;
+            currentY += 1;
+        } else {
+            currentX += 1;
+        }
+    }
+    return frameImage;
 }
 
 QVector<QColor> Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color){
