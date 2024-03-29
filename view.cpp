@@ -18,6 +18,14 @@ View::View(Model &model, QWidget *parent)
     ui->cloneButton->setIcon(QIcon(":/toolBarIcons/cloneIcon"));
     ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
 
+    //set all swatches to black on initialization
+    ui->swatch1->setStyleSheet("background-color: rgb(0, 0, 0)");
+    ui->swatch2->setStyleSheet("background-color: rgb(0, 0, 0)");
+    ui->swatch3->setStyleSheet("background-color: rgb(0, 0, 0)");
+    ui->swatch4->setStyleSheet("background-color: rgb(0, 0, 0)");
+    ui->swatch5->setStyleSheet("background-color: rgb(0, 0, 0)");
+    ui->swatch6->setStyleSheet("background-color: rgb(0, 0, 0)");
+
     //Canvas Signals/Slots
     connect(ui->canvas, &Canvas::canvasClickSignal, &model, &Model::canvasClick);
     connect(&model, &Model::sendFrameToCanvas, ui->canvas, &Canvas::updateCanvas);
@@ -47,6 +55,17 @@ View::View(Model &model, QWidget *parent)
     connect(ui->pixelDimensionSlider, &QSlider::valueChanged, this, &View::pixelDimensionSliderChanged);
     connect(ui->confirmDimensionButton, &QAbstractButton::clicked, this, &View::canvasSizeSelected);
     connect(this, &View::canvasSizeSignal, &model, &Model::newCanvas);
+
+    //Connect swatch signals and slots
+    connect(&model, &Model::updateColorSliders, this, &View::updateColorSliders);
+    connect(&model, &Model::fillSwatch, this, &View::updateSwatchColor);
+    //connect swatches 1-6
+    connect(ui->swatch1, &QAbstractButton::clicked, &model, &Model::swatch1Clicked);
+    connect(ui->swatch2, &QAbstractButton::clicked, &model, &Model::swatch2Clicked);
+    connect(ui->swatch3, &QAbstractButton::clicked, &model, &Model::swatch3Clicked);
+    connect(ui->swatch4, &QAbstractButton::clicked, &model, &Model::swatch4Clicked);
+    connect(ui->swatch5, &QAbstractButton::clicked, &model, &Model::swatch5Clicked);
+    connect(ui->swatch6, &QAbstractButton::clicked, &model, &Model::swatch6Clicked);
 }
 
 View::~View()
@@ -108,4 +127,57 @@ void View::canvasSizeSelected(){
     ui->confirmDimensionButton->setVisible(false);
 
     emit canvasSizeSignal(ui->pixelDimensionSlider->value());
+}
+
+void View::updateColorSliders(QColor currentColor){
+    ui->redSlider->setValue(currentColor.red());
+    ui->greenSlider->setValue(currentColor.green());
+    ui->blueSlider->setValue(currentColor.blue());
+    ui->alphaSlider->setValue(currentColor.alpha());
+}
+
+void View::updateSwatchColor(int swatch, QColor color){
+    switch(swatch){
+    case 1:
+        ui->swatch1->setStyleSheet(QString("QPushButton {background-color: rgba("
+                                           + QString::number(color.red()) + ","
+                                           + QString::number(color.green()) + ","
+                                           + QString::number(color.blue()) + ","
+                                           + QString::number(color.alpha()) + ");}"));
+        break;
+    case 2:
+        ui->swatch2->setStyleSheet(QString("QPushButton {background-color: rgba("
+                                           + QString::number(color.red()) + ","
+                                           + QString::number(color.green()) + ","
+                                           + QString::number(color.blue()) + ","
+                                           + QString::number(color.alpha()) + ");}"));
+        break;
+    case 3:
+        ui->swatch3->setStyleSheet(QString("QPushButton {background-color: rgba("
+                                           + QString::number(color.red()) + ","
+                                           + QString::number(color.green()) + ","
+                                           + QString::number(color.blue()) + ","
+                                           + QString::number(color.alpha()) + ");}"));
+        break;
+    case 4:
+        ui->swatch4->setStyleSheet(QString("QPushButton {background-color: rgba("
+                                           + QString::number(color.red()) + ","
+                                           + QString::number(color.green()) + ","
+                                           + QString::number(color.blue()) + ","
+                                           + QString::number(color.alpha()) + ");}"));
+        break;
+    case 5:
+        ui->swatch5->setStyleSheet(QString("QPushButton {background-color: rgba("
+                                           + QString::number(color.red()) + ","
+                                           + QString::number(color.green()) + ","
+                                           + QString::number(color.blue()) + ","
+                                           + QString::number(color.alpha()) + ");}"));
+        break;
+    case 6:
+        ui->swatch6->setStyleSheet(QString("QPushButton {background-color: rgba("
+                                           + QString::number(color.red()) + ","
+                                           + QString::number(color.green()) + ","
+                                           + QString::number(color.blue()) + ","
+                                           + QString::number(color.alpha()) + ");}"));
+    }
 }

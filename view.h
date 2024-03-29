@@ -31,6 +31,8 @@ public slots:
     void alphaSpinBoxChanged();
     void canvasSizeSelected();
     void pixelDimensionSliderChanged();
+    void updateSwatchColor(int swatch, QColor color);
+    void updateColorSliders(QColor currentColor);
 
 signals:
     void colorValueChanged(QString color, int value);

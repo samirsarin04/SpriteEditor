@@ -12,6 +12,8 @@ public:
 
 signals:
     void sendFrameToCanvas(QVector<QColor>);
+    void fillSwatch(int swatch, QColor color);
+    void updateColorSliders(QColor currentColor);
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -21,6 +23,12 @@ public slots:
     void toolToPaint();
     void toolToEraser();
     void toolToDropper();
+    void swatch1Clicked();
+    void swatch2Clicked();
+    void swatch3Clicked();
+    void swatch4Clicked();
+    void swatch5Clicked();
+    void swatch6Clicked();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
@@ -29,6 +37,8 @@ private:
     Frame* currentFrame;
     bool drawing;
     QColor currentColor;
+    QVector<QColor> swatches;
+    void addSwatch(int swatchNumber);
 };
 
 #endif // MODEL_H

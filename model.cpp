@@ -7,6 +7,8 @@ Model::Model(QObject *parent)
 {
     // initial tool
     currentTool = paint;
+    QColor defaultSwatch(0,0,0);
+    swatches = {defaultSwatch, defaultSwatch, defaultSwatch, defaultSwatch, defaultSwatch, defaultSwatch};
 }
 
 void Model::canvasClick(int x, int y, bool click){
@@ -93,3 +95,70 @@ void Model::toolToEraser(){
 void Model::toolToDropper(){
     currentTool = dropper;
 }
+
+void Model::swatch1Clicked(){
+    addSwatch(0);
+}
+
+void Model::swatch2Clicked(){
+    addSwatch(1);
+}
+
+void Model::swatch3Clicked(){
+    addSwatch(2);
+}
+
+void Model::swatch4Clicked(){
+    addSwatch(3);
+}
+
+void Model::swatch5Clicked(){
+    addSwatch(4);
+}
+
+void Model::swatch6Clicked(){
+    addSwatch(5);
+}
+
+
+void Model::addSwatch(int swatchNumber) {
+    if (swatches.at(swatchNumber)!=currentColor && swatches.at(swatchNumber) == QColor(0,0,0)){
+        swatches.replace(swatchNumber,currentColor);
+        emit fillSwatch(swatchNumber + 1, currentColor);
+    }
+    else if (swatches.at(swatchNumber) == currentColor)
+    {
+        swatches.replace(swatchNumber, QColor(0,0,0));
+        emit fillSwatch(swatchNumber + 1, swatches.at(swatchNumber));
+    }
+    else if (swatches.at(swatchNumber) != currentColor)
+    {
+        currentColor = swatches.at(swatchNumber);
+        emit fillSwatch(swatchNumber, currentColor);
+        emit updateColorSliders(currentColor);
+    }
+
+
+    /*
+    if(swatches.size() > 0){
+        if(swatches.at(swatchNumber) != currentColor){
+            currentColor = swatches.at(swatchNumber);
+            emit updateColorSliders(currentColor);
+            emit fillSwatch(swatchNumber, currentColor);
+        }
+        else{
+            if(swatches.at(swatchNumber)==currentColor){
+                swatches.remove(swatchNumber);
+                emit fillSwatch(swatchNumber, QColor(0,0,0,0));
+            }
+        }
+    }
+    else{
+        swatches.push_back(currentColor);
+        emit fillSwatch(swatchNumber, currentColor);
+    }
+    */
+}
+
+
+
