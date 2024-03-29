@@ -33,6 +33,7 @@ public slots:
     void pixelDimensionSliderChanged();
     void updateSwatchColor(int swatch, QString styleString);
     void updateColorSliders(QColor currentColor);
+    void updateColorPreview(QString styleString);
 
 signals:
     void colorValueChanged(QString color, int value);

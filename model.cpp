@@ -50,7 +50,7 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         case dropper:
             // Dropper logic here
             //set current color to the color of what is clicked on
-            currentColor = currentFrame->getPixelColor(x, y);
+            //currentColor = currentFrame->getPixelColor(x, y);
             break;
         default:
             // throw _exception("No tool selected");
@@ -77,6 +77,7 @@ void Model::colorChanged(QString color, int value) {
     else if (color == "alpha"){
         currentColor.setAlpha(value);
     }
+    emit updateColorPreview(getStyleString(currentColor));
 }
 
 void Model::newCanvas(int size){
@@ -145,10 +146,10 @@ void Model::addSwatch(int swatchNumber) {
 }
 
 QString Model::getStyleString(QColor color){
-    return QString("QPushButton {background-color: rgba("
+    return QString("background-color: rgba("
         + QString::number(color.red()) + ","
         + QString::number(color.green()) + ","
         + QString::number(color.blue()) + ","
-        + QString::number(color.alpha()) + ");}");
+        + QString::number(color.alpha()) + ");");
     }
 

@@ -14,6 +14,7 @@ signals:
     void sendFrameToCanvas(QVector<QColor>);
     void fillSwatch(int swatch, QString styleString);
     void updateColorSliders(QColor currentColor);
+    void updateColorPreview(QString styleString);
 
 public slots:
     void canvasClick(int x, int y, bool click);

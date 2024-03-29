@@ -439,7 +439,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <rect>
       <x>930</x>
       <y>240</y>
-      <width>260</width>
+      <width>266</width>
       <height>317</height>
      </rect>
     </property>
@@ -498,8 +498,8 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>254</width>
-            <height>197</height>
+            <width>260</width>
+            <height>201</height>
            </rect>
           </property>
          </widget>
@@ -508,6 +508,16 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QWidget" name="colorPreview" native="true">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>221</width>
+      <height>41</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

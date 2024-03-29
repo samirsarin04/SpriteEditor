@@ -11,6 +11,10 @@ View::View(Model &model, QWidget *parent)
     this->setStyleSheet("background-color: rgb(60, 60, 60)");
     ui->canvas->setVisible(false);
 
+    //Set Color Preview to default value
+    ui->colorPreview->setStyleSheet("background-color: rgb(255, 0, 255)");
+    connect(&model, &Model::updateColorPreview, this, &View::updateColorPreview);
+
     //Set Tool Icons
     ui->brushButton->setIcon(QIcon(":/toolBarIcons/paintBrushIcon"));
     ui->eraseButton->setIcon(QIcon(":/toolBarIcons/eraseIcon"));
@@ -158,4 +162,8 @@ void View::updateSwatchColor(int swatch, QString styleString){
     case 6:
         ui->swatch6->setStyleSheet(styleString);
     }
+}
+
+void View::updateColorPreview(QString styleString){
+    ui->colorPreview->setStyleSheet(styleString);
 }
