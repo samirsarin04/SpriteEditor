@@ -121,12 +121,17 @@ void Model::newCanvas(int size){
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
     frames.push_back(Frame(size));
     currentFrame = &frames[0];
-    tick.setInterval(1000);
-    tick.start();
+    updateFPS(0);
 }
 
 void Model::updateFPS(int fps){
     tick.stop();
+    this->fps = fps;
+    if (fps == 0){
+        tick.setInterval(double(100));
+        tick.start();
+        return;
+    }
     tick.setInterval(double(1000 / fps));
     tick.start();
 }
@@ -134,6 +139,13 @@ void Model::updateFPS(int fps){
 void Model::generatePreview(){
     lock.lock();
     // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
+    if(fps == 0){
+        QImage temp = frames[imageIndex].generateImage();
+        lock.unlock();
+        emit sendImage(temp);
+        return;
+    }
+
     imageIndex = imageIndex == 0 ? 1 : 0;
     QImage temp = frames[imageIndex].generateImage();
     lock.unlock();

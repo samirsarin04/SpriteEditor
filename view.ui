@@ -468,10 +468,13 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
          <item>
           <widget class="QSpinBox" name="playbackSpeedSpinBox">
            <property name="minimum">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="maximum">
             <number>60</number>
+           </property>
+           <property name="value">
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -480,10 +483,13 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
        <item>
         <widget class="QSlider" name="playbackSpeedSlider">
          <property name="minimum">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="maximum">
           <number>60</number>
+         </property>
+         <property name="value">
+          <number>0</number>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>

@@ -42,6 +42,7 @@ private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
     int size;
+    int fps;
     QVector<Frame> frames;
     Frame* currentFrame;
     bool drawing;
