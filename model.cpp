@@ -140,12 +140,11 @@ void Model::generatePreview(){
     lock.lock();
     // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
     if(fps == 0){
-        QImage temp = frames[imageIndex].generateImage();
+        QImage temp = currentFrame->generateImage();
         lock.unlock();
         emit sendImage(temp);
         return;
     }
-
     imageIndex = imageIndex == 0 ? 1 : 0;
     QImage temp = frames[imageIndex].generateImage();
     lock.unlock();
@@ -221,9 +220,11 @@ void Model::swatch6Clicked(){
 // }
 
 void Model::addSwatch(int swatchNumber) {
+    detoggleActiveButton(paint);
     currentTool = paint;
     activeSwatch = swatchNumber;
     currentColor = swatches[activeSwatch];
+    emit toggleBrush(true);
     emit updateColorSliders(swatches[activeSwatch]);
     emit updateColorPreview(getStyleString(swatches[activeSwatch]));
     emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
