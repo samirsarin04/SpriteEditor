@@ -88,15 +88,23 @@ void Model::newCanvas(int size){
 }
 
 void Model::toolToPaint(){
+    detoggleActiveButton(paint);
     currentTool = paint;
+    emit toggleBrush(true);
+
 }
 
 void Model::toolToEraser(){
+    detoggleActiveButton(eraser);
     currentTool = eraser;
+    emit toggleEraser(true);
+
 }
 
 void Model::toolToDropper(){
+    detoggleActiveButton(dropper);
     currentTool = dropper;
+    emit togglePicker(true);
 }
 
 void Model::swatch1Clicked(){
@@ -152,4 +160,25 @@ QString Model::getStyleString(QColor color){
         + QString::number(color.blue()) + ","
         + QString::number(color.alpha()) + ");");
     }
+
+void Model::detoggleActiveButton(Tool tool){
+    if (tool == currentTool){
+        return;
+    }
+
+    switch(currentTool){
+    case paint:
+        emit toggleBrush(false);
+        return;
+    case eraser:
+        emit toggleEraser(false);
+        return;
+    case dropper:
+        emit togglePicker(false);
+        return;
+    default:
+        // throw _exception("No tool selected");
+        break;
+    }
+}
 

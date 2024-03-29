@@ -34,6 +34,9 @@ public slots:
     void updateSwatchColor(int swatch, QString styleString);
     void updateColorSliders(QColor currentColor);
     void updateColorPreview(QString styleString);
+    void setBrush(bool enabled);
+    void setEraser(bool enabled);
+    void setPicker(bool enabled);
 
 signals:
     void colorValueChanged(QString color, int value);
