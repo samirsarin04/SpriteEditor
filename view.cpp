@@ -23,7 +23,7 @@ View::View(Model &model, QWidget *parent)
     ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
 
     //Set brush to active tool visually
-    ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+    ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 
     //Tool Signal/Slots
     connect(&model, &Model::toggleBrush, this, &View::setBrush);
@@ -202,27 +202,27 @@ void View::updateColorPreview(QString styleString){
 void View::setBrush(bool enabled){
     // WE MAY NEED TO ADD A PORTION TO STYLE SHEET THAT EXPLICITLY SETS THE DIMENSIONS OF BUTTON EACH TIME
     if (enabled){
-        ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+        ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
         return;
     }
 
-    ui->brushButton->setStyleSheet("background-color: rgba(60, 60, 60, 255)");
+    ui->brushButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::setEraser(bool enabled){
     if (enabled){
-        ui->eraseButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+        ui->eraseButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
         return;
     }
 
-    ui->eraseButton->setStyleSheet("background-color: rgba(60, 60, 60, 255)");
+    ui->eraseButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::setPicker(bool enabled){
     if (enabled){
-        ui->dropperButton->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+        ui->dropperButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
         return;
     }
 
-    ui->dropperButton->setStyleSheet("background-color: rgba(60, 60, 60, 255)");
+    ui->dropperButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
