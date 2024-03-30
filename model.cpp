@@ -299,7 +299,6 @@ void Model::loadPressed(QString& filename) {
         }
         frame.setPixels(framePixels);
         newFrames.append(frame);
-
     }
     lock.lock();
     frames.clear();

@@ -223,11 +223,11 @@ void View::loadPressed(){
 void View::resizeCanvas(int size) {
     //qDebug() << frames[0].getPixels();
     qDebug() << "SETTING FRAMES UI";
-    ui->canvas = new Canvas(this);
+    //ui->canvas = new Canvas(this);
     ui->canvas->setGridSize(size);
     qDebug() << "SIZE SET";
     //ui->canvas->updateCanvas(frames[0].getPixels());
-    ui->canvas->update();
+    //ui->canvas->update();
 }
 
 
