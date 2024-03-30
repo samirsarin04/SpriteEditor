@@ -310,7 +310,6 @@ void View::addPressed() {
     frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
     frame->show();
-    frame->setGeometry(100, 50 + (frameButtons.size() * 30), 100, 30);
 }
 
 void View::deletePressed(){
