@@ -48,6 +48,7 @@ public slots:
     void addPressed();
     void projectReset();
     void errorOccurred(const QString &message);
+    void messageBox();
 
 signals:
     void colorValueChanged(QString color, int value);
@@ -57,6 +58,7 @@ signals:
     void loadModel(QString& filename);
     void addFrame();
     void newProjectPressed();
+    void messageYesSelected();
 
 
 private:

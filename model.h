@@ -28,6 +28,7 @@ signals:
     void resizeCanvas(int size);
     void projectReset();
     void errorOccurred(const QString &message);
+    void messageBox();
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -49,6 +50,7 @@ public slots:
     void savePressed(QString& filename);
     void loadPressed(QString& filename);
     void newProjectPressed();
+    void messageYesSelected();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;

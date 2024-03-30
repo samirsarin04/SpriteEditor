@@ -48,6 +48,7 @@ View::View(Model &model, QWidget *parent)
     //connect error signal/slot
     connect(&model, &Model::errorOccurred, this, &View::errorOccurred);
 
+
     //Update Color signal/slot
     connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
 
@@ -67,6 +68,8 @@ View::View(Model &model, QWidget *parent)
     //new project signal
     connect(ui->NewProject, &QAction::triggered, &model, &Model::newProjectPressed);
     connect(&model, &Model::projectReset, this, &View::projectReset);
+    connect(&model, &Model::messageBox, this, &View::messageBox);
+    connect(this, &View::messageYesSelected, &model, &Model::messageYesSelected);
 
     //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
@@ -235,6 +238,15 @@ void View::loadPressed(){
 
 void View::resizeCanvas(int size) {
     ui->canvas->setGridSize(size);
+}
+
+void View::messageBox(){
+    auto reply = QMessageBox::question(nullptr, "New Project", "Are you sure you want to reset the project?",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        emit messageYesSelected();
+    }
 }
 
 void View::projectReset(){

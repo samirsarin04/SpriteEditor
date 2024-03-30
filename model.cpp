@@ -314,6 +314,10 @@ void Model::loadPressed(QString& filename) {
 }
 
 void Model::newProjectPressed(){
+    emit messageBox();
+}
+
+void Model::messageYesSelected(){
     tick.stop();
     //clear QImages once implemented
     frames.clear();
