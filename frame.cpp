@@ -38,6 +38,7 @@ QImage Frame::generateImage(){
         } else {
             currentX += 1;
         }
+        qDebug() << "i: " << i;
     }
     return frameImage;
 }

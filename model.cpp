@@ -120,7 +120,7 @@ void Model::newCanvas(int size){
     this->size = size;
     frames.push_back(Frame(size));
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
-    //frames.push_back(Frame(size));
+    frames.push_back(Frame(size));
     currentFrame = &frames[0];
     updateFPS(0);
 
@@ -139,6 +139,8 @@ void Model::updateFPS(int fps){
 }
 
 void Model::generatePreview(){
+    if(frames.length() == 0)
+        return;
     lock.lock();
     // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
     if(fps == 0 || frames.length() < 2){
@@ -147,8 +149,8 @@ void Model::generatePreview(){
         emit sendImage(temp);
         return;
     }
-    imageIndex = imageIndex == 0 ? 1 : 0;
-    QImage temp = frames[imageIndex].generateImage();
+    imageIndex++;
+    QImage temp = frames[imageIndex%frames.size()].generateImage();
     lock.unlock();
     emit sendImage(temp);
 }
@@ -323,4 +325,25 @@ void Model::messageYesSelected(){
     frames.clear();
     imageIndex = 0;
     emit projectReset();
+}
+
+void Model::displayFrame(){
+    qDebug() << "SHOULD NOT BE CALLED YET";
+    bool flag;
+    int frameIndex = sender()->objectName().toInt(&flag);
+    if(!flag){
+        //conversion failed
+    }
+    //set current frame to frameIndex
+
+    currentFrame = &frames[frameIndex];
+
+}
+
+void Model::addFrame(){
+    //add lock
+    lock.lock();
+    frames.push_back(Frame(size));
+    lock.unlock();
+    qDebug() << "added frame. Total frames: " << frames.size();
 }

@@ -51,6 +51,8 @@ public slots:
     void loadPressed(QString& filename);
     void newProjectPressed();
     void messageYesSelected();
+    void displayFrame();
+    void addFrame();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
@@ -66,7 +68,7 @@ private:
     QString getStyleString(QColor color);
     int activeSwatch;
     QTimer tick;
-    int imageIndex;
+    uint imageIndex;
     std::mutex lock;
     void save(const QString& filename);
 };

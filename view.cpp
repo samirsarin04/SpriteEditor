@@ -111,6 +111,8 @@ View::View(Model &model, QWidget *parent)
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
+
+    connect(this, &View::sendAddFrame, &model, &Model::addFrame);
 }
 
 View::~View()
@@ -302,14 +304,26 @@ void View::setPicker(bool enabled){
 
 void View::addPressed() {
 
-    int vectorSize = frameButtons.size() + 1;
-    QString frameString = QString("Frame %1").arg(vectorSize);
+    qDebug() << "added frame (addPressed)";
+    emit sendAddFrame();
+
+    int vectorSize = frameButtons.size();
+    QString frameString = QString("Frame %1").arg(vectorSize + 1);
+
+    QString frameNumberString = QString("%1").arg(vectorSize);
 
     QPushButton *frame = new QPushButton(frameString);
+    frame->setObjectName(frameNumberString);
     frameButtons.push_back(frame);
     frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
     frame->show();
+
+    connect(frame, &QPushButton::clicked, this, &View::displayFrame);
+}
+
+void View::handleDisplayFrame(){
+    //todo remove
 }
 
 void View::deletePressed(){
