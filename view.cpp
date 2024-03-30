@@ -221,6 +221,7 @@ void View::loadPressed(){
 }
 
 void View::setLoadedFrames(QVector<Frame> frames, int size) {
+    qDebug() << frames[0].getPixels();
     qDebug() << "SETTING FRAMES UI";
     ui->canvas = new Canvas(this);
     ui->canvas->setGridSize(size);

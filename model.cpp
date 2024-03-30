@@ -267,6 +267,7 @@ void Model::savePressed(QString& filename) {
     } else {
         // file failed to save
     }
+    qDebug() << frames[0].getPixels();
 }
 
 
@@ -299,11 +300,18 @@ void Model::loadPressed(QString& filename) {
             frame.setPixels(framePixels);
             newFrames.append(frame);
         } else {
-            qDebug() << "Error: Incorrect number of pixels in frame.";
+            qDebug() << "incorrect number of pixels in frame.";
         }
     }
-    frames = newFrames;
-    emit updateLoadedFrames(frames, size);
+    lock.lock();
+    frames.clear();
+    int i = 0;
+    for(Frame frame: newFrames){
+        frames.insert(i, frame);
+        i++;
+    }
+    //emit updateLoadedFrames(frames, size);
+    lock.unlock();
 }
 
 
