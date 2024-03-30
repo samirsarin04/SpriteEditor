@@ -140,7 +140,7 @@ void Model::updateFPS(int fps){
 void Model::generatePreview(){
     lock.lock();
     // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
-    if(fps == 0){
+    if(fps == 0 || frames.length() < 2){
         QImage temp = currentFrame->generateImage();
         lock.unlock();
         emit sendImage(temp);
