@@ -44,6 +44,7 @@ public slots:
     void savePressed();
     void loadPressed();
     void resizeCanvas(int size);
+    void addPressed();
 
 signals:
     void colorValueChanged(QString color, int value);
@@ -51,9 +52,11 @@ signals:
     void fpsChanged(int fps);
     void saveModel(QString& filename);
     void loadModel(QString& filename);
+    void addFrame();
 
 
 private:
     Ui::View *ui;
+    QVector<QPushButton*> frameButtons;
 };
 #endif // VIEW_H

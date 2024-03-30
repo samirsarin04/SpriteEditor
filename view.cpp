@@ -93,6 +93,9 @@ View::View(Model &model, QWidget *parent)
     connect(ui->playbackSpeedSlider, &QSlider::valueChanged, this, &View::imagePreviewSliderChanged);
     connect(ui->playbackSpeedSpinBox, &QSpinBox::valueChanged, this, &View::imagePreviewSpinBoxChanged);
     connect(this, &View::fpsChanged, &model, &Model::updateFPS);
+
+    //Connect frame stuff
+    connect(ui->addFrameButton, &QPushButton::clicked, this, &View::addPressed);
 }
 
 View::~View()
@@ -261,4 +264,12 @@ void View::setPicker(bool enabled){
     }
 
     ui->dropperButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+}
+
+void View::addPressed() {
+    QPushButton *frame = new QPushButton("Frame ", ui->framesScrollArea);
+    frameButtons.push_back(frame);
+    frame->show();
+    frame->setGeometry(100, 50 + (frameButtons.size() * 30), 100, 30);
+
 }

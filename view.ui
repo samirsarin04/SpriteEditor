@@ -98,7 +98,7 @@
       <x>20</x>
       <y>50</y>
       <width>234</width>
-      <height>648</height>
+      <height>695</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -441,7 +441,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
       <x>930</x>
       <y>240</y>
       <width>266</width>
-      <height>317</height>
+      <height>359</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -499,23 +499,51 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
         </widget>
        </item>
        <item>
-        <widget class="QScrollArea" name="framesScrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>260</width>
-            <height>222</height>
-           </rect>
-          </property>
-         </widget>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QScrollArea" name="framesScrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>235</width>
+              <height>179</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QScrollBar" name="verticalScrollBar">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addFrameButton">
+       <property name="text">
+        <string>Add Frame</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="removeFrameButton">
+       <property name="text">
+        <string>Delete Frame</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -549,7 +577,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
