@@ -25,7 +25,7 @@ signals:
     void toggleEraser(bool enabled);
     void togglePicker(bool enabled);
     void sendImage(QImage image);
-    void updateLoadedFrames(QVector<Frame> frames, int dimension);
+    void resizeCanvas(int size);
 
 public slots:
     void canvasClick(int x, int y, bool click);

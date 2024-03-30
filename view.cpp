@@ -57,7 +57,7 @@ View::View(Model &model, QWidget *parent)
     connect(this, &View::saveModel, &model, &Model::savePressed);
     connect(ui->LoadFromFile, &QAction::triggered, this, &View::loadPressed);
     connect(this, &View::loadModel, &model, &Model::loadPressed);
-    connect(&model, &Model::updateLoadedFrames,this, &View::setLoadedFrames);
+    connect(&model, &Model::resizeCanvas,this, &View::resizeCanvas);
 
     //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
@@ -220,13 +220,13 @@ void View::loadPressed(){
     }
 }
 
-void View::setLoadedFrames(QVector<Frame> frames, int size) {
-    qDebug() << frames[0].getPixels();
+void View::resizeCanvas(int size) {
+    //qDebug() << frames[0].getPixels();
     qDebug() << "SETTING FRAMES UI";
     ui->canvas = new Canvas(this);
     ui->canvas->setGridSize(size);
     qDebug() << "SIZE SET";
-    ui->canvas->updateCanvas(frames[0].getPixels());
+    //ui->canvas->updateCanvas(frames[0].getPixels());
     ui->canvas->update();
 }
 

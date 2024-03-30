@@ -272,6 +272,7 @@ void Model::savePressed(QString& filename) {
 
 
 void Model::loadPressed(QString& filename) {
+    int prevSize = size;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
         // file failed to open
@@ -281,7 +282,7 @@ void Model::loadPressed(QString& filename) {
     file.close();
     QJsonDocument doc = QJsonDocument::fromJson(fileContent);
     QJsonObject json = doc.object();
-    int size = json["pixelDimension"].toInt();
+    size = json["pixelDimension"].toInt();
     QVector<Frame> newFrames;
     QJsonArray framesArray = json["frames"].toArray();
     for (const auto& frameValue : framesArray) {
@@ -310,7 +311,8 @@ void Model::loadPressed(QString& filename) {
         frames.insert(i, frame);
         i++;
     }
-    //emit updateLoadedFrames(frames, size);
+    if(prevSize != size)
+    emit resizeCanvas(size);
     lock.unlock();
 }
 

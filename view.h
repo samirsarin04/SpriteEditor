@@ -43,7 +43,7 @@ public slots:
     void imagePreviewSpinBoxChanged();
     void savePressed();
     void loadPressed();
-    void setLoadedFrames(QVector<Frame> frames,int size);
+    void resizeCanvas(int size);
 
 signals:
     void colorValueChanged(QString color, int value);
