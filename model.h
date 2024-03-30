@@ -26,6 +26,7 @@ signals:
     void togglePicker(bool enabled);
     void sendImage(QImage image);
     void resizeCanvas(int size);
+    void projectReset();
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -46,6 +47,7 @@ public slots:
     void generatePreview();
     void savePressed(QString& filename);
     void loadPressed(QString& filename);
+    void newProjectPressed();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;

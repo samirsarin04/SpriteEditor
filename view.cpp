@@ -59,6 +59,10 @@ View::View(Model &model, QWidget *parent)
     connect(this, &View::loadModel, &model, &Model::loadPressed);
     connect(&model, &Model::resizeCanvas,this, &View::resizeCanvas);
 
+    //new project signal
+    connect(ui->NewProject, &QAction::triggered, &model, &Model::newProjectPressed);
+    connect(&model, &Model::projectReset, this, &View::projectReset);
+
     //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
     connect(ui->greenSlider, &QSlider::valueChanged, this, &View::greenSliderValueChanged);
@@ -167,7 +171,7 @@ void View::canvasSizeSelected(){
     ui->pixelDimensionSlider->setVisible(false);
     ui->pixelDimensionLabel->setVisible(false);
     ui->confirmDimensionButton->setVisible(false);
-
+    ui->previewLabel->setVisible(true);
     emit canvasSizeSignal(ui->pixelDimensionSlider->value());
 }
 
@@ -224,6 +228,13 @@ void View::resizeCanvas(int size) {
     ui->canvas->setGridSize(size);
 }
 
+void View::projectReset(){
+    ui->canvas->setVisible(false);
+    ui->previewLabel->setVisible(false);
+    ui->pixelDimensionLabel->setVisible(true);
+    ui->pixelDimensionSlider->setVisible(true);
+    ui->confirmDimensionButton->setVisible(true);
+}
 
 void View::updateColorPreview(QString styleString){
     ui->colorPreview->setStyleSheet(styleString);

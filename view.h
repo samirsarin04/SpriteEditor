@@ -44,6 +44,7 @@ public slots:
     void savePressed();
     void loadPressed();
     void resizeCanvas(int size);
+    void projectReset();
 
 signals:
     void colorValueChanged(QString color, int value);
@@ -51,6 +52,7 @@ signals:
     void fpsChanged(int fps);
     void saveModel(QString& filename);
     void loadModel(QString& filename);
+    void newProjectPressed();
 
 
 private:

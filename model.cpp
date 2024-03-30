@@ -123,6 +123,7 @@ void Model::newCanvas(int size){
     //frames.push_back(Frame(size));
     currentFrame = &frames[0];
     updateFPS(0);
+
 }
 
 void Model::updateFPS(int fps){
@@ -267,7 +268,6 @@ void Model::savePressed(QString& filename) {
     } else {
         // file failed to save
     }
-    qDebug() << frames[0].getPixels();
 }
 
 
@@ -312,4 +312,10 @@ void Model::loadPressed(QString& filename) {
     lock.unlock();
 }
 
-
+void Model::newProjectPressed(){
+    tick.stop();
+    //clear QImages once implemented
+    frames.clear();
+    imageIndex = 0;
+    emit projectReset();
+}

@@ -98,7 +98,7 @@
       <x>20</x>
       <y>50</y>
       <width>234</width>
-      <height>648</height>
+      <height>665</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -509,7 +509,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
             <x>0</x>
             <y>0</y>
             <width>260</width>
-            <height>222</height>
+            <height>213</height>
            </rect>
           </property>
          </widget>
@@ -549,7 +549,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
@@ -558,6 +558,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
     </property>
     <addaction name="SaveToFile"/>
     <addaction name="LoadFromFile"/>
+    <addaction name="NewProject"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -576,6 +577,11 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
   <action name="LoadFromFile">
    <property name="text">
     <string>Load from file</string>
+   </property>
+  </action>
+  <action name="NewProject">
+   <property name="text">
+    <string>New Project</string>
    </property>
   </action>
  </widget>
