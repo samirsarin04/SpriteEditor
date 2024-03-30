@@ -180,6 +180,10 @@ void View::pixelDimensionSliderChanged(){
 void View::canvasSizeSelected(){
     ui->transparentBackdrop->setVisible(true);
     ui->canvas->setVisible(true);
+    int size = ui->pixelDimensionSlider->value();
+    int pixelSize = (640 / size);
+    int canvasSize = pixelSize * size;
+    ui->transparentBackdrop->setFixedSize(canvasSize, canvasSize);
     ui->canvas->setGridSize(ui->pixelDimensionSlider->value());
     ui->pixelDimensionSlider->setVisible(false);
     ui->pixelDimensionLabel->setVisible(false);
@@ -239,6 +243,9 @@ void View::loadPressed(){
 
 void View::resizeCanvas(int size) {
     ui->canvas->setGridSize(size);
+    int pixelSize = (640 / size);
+    int canvasSize = pixelSize * size;
+    ui->transparentBackdrop->setFixedSize(canvasSize, canvasSize);
 }
 
 void View::messageBox(){
@@ -270,7 +277,7 @@ void View::setBrush(bool enabled){
         return;
     }
 
-    ui->brushButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+    ui->brushButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::setEraser(bool enabled){
@@ -279,7 +286,7 @@ void View::setEraser(bool enabled){
         return;
     }
 
-    ui->eraseButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+    ui->eraseButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::setPicker(bool enabled){
@@ -288,7 +295,7 @@ void View::setPicker(bool enabled){
         return;
     }
 
-    ui->dropperButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+    ui->dropperButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::addPressed() {
