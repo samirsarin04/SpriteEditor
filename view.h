@@ -46,6 +46,7 @@ public slots:
     void loadPressed();
     void resizeCanvas(int size);
     void addPressed();
+    void deletePressed();
     void projectReset();
     void errorOccurred(const QString &message);
     void messageBox();
@@ -57,6 +58,7 @@ signals:
     void saveModel(QString& filename);
     void loadModel(QString& filename);
     void addFrame();
+    void deleteFrame();
     void newProjectPressed();
     void messageYesSelected();
 

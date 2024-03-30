@@ -108,6 +108,7 @@ View::View(Model &model, QWidget *parent)
 
     //Connect frame stuff
     connect(ui->addFrameButton, &QPushButton::clicked, this, &View::addPressed);
+    connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
 }
 
 View::~View()
@@ -295,7 +296,15 @@ void View::addPressed() {
     frameButtons.push_back(frame);
     frame->show();
     frame->setGeometry(100, 50 + (frameButtons.size() * 30), 100, 30);
+}
 
+void View::deletePressed(){
+
+    if(frameButtons.size()>0)
+    {
+        frameButtons[frameButtons.size()-1]->hide();
+        frameButtons.pop_back();
+    }
 }
 
 void View::errorOccurred(const QString &message){
