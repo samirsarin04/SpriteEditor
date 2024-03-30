@@ -43,8 +43,9 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QSlider::handle:pressed {background-color: rgb(0, 255, 255);};
-</string>
+     <string notr="true">QSlider::handle {background-color: rgb(140, 140, 140);}
+QSlider::handle:hover {background-color: rgb(100, 100, 100);}
+QSlider::handle:pressed {background-color: rgb(0, 0, 0);};</string>
     </property>
     <property name="minimum">
      <number>2</number>
@@ -257,6 +258,11 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
          </item>
          <item>
           <widget class="QSlider" name="redSlider">
+           <property name="styleSheet">
+            <string notr="true">QSlider::handle {background-color: rgb(255, 0, 0);}
+QSlider::handle:hover {background-color: rgb(205, 0, 0);}
+QSlider::handle:pressed {background-color: rgb(155, 0, 0);};</string>
+           </property>
            <property name="maximum">
             <number>255</number>
            </property>
@@ -290,6 +296,11 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
            </item>
            <item>
             <widget class="QSlider" name="greenSlider">
+             <property name="styleSheet">
+              <string notr="true">QSlider::handle {background-color: rgb(0, 245, 0);}
+QSlider::handle:hover {background-color: rgb(0, 205, 0);}
+QSlider::handle:pressed {background-color: rgb(0, 155, 0);};</string>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -323,6 +334,11 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
              </item>
              <item>
               <widget class="QSlider" name="blueSlider">
+               <property name="styleSheet">
+                <string notr="true">QSlider::handle {background-color: rgb(0, 0, 255);}
+QSlider::handle:hover {background-color: rgb(0, 0, 205);}
+QSlider::handle:pressed {background-color: rgb(0, 0, 155);};</string>
+               </property>
                <property name="maximum">
                 <number>255</number>
                </property>
@@ -361,6 +377,11 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
              </item>
              <item>
               <widget class="QSlider" name="alphaSlider">
+               <property name="styleSheet">
+                <string notr="true">QSlider::handle {background-color: rgb(140, 140, 140);}
+QSlider::handle:hover {background-color: rgb(100, 100, 100);}
+QSlider::handle:pressed {background-color: rgb(0, 0, 0);};</string>
+               </property>
                <property name="maximum">
                 <number>255</number>
                </property>
@@ -477,6 +498,11 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
        </item>
        <item>
         <widget class="QSlider" name="playbackSpeedSlider">
+         <property name="styleSheet">
+          <string notr="true">QSlider::handle {background-color: rgb(140, 140, 140);}
+QSlider::handle:hover {background-color: rgb(100, 100, 100);}
+QSlider::handle:pressed {background-color: rgb(0, 0, 0);};</string>
+         </property>
          <property name="minimum">
           <number>0</number>
          </property>
@@ -515,8 +541,8 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>265</width>
-            <height>213</height>
+            <width>260</width>
+            <height>197</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -554,15 +580,23 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
       <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid black;
+border-color: rgb(180, 180, 180);</string>
+    </property>
    </widget>
    <widget class="QLabel" name="previewLabel">
     <property name="geometry">
      <rect>
-      <x>960</x>
+      <x>950</x>
       <y>20</y>
       <width>200</width>
       <height>200</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 2px solid black;
+border-color: rgb(180, 180, 180);</string>
     </property>
     <property name="text">
      <string/>
@@ -578,7 +612,9 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/backdrops/canvasBackground);</string>
+     <string notr="true">background-image: url(:/backdrops/canvasBackground);
+border: 2px solid black;
+border-color: rgb(180, 180, 180);</string>
     </property>
     <property name="text">
      <string/>

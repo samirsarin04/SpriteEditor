@@ -110,6 +110,7 @@ View::View(Model &model, QWidget *parent)
     connect(ui->addFrameButton, &QPushButton::clicked, this, &View::addPressed);
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
 }
 
 View::~View()
@@ -181,6 +182,10 @@ void View::pixelDimensionSliderChanged(){
 void View::canvasSizeSelected(){
     ui->transparentBackdrop->setVisible(true);
     ui->canvas->setVisible(true);
+    int size = ui->pixelDimensionSlider->value();
+    int pixelSize = (640 / size);
+    int canvasSize = pixelSize * size;
+    ui->transparentBackdrop->setFixedSize(canvasSize, canvasSize);
     ui->canvas->setGridSize(ui->pixelDimensionSlider->value());
     ui->pixelDimensionSlider->setVisible(false);
     ui->pixelDimensionLabel->setVisible(false);
@@ -240,6 +245,9 @@ void View::loadPressed(){
 
 void View::resizeCanvas(int size) {
     ui->canvas->setGridSize(size);
+    int pixelSize = (640 / size);
+    int canvasSize = pixelSize * size;
+    ui->transparentBackdrop->setFixedSize(canvasSize, canvasSize);
 }
 
 void View::messageBox(){
@@ -271,7 +279,7 @@ void View::setBrush(bool enabled){
         return;
     }
 
-    ui->brushButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+    ui->brushButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::setEraser(bool enabled){
@@ -280,7 +288,7 @@ void View::setEraser(bool enabled){
         return;
     }
 
-    ui->eraseButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+    ui->eraseButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::setPicker(bool enabled){
@@ -289,7 +297,7 @@ void View::setPicker(bool enabled){
         return;
     }
 
-    ui->dropperButton->setStyleSheet("background-color: rgba(60, 60, 60, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+    ui->dropperButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
 void View::addPressed() {
@@ -302,7 +310,16 @@ void View::addPressed() {
     frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
     frame->show();
+    frame->setGeometry(100, 50 + (frameButtons.size() * 30), 100, 30);
+}
 
+void View::deletePressed(){
+
+    if(frameButtons.size()>0)
+    {
+        frameButtons[frameButtons.size()-1]->hide();
+        frameButtons.pop_back();
+    }
 }
 
 void View::errorOccurred(const QString &message){
