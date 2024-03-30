@@ -297,12 +297,9 @@ void Model::loadPressed(QString& filename) {
             QColor color(red, green, blue, alpha);
             framePixels.append(color);
         }
-        if (framePixels.size() == size * size) {
-            frame.setPixels(framePixels);
-            newFrames.append(frame);
-        } else {
-            qDebug() << "incorrect number of pixels in frame.";
-        }
+        frame.setPixels(framePixels);
+        newFrames.append(frame);
+
     }
     lock.lock();
     frames.clear();
