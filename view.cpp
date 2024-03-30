@@ -108,6 +108,8 @@ View::View(Model &model, QWidget *parent)
 
     //Connect frame stuff
     connect(ui->addFrameButton, &QPushButton::clicked, this, &View::addPressed);
+
+    ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 }
 
 View::~View()
@@ -291,10 +293,15 @@ void View::setPicker(bool enabled){
 }
 
 void View::addPressed() {
-    QPushButton *frame = new QPushButton("Frame ", ui->framesScrollArea);
+
+    int vectorSize = frameButtons.size() + 1;
+    QString frameString = QString("Frame %1").arg(vectorSize);
+
+    QPushButton *frame = new QPushButton(frameString);
     frameButtons.push_back(frame);
+    frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
     frame->show();
-    frame->setGeometry(100, 50 + (frameButtons.size() * 30), 100, 30);
 
 }
 
