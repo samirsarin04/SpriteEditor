@@ -2,7 +2,7 @@
 #include <iostream>
 #include <QDebug>
 
-Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pixelDimension, pixelDimension, QImage::Format_RGB16) {
+Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pixelDimension, pixelDimension, QImage::Format_RGBA64) {
     firstStroke = true;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
