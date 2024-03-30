@@ -563,7 +563,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
     <property name="title">
-     <string>Save</string>
+     <string>File</string>
     </property>
     <addaction name="SaveToFile"/>
     <addaction name="LoadFromFile"/>
