@@ -4,6 +4,11 @@
 #include <QObject>
 #include "frame.h"
 #include <QTimer>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
 
 class Model : public QObject
 {
@@ -20,6 +25,7 @@ signals:
     void toggleEraser(bool enabled);
     void togglePicker(bool enabled);
     void sendImage(QImage image);
+    void updateLoadedFrames(QVector<Frame> frames, int dimension);
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -38,6 +44,8 @@ public slots:
     void swatch6Clicked();
     void undoAction();
     void generatePreview();
+    void savePressed(QString& filename);
+    void loadPressed(QString& filename);
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
@@ -55,6 +63,7 @@ private:
     QTimer tick;
     int imageIndex;
     std::mutex lock;
+    void save(const QString& filename);
 };
 
 #endif // MODEL_H

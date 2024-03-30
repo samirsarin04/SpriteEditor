@@ -88,3 +88,11 @@ QVector<QColor> Frame::undoAction(){
         return pixels;
     }
 }
+
+void Frame::setPixels(const QVector<QColor>& newPixels) {
+    if (newPixels.size() == pixelDimension * pixelDimension) {
+        pixels = newPixels;
+    } else {
+        qDebug() << "Error: Pixel data size mismatch.";
+    }
+}

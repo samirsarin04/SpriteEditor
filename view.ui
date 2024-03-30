@@ -518,7 +518,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
             <x>0</x>
             <y>0</y>
             <width>260</width>
-            <height>201</height>
+            <height>197</height>
            </rect>
           </property>
          </widget>
@@ -558,13 +558,15 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSprite_Editor">
     <property name="title">
      <string>Save</string>
     </property>
+    <addaction name="SaveToFile"/>
+    <addaction name="LoadFromFile"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -575,6 +577,16 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="SaveToFile">
+   <property name="text">
+    <string>Save to file</string>
+   </property>
+  </action>
+  <action name="LoadFromFile">
+   <property name="text">
+    <string>Load from file</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

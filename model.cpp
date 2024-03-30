@@ -2,6 +2,7 @@
 #include <QDebug>
 #include<iostream>
 
+
 Model::Model(QObject *parent)
     : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255), activeSwatch(0)
 {
@@ -197,28 +198,6 @@ void Model::swatch6Clicked(){
     addSwatch(5);
 }
 
-// void Model::addSwatch(int swatchNumber) {
-//     currentTool = paint;
-//     if (swatches[swatchNumber]!=currentColor && swatches[swatchNumber] == QColor(0,0,0)){
-//         swatches[swatchNumber] = currentColor;
-//         QString styleString = getStyleString(currentColor);
-//         emit fillSwatch(swatchNumber+1, styleString);
-//     }
-//     else if (swatches[swatchNumber] == currentColor)
-//     {
-//         swatches[swatchNumber] = QColor(0,0,0);
-//         QString styleString = getStyleString(swatches[swatchNumber]);
-//         emit fillSwatch(swatchNumber+1, styleString);
-//     }
-//     else if (swatches[swatchNumber] != currentColor)
-//     {
-//         currentColor = swatches[swatchNumber];
-//         QString styleString = getStyleString(currentColor);
-//         emit fillSwatch(swatchNumber+1, styleString);
-//         emit updateColorSliders(currentColor);
-//     }
-// }
-
 void Model::addSwatch(int swatchNumber) {
     detoggleActiveButton(paint);
     currentTool = paint;
@@ -258,5 +237,71 @@ void Model::detoggleActiveButton(Tool tool){
     default:
         break;
     }
+}
+
+void Model::savePressed(QString& filename) {
+    QJsonObject json;
+    json["size"] = size;
+    QJsonArray framesArray;
+    for (Frame& frame : frames) {
+        QJsonArray framePixels;
+        for (QColor& color : frame.getPixels()) {
+            QJsonObject pixelObject;
+            pixelObject["r"] = color.red();
+            pixelObject["g"] = color.green();
+            pixelObject["b"] = color.blue();
+            pixelObject["a"] = color.alpha();
+            framePixels.append(pixelObject);
+        }
+        QJsonObject frameObject;
+        frameObject["pixels"] = framePixels;
+        framesArray.append(frameObject);
+    }
+    json["frames"] = framesArray;
+
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(QJsonDocument(json).toJson());
+        file.close();
+    } else {
+        //file can't be saved
+    }
+}
+
+void Model::loadPressed(QString& filename) {
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        //file can't be opened
+        return;
+    }
+    QByteArray fileContent = file.readAll();
+    file.close();
+    QJsonDocument doc = QJsonDocument::fromJson(fileContent);
+    QJsonObject json = doc.object();
+    size = json["size"].toInt();
+    QVector<Frame> newFrames;
+    QJsonArray framesArray = json["frames"].toArray();
+    for (const auto& frameValue : framesArray) {
+        Frame frame(size);
+        QVector<QColor> framePixels;
+        QJsonArray framePixelsArray = frameValue.toObject()["pixels"].toArray();
+        for (const auto& pixelValue : framePixelsArray) {
+            QJsonObject pixelObject = pixelValue.toObject();
+            int red = pixelObject["r"].toInt();
+            int green = pixelObject["g"].toInt();
+            int blue = pixelObject["b"].toInt();
+            int alpha = pixelObject["a"].toInt();
+            QColor color(red, green, blue, alpha);
+            framePixels.append(color);
+        }
+
+        if (framePixels.size() == size * size) {
+            frame.setPixels(framePixels);
+            newFrames.append(frame);
+        }
+    }
+    emit updateLoadedFrames(newFrames, size);
+    frames = newFrames;
+    qDebug() << "frames set";
 }
 

@@ -31,6 +31,7 @@ public:
     bool getFirstStroke();
     void setFirstStroke(bool firstStroke);
     QImage generateImage();
+    void setPixels(const QVector<QColor>& newPixels);
 };
 
 #endif // FRAME_H

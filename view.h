@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 #include "model.h"
 #include "canvas.h"
 #include "button.h"
@@ -40,11 +41,17 @@ public slots:
     void setImagePreview(QImage image);
     void imagePreviewSliderChanged();
     void imagePreviewSpinBoxChanged();
+    void savePressed();
+    void loadPressed();
+    void setLoadedFrames(QVector<Frame> frames,int size);
 
 signals:
     void colorValueChanged(QString color, int value);
     void canvasSizeSignal(int size);
     void fpsChanged(int fps);
+    void saveModel(QString& filename);
+    void loadModel(QString& filename);
+
 
 private:
     Ui::View *ui;

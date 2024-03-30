@@ -52,6 +52,13 @@ View::View(Model &model, QWidget *parent)
     connect(ui->dropperButton, &QPushButton::clicked, &model, &Model::toolToDropper);
     connect(ui->undoButton, &QPushButton::clicked, &model, &Model::undoAction);
 
+    //json connections
+    connect(ui->SaveToFile, &QAction::triggered, this, &View::savePressed);
+    connect(this, &View::saveModel, &model, &Model::savePressed);
+    connect(ui->LoadFromFile, &QAction::triggered, this, &View::loadPressed);
+    connect(this, &View::loadModel, &model, &Model::loadPressed);
+    connect(&model, &Model::updateLoadedFrames,this, &View::setLoadedFrames);
+
     //RGBA Slider signals/slots
     connect(ui->redSlider, &QSlider::valueChanged, this, &View::redSliderValueChanged);
     connect(ui->greenSlider, &QSlider::valueChanged, this, &View::greenSliderValueChanged);
@@ -194,6 +201,34 @@ void View::updateSwatchColor(int swatch, QString styleString){
         ui->swatch6->setStyleSheet(styleString);
     }
 }
+
+void View::savePressed() {
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                    "/home/untitled.json",
+                                                    tr("JSON (*.json)"));
+    if (!fileName.isEmpty()) {
+        emit saveModel(fileName);
+    }
+}
+
+void View::loadPressed(){
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Save File"),
+                                                    "/home/untitled.json",
+                                                    tr("JSON (*.json)"));
+    if (!fileName.isEmpty()) {
+        emit loadModel(fileName);
+    }
+}
+
+void View::setLoadedFrames(QVector<Frame> frames, int size) {
+    qDebug() << "SETTING FRAMES UI";
+    ui->canvas = new Canvas(this);
+    ui->canvas->setGridSize(size);
+    qDebug() << "SIZE SET";
+    ui->canvas->updateCanvas(frames[0].getPixels());
+    ui->canvas->update();
+}
+
 
 void View::updateColorPreview(QString styleString){
     ui->colorPreview->setStyleSheet(styleString);
