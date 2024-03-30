@@ -204,8 +204,8 @@ void View::updateSwatchColor(int swatch, QString styleString){
 
 void View::savePressed() {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                    "/home/untitled.json",
-                                                    tr("JSON (*.json)"));
+                                                    "/home/untitled.ssp",
+                                                    tr("JSON (*.ssp)"));
     if (!fileName.isEmpty()) {
         emit saveModel(fileName);
     }
@@ -213,21 +213,15 @@ void View::savePressed() {
 
 void View::loadPressed(){
     QString fileName = QFileDialog::getOpenFileName(this, tr("Save File"),
-                                                    "/home/untitled.json",
-                                                    tr("JSON (*.json)"));
+                                                    "/home/untitled.ssp",
+                                                    tr("JSON (*.ssp)"));
     if (!fileName.isEmpty()) {
         emit loadModel(fileName);
     }
 }
 
 void View::resizeCanvas(int size) {
-    //qDebug() << frames[0].getPixels();
-    qDebug() << "SETTING FRAMES UI";
-    //ui->canvas = new Canvas(this);
     ui->canvas->setGridSize(size);
-    qDebug() << "SIZE SET";
-    //ui->canvas->updateCanvas(frames[0].getPixels());
-    //ui->canvas->update();
 }
 
 
