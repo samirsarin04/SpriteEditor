@@ -45,6 +45,9 @@ View::View(Model &model, QWidget *parent)
     connect(&model, &Model::sendFrameToCanvas, ui->canvas, &Canvas::updateCanvas);
     connect(ui->canvas, &Canvas::canvasMoveSignal, &model, &Model::canvasMovement);
 
+    //connect error signal/slot
+    connect(&model, &Model::errorOccurred, this, &View::errorOccurred);
+
     //Update Color signal/slot
     connect(this, &View::colorValueChanged, &model, &Model::colorChanged);
 
@@ -281,4 +284,8 @@ void View::addPressed() {
     frame->show();
     frame->setGeometry(100, 50 + (frameButtons.size() * 30), 100, 30);
 
+}
+
+void View::errorOccurred(const QString &message){
+    QMessageBox::critical(this, "Error", message);
 }

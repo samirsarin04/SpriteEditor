@@ -75,7 +75,7 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         case dropper:
             return;
         default:
-            // throw _exception("No tool selected");
+            emit errorOccurred("no tool selected");
             return;
         }
     }
@@ -260,13 +260,10 @@ void Model::savePressed(QString& filename) {
 
     QFile file(filename);
     if (file.open(QIODevice::WriteOnly)) {
-
         file.write(QJsonDocument(json).toJson());
-        //file.write(QJsonDocument(json).toJson(QJsonDocument::Compact)); this version puts it on the same line, choose which we want
-
         file.close();
     } else {
-        // file failed to save
+        emit errorOccurred("File failed to save");
     }
 }
 
@@ -275,12 +272,16 @@ void Model::loadPressed(QString& filename) {
     int prevSize = size;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        // file failed to open
+        emit errorOccurred("File failed to open");
         return;
     }
     QByteArray fileContent = file.readAll();
     file.close();
     QJsonDocument doc = QJsonDocument::fromJson(fileContent);
+    if (doc.isNull() || !doc.isObject()) {
+        emit errorOccurred("Invalid JSON format");
+        return;
+    }
     QJsonObject json = doc.object();
     size = json["pixelDimension"].toInt();
     QVector<Frame> newFrames;

@@ -6,6 +6,7 @@
 #include "model.h"
 #include "canvas.h"
 #include "button.h"
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -46,6 +47,7 @@ public slots:
     void resizeCanvas(int size);
     void addPressed();
     void projectReset();
+    void errorOccurred(const QString &message);
 
 signals:
     void colorValueChanged(QString color, int value);

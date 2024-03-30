@@ -27,6 +27,7 @@ signals:
     void sendImage(QImage image);
     void resizeCanvas(int size);
     void projectReset();
+    void errorOccurred(const QString &message);
 
 public slots:
     void canvasClick(int x, int y, bool click);
