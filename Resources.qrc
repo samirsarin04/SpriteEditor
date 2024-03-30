@@ -6,4 +6,7 @@
         <file alias="paintBrushIcon">resourceFiles/paintbrush.png</file>
         <file alias="undoIcon">resourceFiles/undo.png</file>
     </qresource>
+    <qresource prefix="/backdrops">
+        <file alias="canvasBackground">resourceFiles/transparent.jpg</file>
+    </qresource>
 </RCC>

@@ -8,7 +8,7 @@ Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pi
     canvasSize = pixelSize * pixelDimension;
     //Default initializes frame to white, will be changed later
     for(int i = 0; i < (pixelDimension * pixelDimension); i++){
-        pixels.push_back(QColor(255, 255, 255, 255));
+        pixels.push_back(QColor(0, 0, 0, 0));
     }
 }
 

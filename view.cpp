@@ -8,8 +8,9 @@ View::View(Model &model, QWidget *parent)
     , ui(new Ui::View)
 {
     ui->setupUi(this);
-    this->setStyleSheet("background-color: rgb(60, 60, 60)");
+    this->setStyleSheet("background-color: rgb(200, 200, 200)");
     ui->canvas->setVisible(false);
+    ui->transparentBackdrop->setVisible(false);
 
     //Set Color Preview to default value
     ui->colorPreview->setStyleSheet("background-color: rgb(255, 0, 255)");
@@ -21,6 +22,7 @@ View::View(Model &model, QWidget *parent)
     ui->dropperButton->setIcon(QIcon(":/toolBarIcons/dropperIcon"));
     ui->cloneButton->setIcon(QIcon(":/toolBarIcons/cloneIcon"));
     ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
+
 
     //Set brush to active tool visually
     ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
@@ -166,6 +168,7 @@ void View::pixelDimensionSliderChanged(){
 }
 
 void View::canvasSizeSelected(){
+    ui->transparentBackdrop->setVisible(true);
     ui->canvas->setVisible(true);
     ui->canvas->setGridSize(ui->pixelDimensionSlider->value());
     ui->pixelDimensionSlider->setVisible(false);
@@ -229,6 +232,7 @@ void View::resizeCanvas(int size) {
 }
 
 void View::projectReset(){
+    ui->transparentBackdrop->setVisible(false);
     ui->canvas->setVisible(false);
     ui->previewLabel->setVisible(false);
     ui->pixelDimensionLabel->setVisible(true);
