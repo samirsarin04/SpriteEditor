@@ -120,7 +120,7 @@ void Model::newCanvas(int size){
     this->size = size;
     frames.push_back(Frame(size));
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
-    frames.push_back(Frame(size));
+    //frames.push_back(Frame(size));
     currentFrame = &frames[0];
     updateFPS(0);
 }
@@ -241,67 +241,69 @@ void Model::detoggleActiveButton(Tool tool){
 
 void Model::savePressed(QString& filename) {
     QJsonObject json;
-    json["size"] = size;
+    json["pixelDimension"] = size;
     QJsonArray framesArray;
     for (Frame& frame : frames) {
-        QJsonArray framePixels;
-        for (QColor& color : frame.getPixels()) {
-            QJsonObject pixelObject;
-            pixelObject["r"] = color.red();
-            pixelObject["g"] = color.green();
-            pixelObject["b"] = color.blue();
-            pixelObject["a"] = color.alpha();
-            framePixels.append(pixelObject);
-        }
         QJsonObject frameObject;
-        frameObject["pixels"] = framePixels;
+        QJsonArray rgbaValues;
+        for (const QColor& color : frame.getPixels()) {
+            rgbaValues.append(color.red());
+            rgbaValues.append(color.green());
+            rgbaValues.append(color.blue());
+            rgbaValues.append(color.alpha());
+        }
+        frameObject["RGBAValues"] = rgbaValues;
         framesArray.append(frameObject);
     }
     json["frames"] = framesArray;
 
     QFile file(filename);
     if (file.open(QIODevice::WriteOnly)) {
+
         file.write(QJsonDocument(json).toJson());
+        //file.write(QJsonDocument(json).toJson(QJsonDocument::Compact)); this version puts it on the same line, choose which we want
+
         file.close();
     } else {
-        //file can't be saved
+        // file failed to save
     }
 }
+
 
 void Model::loadPressed(QString& filename) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        //file can't be opened
+        // file failed to open
         return;
     }
     QByteArray fileContent = file.readAll();
     file.close();
     QJsonDocument doc = QJsonDocument::fromJson(fileContent);
     QJsonObject json = doc.object();
-    size = json["size"].toInt();
+    int size = json["pixelDimension"].toInt();
     QVector<Frame> newFrames;
     QJsonArray framesArray = json["frames"].toArray();
     for (const auto& frameValue : framesArray) {
         Frame frame(size);
         QVector<QColor> framePixels;
-        QJsonArray framePixelsArray = frameValue.toObject()["pixels"].toArray();
-        for (const auto& pixelValue : framePixelsArray) {
-            QJsonObject pixelObject = pixelValue.toObject();
-            int red = pixelObject["r"].toInt();
-            int green = pixelObject["g"].toInt();
-            int blue = pixelObject["b"].toInt();
-            int alpha = pixelObject["a"].toInt();
+        QJsonArray rgbaValues = frameValue.toObject()["RGBAValues"].toArray();
+        for (int i = 0; i < rgbaValues.size(); i += 4) {
+            int red = rgbaValues[i].toInt();
+            int green = rgbaValues[i + 1].toInt();
+            int blue = rgbaValues[i + 2].toInt();
+            int alpha = rgbaValues[i + 3].toInt();
             QColor color(red, green, blue, alpha);
             framePixels.append(color);
         }
-
         if (framePixels.size() == size * size) {
             frame.setPixels(framePixels);
             newFrames.append(frame);
+        } else {
+            qDebug() << "Error: Incorrect number of pixels in frame.";
         }
     }
-    emit updateLoadedFrames(newFrames, size);
     frames = newFrames;
-    qDebug() << "frames set";
+    emit updateLoadedFrames(frames, size);
 }
+
 
