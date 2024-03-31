@@ -12,6 +12,7 @@ SOURCES += \
     button.cpp \
     canvas.cpp \
     frame.cpp \
+    framepreviewbutton.cpp \
     main.cpp \
     model.cpp \
     view.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     button.h \
     canvas.h \
     frame.h \
+    framepreviewbutton.h \
     model.h \
     view.h
 

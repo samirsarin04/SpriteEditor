@@ -118,7 +118,7 @@ void Model::colorChanged(QString color, int value) {
 void Model::newCanvas(int size){
     frames.clear();
     this->size = size;
-    frames.push_back(Frame(size));
+    //frames.push_back(Frame(size));
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
     frames.push_back(Frame(size));
     currentFrame = &frames[0];
@@ -150,9 +150,9 @@ void Model::generatePreview(){
         return;
     }
     imageIndex++;
-    QImage temp = frames[imageIndex%frames.size()].generateImage();
+    //QImage temp = frames[imageIndex%frames.size()].generateImage();
     lock.unlock();
-    emit sendImage(temp);
+    //emit sendImage(temp);
 }
 
 void Model::toolToPaint(){
@@ -214,11 +214,11 @@ void Model::addSwatch(int swatchNumber) {
 
 QString Model::getStyleString(QColor color){
     return QString("background-color: rgba("
-        + QString::number(color.red()) + ","
-        + QString::number(color.green()) + ","
-        + QString::number(color.blue()) + ","
-        + QString::number(color.alpha()) + ");");
-    }
+                   + QString::number(color.red()) + ","
+                   + QString::number(color.green()) + ","
+                   + QString::number(color.blue()) + ","
+                   + QString::number(color.alpha()) + ");");
+}
 
 void Model::undoAction(){
     emit sendFrameToCanvas(currentFrame->undoAction());
@@ -311,7 +311,7 @@ void Model::loadPressed(QString& filename) {
         i++;
     }
     if(prevSize != size)
-    emit resizeCanvas(size);
+        emit resizeCanvas(size);
     lock.unlock();
 }
 
@@ -342,8 +342,15 @@ void Model::displayFrame(){
 
 void Model::addFrame(){
     //add lock
+    qDebug() << currentFrame;
     lock.lock();
     frames.push_back(Frame(size));
     lock.unlock();
+    currentFrame = &frames[0];
+    qDebug() << currentFrame;
     qDebug() << "added frame. Total frames: " << frames.size();
+}
+
+void Model::changeFrame(){
+
 }

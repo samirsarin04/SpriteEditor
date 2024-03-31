@@ -107,12 +107,14 @@ View::View(Model &model, QWidget *parent)
     connect(this, &View::fpsChanged, &model, &Model::updateFPS);
 
     //Connect frame stuff
-    connect(ui->addFrameButton, &QPushButton::clicked, this, &View::addPressed);
+    connect(ui->addFrameButton, &QPushButton::clicked, &model, &Model::addFrame);
+
+    connect(&model,&Model::changeFrame, this, &View::addPressed);
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
+    //connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
 
-    connect(this, &View::sendAddFrame, &model, &Model::addFrame);
+    //connect(this, &View::sendAddFrame, &model, &Model::addFrame);
 }
 
 View::~View()
@@ -254,7 +256,7 @@ void View::resizeCanvas(int size) {
 
 void View::messageBox(){
     auto reply = QMessageBox::question(nullptr, "New Project", "Are you sure you want to reset the project?",
-                                  QMessageBox::Yes | QMessageBox::No);
+                                       QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
         emit messageYesSelected();
@@ -305,21 +307,21 @@ void View::setPicker(bool enabled){
 void View::addPressed() {
 
     qDebug() << "added frame (addPressed)";
-    emit sendAddFrame();
+    //emit sendAddFrame();
 
     int vectorSize = frameButtons.size();
     QString frameString = QString("Frame %1").arg(vectorSize + 1);
 
     QString frameNumberString = QString("%1").arg(vectorSize);
 
-    QPushButton *frame = new QPushButton(frameString);
+    FramePreviewButton *frame = new FramePreviewButton();
     frame->setObjectName(frameNumberString);
-    frameButtons.push_back(frame);
-    frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    //frameButtons.push_back(frame);
+    //frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
     frame->show();
 
-    connect(frame, &QPushButton::clicked, this, &View::displayFrame);
+    //connect(frame, &QPushButton::clicked, this, &View::displayFrame);
 }
 
 void View::handleDisplayFrame(){

@@ -7,6 +7,7 @@
 #include "canvas.h"
 #include "button.h"
 #include <QMessageBox>
+#include "framepreviewbutton.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -67,6 +68,6 @@ signals:
 
 private:
     Ui::View *ui;
-    QVector<QPushButton*> frameButtons;
+    QVector<FramePreviewButton*> frameButtons;
 };
 #endif // VIEW_H
