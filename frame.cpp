@@ -2,7 +2,13 @@
 #include <iostream>
 #include <QDebug>
 
+
+int Frame::globalID = 0;
 Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pixelDimension, pixelDimension, QImage::Format_RGBA64) {
+    //qDebug()<< ID;
+    ID = globalID;
+    ++globalID;
+    qDebug()<<"After: "<< ID;
     firstStroke = true;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;

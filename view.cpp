@@ -5,7 +5,7 @@
 
 View::View(Model &model, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::View)
+    , ui(new Ui::View),modelPtr(&model)
 {
     ui->setupUi(this);
     this->setStyleSheet("background-color: rgb(200, 200, 200)");
@@ -109,7 +109,7 @@ View::View(Model &model, QWidget *parent)
     //Connect frame stuff
     connect(ui->addFrameButton, &QPushButton::clicked, &model, &Model::addFrame);
 
-    connect(&model,&Model::changeFrame, this, &View::addPressed);
+    connect(&model,&Model::createPreviewButton, this, &View::addPressed);
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     //connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
@@ -304,7 +304,7 @@ void View::setPicker(bool enabled){
     ui->dropperButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
-void View::addPressed() {
+void View::addPressed(int ID) {
 
     qDebug() << "added frame (addPressed)";
     //emit sendAddFrame();
@@ -314,14 +314,16 @@ void View::addPressed() {
 
     QString frameNumberString = QString("%1").arg(vectorSize);
 
-    FramePreviewButton *frame = new FramePreviewButton();
+    FramePreviewButton *frame = new FramePreviewButton(ID);
     frame->setObjectName(frameNumberString);
-    //frameButtons.push_back(frame);
-    //frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    frameButtons[ID] = frame;
+    frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
+    frame->setFixedSize(100,100);
+    frame->setText(frameString);
     frame->show();
 
-    //connect(frame, &QPushButton::clicked, this, &View::displayFrame);
+    connect(frame, &FramePreviewButton::frameClicked, modelPtr, &Model::changeFrame);
 }
 
 void View::handleDisplayFrame(){
@@ -333,7 +335,7 @@ void View::deletePressed(){
     if(frameButtons.size()>0)
     {
         frameButtons[frameButtons.size()-1]->hide();
-        frameButtons.pop_back();
+        //frameButtons.pop_back();
     }
 }
 

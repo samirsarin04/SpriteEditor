@@ -8,7 +8,7 @@
 #include "button.h"
 #include <QMessageBox>
 #include "framepreviewbutton.h"
-
+#include <map>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class View;
@@ -46,7 +46,7 @@ public slots:
     void savePressed();
     void loadPressed();
     void resizeCanvas(int size);
-    void addPressed();
+    void addPressed(int ID);
     void deletePressed();
     void projectReset();
     void errorOccurred(const QString &message);
@@ -68,6 +68,9 @@ signals:
 
 private:
     Ui::View *ui;
-    QVector<FramePreviewButton*> frameButtons;
+    //QVector<FramePreviewButton*> frameButtons;
+    Model *modelPtr;
+    QMap<int,FramePreviewButton*> frameButtons;
+
 };
 #endif // VIEW_H

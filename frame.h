@@ -32,6 +32,9 @@ public:
     void setFirstStroke(bool firstStroke);
     QImage generateImage();
     void setPixels(const QVector<QColor>& newPixels);
+    int ID;
+    static int globalID;
+
 };
 
 #endif // FRAME_H

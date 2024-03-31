@@ -1,13 +1,15 @@
 #include "framepreviewbutton.h"
 
-FramePreviewButton::FramePreviewButton(QWidget *parent)
+FramePreviewButton::FramePreviewButton(int ID,QWidget *parent)
     : QLabel{parent}
 {
-    qDebug() << "Hello!";
+    this->ID = ID;
+    qDebug() << ID;
 }
 
 void FramePreviewButton::mousePressEvent(QMouseEvent *event){
     if (event->button() == Qt::LeftButton){
-        //emit canvasClickSignal(event->pos().x(), event->pos().y(), true);
+        emit frameClicked(ID);
+
     }
 }

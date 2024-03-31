@@ -17,6 +17,8 @@ Model::Model(QObject *parent)
 
     swatches[activeSwatch] = currentColor;
 
+    //Frame::ID = 0;
+
     connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
 }
 
@@ -121,6 +123,7 @@ void Model::newCanvas(int size){
     //frames.push_back(Frame(size));
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
     frames.push_back(Frame(size));
+    emit addFrame();
     currentFrame = &frames[0];
     updateFPS(0);
 
@@ -344,13 +347,24 @@ void Model::addFrame(){
     //add lock
     qDebug() << currentFrame;
     lock.lock();
-    frames.push_back(Frame(size));
+    Frame temp(size);
+    frames.push_back(temp);
     lock.unlock();
     currentFrame = &frames[0];
+    emit createPreviewButton(temp.ID);
     qDebug() << currentFrame;
     qDebug() << "added frame. Total frames: " << frames.size();
 }
 
-void Model::changeFrame(){
+void Model::changeFrame(int ID){
 
+    for(Frame frame : frames)
+    {
+        if(ID == frame.ID)
+        {
+            qDebug() << "match";
+            currentFrame = &frame;
+        }
+    }
+    qDebug() << "Frame Request";
 }

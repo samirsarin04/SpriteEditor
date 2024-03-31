@@ -29,7 +29,7 @@ signals:
     void projectReset();
     void errorOccurred(const QString &message);
     void messageBox();
-    void createPreviewButton();
+    void createPreviewButton(int ID);
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -54,7 +54,7 @@ public slots:
     void messageYesSelected();
     void displayFrame();
     void addFrame();
-    void changeFrame();
+    void changeFrame(int ID);
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
