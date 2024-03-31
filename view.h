@@ -50,6 +50,7 @@ public slots:
     void projectReset();
     void errorOccurred(const QString &message);
     void messageBox();
+    void handleDisplayFrame();
 
 signals:
     void colorValueChanged(QString color, int value);
@@ -57,10 +58,11 @@ signals:
     void fpsChanged(int fps);
     void saveModel(QString& filename);
     void loadModel(QString& filename);
-    void addFrame();
+    void sendAddFrame();
     void deleteFrame();
     void newProjectPressed();
     void messageYesSelected();
+    void displayFrame();
 
 
 private:
