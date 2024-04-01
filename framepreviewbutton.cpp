@@ -4,7 +4,6 @@ FramePreviewButton::FramePreviewButton(int ID,QWidget *parent)
     : QLabel{parent}
 {
     this->ID = ID;
-   // qDebug() << ID;
 }
 
 void FramePreviewButton::mousePressEvent(QMouseEvent *event){

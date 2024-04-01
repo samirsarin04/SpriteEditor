@@ -4,21 +4,14 @@
 
 
 Model::Model(QObject *parent)
-    : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255), activeSwatch(0)
+    : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255), currentTool(paint),
+     size(0), fps(0), imageIndex(0), playbackSize(false), activeSwatch(0)
 {
-    // initial tool
-    currentTool = paint;
     QColor defaultSwatch(0,0,0);
     for(int i = 0; i < 6; i++) {
         swatches[i] = defaultSwatch;
     }
-
-    imageIndex = 0;
-    size = 0;
     swatches[activeSwatch] = currentColor;
-    fps = 0;
-    //Frame::ID = 0;
-    playbackSize = false;
 
     connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
 }
@@ -26,6 +19,7 @@ Model::Model(QObject *parent)
 void Model::canvasClick(int x, int y, bool click){
     lock.lock();
     drawing = click;
+
     //if we are not drawing and the first brush stroke is waiting to be made
     if(drawing == false && currentFrame->getFirstStroke()){
         currentFrame->addToHistory(currentFrame->getPixels());
@@ -35,6 +29,7 @@ void Model::canvasClick(int x, int y, bool click){
     else if(drawing == true){
         currentFrame->addToHistory(currentFrame->getPixels());
     }
+
     switch(currentTool){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
@@ -58,7 +53,7 @@ void Model::canvasClick(int x, int y, bool click){
         lock.unlock();
         return;
     default:
-      lock.unlock();
+        lock.unlock();
         return;
     }
    lock.unlock();
@@ -70,40 +65,38 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         return;
     }
 
-    if (drawing){
-        switch(currentTool){
+    switch(currentTool){
         case paint:
+            if (drawing){
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-           // images.insert(currentFrame->ID, currentFrame->getImage());
             images = frames;
             emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
             return;
+            }
+            emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, currentColor));
+            return;
         case eraser:
-            emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-            images = frames;
-            emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
-           // images.insert(currentFrame->ID, currentFrame->getImage());
-             return;
+            if (drawing){
+                emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
+                images = frames;
+                emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
+                return;
+            }
+            emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, QColor(0, 0, 0, 0)));
+            return;
         case dropper:
+            if (drawing){
+                return;
+            }
+            emit updateColorSliders(currentFrame->getPixelColor(x, y));
+            emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
+            emit sendFrameToCanvas(currentFrame->getPixels());
             return;
         default:
             emit errorOccurred("no tool selected");
             return;
         }
     }
-
-    if(currentTool == dropper){
-        emit updateColorSliders(currentFrame->getPixelColor(x, y));
-        emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
-        emit sendFrameToCanvas(currentFrame->getPixels());
-        return;
-    } else if (currentTool == eraser){
-        emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, QColor(0, 0, 0, 0)));
-        return;
-    }
-
-    emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, currentColor));
-}
 
 void Model::colorChanged(QString color, int value) {
     if(currentTool == dropper || currentTool == eraser){
