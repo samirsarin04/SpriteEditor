@@ -44,12 +44,10 @@ void Model::canvasClick(int x, int y, bool click){
     case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
         images = frames;
-        //images.insert(currentFrame->ID, currentFrame->getImage());
         emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
         lock.unlock();
         return;
     case dropper:
-        // Dropper logic here
         currentColor = currentFrame->getPixelColor(x, y);
         emit updateColorPreview(getStyleString(currentColor));
         emit updateColorSliders(currentColor);
@@ -131,12 +129,7 @@ void Model::colorChanged(QString color, int value) {
 void Model::newCanvas(int size){
     frames.clear();
     this->size = size;
-    //frames.push_back(Frame(size));
-    // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
-    //frames.push_back(Frame(size));
-   // emit addFrame();
     addFrame();
-   // currentFrame = &frames[0];
     updateFPS(0);
 
 }
@@ -352,21 +345,15 @@ void Model::loadPressed(QString& filename) {
         prevFrame = frame.ID;
         i++;
     }
-    // if(prevSize != size){
-    //     emit resizeCanvas(size);
-    // }
 
     emit resizeCanvas(size);
     //imgLock.lock();
     images = frames;
     imageIndex = 0;
   //  imgLock.unlock();
-    //tick.start();
-    //generatePreview();
+
     currentFrame = &frames[0];
-    //currentFrame->generateImage();
     emit setImageIcon(frames[0].generateImage(), currentFrame->ID, prevFrame);
-   // qDebug() << "MARKEER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
   //  lock.unlock();
    // tick.start();
 }
@@ -414,16 +401,10 @@ void Model::cloneButton(){
 
 void Model::addFrame(){
     //add lock
-    //qDebug() << currentFrame;
-    //lock.lock();
   //  lock.lock();
     Frame temp(size);
-   // frames.push_back(temp);
-   // frames.insert(temp.ID, temp);
     frames.push_back(temp);
     int tempID = frames.indexOf(temp);
-   // qDebug() << tempID << ": TEMP ID CREATED";
-    //lock.unlock();
     int prevID = frames.size() > 1 ? currentFrame->ID: 0;
     currentFrame = &frames[tempID];
    //imgLock.lock();
@@ -433,13 +414,10 @@ void Model::addFrame(){
     emit sendFrameToCanvas(currentFrame->getPixels());
     emit setImageIcon(currentFrame->getImage(), currentFrame->ID, prevID);
   //  lock.unlock();
-   // qDebug() << currentFrame;
-  //  qDebug() << "added frame. Total frames: " << frames.size();
 }
 
 void Model::removeFrame(){
     tick.stop();
-    // currentFrame->
    int tempID = currentFrame->ID;
    int start = frames.indexOf(*currentFrame);
    imageIndex = 0;
@@ -455,12 +433,9 @@ void Model::removeFrame(){
    }
    //lock.unlock();
 
-   //qDebug() << start << "START VAL";
    if (start >= frames.size()){
-      // qDebug() << "last frame delted";
        currentFrame = &frames[0];
    } else {
-      //  qDebug() << "normal frame delete";
        currentFrame = &frames[start];
    }
    images = frames;
