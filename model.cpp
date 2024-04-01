@@ -195,6 +195,7 @@ void Model::toolToPaint(){
 void Model::toolToEraser(){
     detoggleActiveButton(eraser);
     currentTool = eraser;
+    emit updateColorSliders(QColor(0, 0, 0, 0));
     emit toggleEraser(true);
 }
 

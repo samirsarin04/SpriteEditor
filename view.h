@@ -69,6 +69,7 @@ signals:
 private:
     Ui::View *ui;
     Model *modelPtr;
+    void enableColorSliders(bool enabled);
 
 
 };

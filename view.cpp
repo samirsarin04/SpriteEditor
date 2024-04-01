@@ -328,12 +328,29 @@ void View::updateColorPreview(QString styleString){
     ui->colorPreview->setStyleSheet(styleString);
 }
 
+void View::enableColorSliders(bool enabled){
+
+    ui->redSlider->setEnabled(enabled);
+    ui->redSpinBox->setEnabled(enabled);
+
+    ui->greenSlider->setEnabled(enabled);
+    ui->greenSpinBox->setEnabled(enabled);
+
+    ui->blueSlider->setEnabled(enabled);
+    ui->blueSpinBox->setEnabled(enabled);
+
+    ui->alphaSpinBox->setEnabled(enabled);
+    ui->alphaSlider->setEnabled(enabled);
+}
+
 void View::setBrush(bool enabled){
     // WE MAY NEED TO ADD A PORTION TO STYLE SHEET THAT EXPLICITLY SETS THE DIMENSIONS OF BUTTON EACH TIME
-    if (enabled){
+    if (enabled){   
         ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+        enableColorSliders(true);
         return;
     }
+
 
     ui->brushButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
@@ -341,6 +358,7 @@ void View::setBrush(bool enabled){
 void View::setEraser(bool enabled){
     if (enabled){
         ui->eraseButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+        enableColorSliders(false);
         return;
     }
 
@@ -350,6 +368,7 @@ void View::setEraser(bool enabled){
 void View::setPicker(bool enabled){
     if (enabled){
         ui->dropperButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
+        enableColorSliders(false);
         return;
     }
 
