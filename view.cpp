@@ -138,10 +138,11 @@ View::~View()
     delete ui;
 }
 
-void View::setImagePreview(QImage image, bool bigPreview){
+void View::setImagePreview(QImage image, bool bigPreview, int size){
 
     if (bigPreview){
-
+     ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(size, size, Qt::KeepAspectRatio));
+      return;
     }
 
 
