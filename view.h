@@ -38,7 +38,7 @@ public slots:
     void setBrush(bool enabled);
     void setEraser(bool enabled);
     void setPicker(bool enabled);
-    void setImagePreview(QImage image, bool bigPreview, int size);
+    void setImagePreview(QImage image, bool trueSizePreview, int size);
     void setImageIcon(QImage image, int ID, int lastID);
     void imagePreviewSliderChanged();
     void imagePreviewSpinBoxChanged();

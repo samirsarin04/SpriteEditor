@@ -630,7 +630,7 @@ border-color: rgb(180, 180, 180);</string>
      </rect>
     </property>
     <property name="text">
-     <string>Full Size Playback</string>
+     <string>True Size Playback</string>
     </property>
    </widget>
    <zorder>transparentBackdrop</zorder>

@@ -24,7 +24,7 @@ signals:
     void toggleBrush(bool enabled);
     void toggleEraser(bool enabled);
     void togglePicker(bool enabled);
-    void sendImage(QImage image, bool bigPreview, int size);
+    void sendImage(QImage image, bool trueSizePreview, int size);
     void setImageIcon(QImage image, int ID, int lastFrame);
     void resizeCanvas(int size);
     void projectReset();
