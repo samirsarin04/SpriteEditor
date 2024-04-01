@@ -14,7 +14,7 @@ Model::Model(QObject *parent)
     }
 
     imageIndex = 0;
-
+    size = 0;
     swatches[activeSwatch] = currentColor;
     fps = 0;
     //Frame::ID = 0;
@@ -272,6 +272,9 @@ void Model::detoggleActiveButton(Tool tool){
 }
 
 void Model::savePressed(QString& filename) {
+    if (size < 2){
+        return;
+    }
     QJsonObject json;
     json["pixelDimension"] = size;
     QJsonArray framesArray;
@@ -301,7 +304,7 @@ void Model::savePressed(QString& filename) {
 
 void Model::loadPressed(QString& filename) {
    // tick.stop();
-    int prevSize = size;
+
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
         emit errorOccurred("File failed to open");

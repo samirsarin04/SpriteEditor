@@ -251,6 +251,11 @@ void View::updateSwatchColor(int swatch, QString styleString){
 }
 
 void View::savePressed() {
+
+    if (ui->pixelDimensionSlider->isVisible()){
+        return;
+    }
+
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                     "/home/untitled.ssp",
                                                     tr("JSON (*.ssp)"));
