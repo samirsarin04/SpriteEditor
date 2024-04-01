@@ -254,6 +254,8 @@ QString Model::getStyleString(QColor color){
 
 void Model::undoAction(){
     emit sendFrameToCanvas(currentFrame->undoAction());
+    emit setImageIcon(currentFrame->generateImage(), currentFrame->ID);
+    images = frames;
 }
 void Model::detoggleActiveButton(Tool tool){
     if (tool == currentTool){
