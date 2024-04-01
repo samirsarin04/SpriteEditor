@@ -297,6 +297,16 @@ void View::messageBox(){
 }
 
 void View::projectReset(){
+    for(auto image : frameButtons){
+        image->hide();
+    }
+    frameButtons.clear();
+
+    ui->playbackSpeedSpinBox->setValue(0);
+    ui->playbackSpeedSlider->setValue(0);
+    emit fpsChanged(0);
+
+    frameButtons.clear();
     ui->transparentBackdrop->setVisible(false);
     ui->canvas->setVisible(false);
     ui->previewLabel->setVisible(false);
