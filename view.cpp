@@ -118,6 +118,9 @@ View::View(Model &model, QWidget *parent)
     connect(&model,&Model::createPreviewButton, this, &View::addPressed);
     connect(&model,&Model::deleteFrame, this, &View::deletePressed);
 
+    ui->addFrameButton->setEnabled(false);
+    ui->removeFrameButton->setEnabled(false);
+
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
 
@@ -205,6 +208,9 @@ void View::pixelDimensionSliderChanged(){
 }
 
 void View::canvasSizeSelected(){
+    ui->addFrameButton->setEnabled(true);
+    ui->removeFrameButton->setEnabled(true);
+
     ui->transparentBackdrop->setVisible(true);
     ui->canvas->setVisible(true);
     int size = ui->pixelDimensionSlider->value();
@@ -322,6 +328,9 @@ void View::projectReset(){
     ui->pixelDimensionLabel->setVisible(true);
     ui->pixelDimensionSlider->setVisible(true);
     ui->confirmDimensionButton->setVisible(true);
+
+    ui->addFrameButton->setEnabled(false);
+    ui->removeFrameButton->setEnabled(false);
 }
 
 void View::updateColorPreview(QString styleString){
