@@ -54,7 +54,6 @@ public slots:
     void loadPressed(QString& filename);
     void newProjectPressed();
     void messageYesSelected();
-    void displayFrame();
     void addFrame();
     void changeFrame(int ID);
     void removeFrame();

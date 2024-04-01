@@ -125,7 +125,6 @@ void Model::newCanvas(int size){
     this->size = size;
     addFrame();
     updateFPS(0);
-
 }
 
 void Model::updateFPS(int fps){
@@ -141,44 +140,19 @@ void Model::updateFPS(int fps){
 }
 
 void Model::generatePreview(){
-  // imgLock.lock();
-    if(images.length() == 0){
-       // qDebug() << "empty images reported";
-      //  imgLock.unlock();
-        return;
-    }
-
-
-   // lock.lock();
-    // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
     if(fps == 0 || images.length() < 2){
-        // qDebug() << "NO FPS";
-       //  qDebug() << "0 val triggered/ reported";
-      //  QImage temp = currentFrame->generateImage();
-       // lock.unlock();
         emit sendImage(currentFrame->getImage(), playbackSize, size);
-     //   imgLock.unlock();
         return;
     }
 
     emit sendImage(images[imageIndex++].getImage(), playbackSize, size);
-    //qDebug() << images.size();
-    if (imageIndex >= images.size()){
-        //qDebug() << "RESET";
-        imageIndex = 0;
-    }
-   // lock.unlock();
-    //images
-    //imageIndex++;
-    //QImage temp = frames[imageIndex%frames.size()].generateImage();
-   // lock.unlock();
-    //emit sendImage(temp);
-   // imgLock.unlock();
+
+    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
 }
 
 void Model::toolToPaint(){
     detoggleActiveButton(paint);
-    currentTool = paint;
+    //currentTool = paint;
     emit updateColorPreview(getStyleString(currentColor));
     emit updateColorSliders(currentColor);
     swatches[activeSwatch] = currentColor;
@@ -188,14 +162,12 @@ void Model::toolToPaint(){
 
 void Model::toolToEraser(){
     detoggleActiveButton(eraser);
-    currentTool = eraser;
     emit updateColorSliders(QColor(0, 0, 0, 0));
     emit toggleEraser(true);
 }
 
 void Model::toolToDropper(){
     detoggleActiveButton(dropper);
-    currentTool = dropper;
     emit togglePicker(true);
 }
 
@@ -225,7 +197,6 @@ void Model::swatch6Clicked(){
 
 void Model::addSwatch(int swatchNumber) {
     detoggleActiveButton(paint);
-    currentTool = paint;
     activeSwatch = swatchNumber;
     currentColor = swatches[activeSwatch];
     emit toggleBrush(true);
@@ -254,16 +225,18 @@ void Model::detoggleActiveButton(Tool tool){
     switch(currentTool){
     case paint:
         emit toggleBrush(false);
-        return;
+        break;
     case eraser:
         emit toggleEraser(false);
-        return;
+        break;
     case dropper:
         emit togglePicker(false);
-        return;
+        break;
     default:
         break;
     }
+
+    currentTool = tool;
 }
 
 void Model::savePressed(QString& filename) {
@@ -334,6 +307,7 @@ void Model::loadPressed(QString& filename) {
    // lock.lock();
     frames.clear();
     int i = 0;
+    // Used to track which box is highlighted in frame preview icons as they are loaded in
     int prevFrame = 0;
     for(Frame frame: newFrames){
         frames.insert(i, frame);
@@ -349,7 +323,6 @@ void Model::loadPressed(QString& filename) {
     images = frames;
     imageIndex = 0;
   //  imgLock.unlock();
-
     currentFrame = &frames[0];
     emit setImageIcon(frames[0].generateImage(), currentFrame->ID, prevFrame);
   //  lock.unlock();
@@ -361,45 +334,32 @@ void Model::newProjectPressed(){
 }
 
 void Model::fullSizePlayback(){
+    //Toggles between true size and larger size playback
+    tick.stop();
     playbackSize = !playbackSize;
+    tick.start();
 }
 
 void Model::messageYesSelected(){
     tick.stop();
-    //clear QImages once implemented
     frames.clear();
     imageIndex = 0;
     images = frames;
     emit projectReset();
 }
 
-void Model::displayFrame(){
-    // qDebug() << "SHOULD NOT BE CALLED YET";
-    // bool flag;
-    // int frameIndex = sender()->objectName().toInt(&flag);
-    // if(!flag){
-    //     //conversion failed
-    // }
-    // //set current frame to frameIndex
-
-    // currentFrame = &frames[frameIndex];
-
-}
-
 void Model::cloneButton(){
-   Frame temp(size);
-   temp.setPixels(currentFrame->getPixels());
-   frames.push_back(temp);
-   int tempID = frames.indexOf(temp);
-  // qDebug() << tempID << ": TEMP ID CREATED";
-  //  lock.unlock();
-   int prevID = currentFrame->ID;
-   currentFrame = &frames[tempID];
-  images = frames;
-  emit createPreviewButton(temp.ID);
-  emit sendFrameToCanvas(currentFrame->getPixels());
-  emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, prevID);
-
+    Frame temp(size);
+    temp.setPixels(currentFrame->getPixels());
+    frames.push_back(temp);
+    int newFrameID = frames.indexOf(temp);
+    //Used to track which box is highlighted and unhighlighted
+    int lastFrameID = currentFrame->ID;
+    currentFrame = &frames[newFrameID];
+    images = frames;
+    emit createPreviewButton(temp.ID);
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
 }
 
 void Model::addFrame(){
@@ -407,56 +367,62 @@ void Model::addFrame(){
   //  lock.lock();
     Frame temp(size);
     frames.push_back(temp);
-    int tempID = frames.indexOf(temp);
-    int prevID = frames.size() > 1 ? currentFrame->ID: 0;
-    currentFrame = &frames[tempID];
+    int newFrameID = frames.indexOf(temp);
+    int lastFrameID = frames.size() > 1 ? currentFrame->ID: 0;
+    currentFrame = &frames[newFrameID];
    //imgLock.lock();
     images = frames;
   // imgLock.unlock();
     emit createPreviewButton(temp.ID);
     emit sendFrameToCanvas(currentFrame->getPixels());
-    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, prevID);
+    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, lastFrameID);
   //  lock.unlock();
 }
 
 void Model::removeFrame(){
-    tick.stop();
-   int tempID = currentFrame->ID;
+   tick.stop();
+   int frameToBeDeletedID = currentFrame->ID;
    int start = frames.indexOf(*currentFrame);
+
+   // Resets the index of the image being previewed to avoid out of bounds rendering occurring
    imageIndex = 0;
 
    frames.removeAt(start);
   // lock.lock();
    if (frames.size() == 0) {
-       emit deleteFrame(tempID);
+       emit deleteFrame(frameToBeDeletedID);
        addFrame();
        tick.start();
-       emit setImageIcon(currentFrame->getImage(), currentFrame->ID, tempID);
+       emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
        return;
    }
    //lock.unlock();
 
+   // Default action is advance to next available frame when a frame is deleted
+   // If the last frame is deleted, the first frame in the sequence is toggled
    if (start >= frames.size()){
        currentFrame = &frames[0];
    } else {
        currentFrame = &frames[start];
    }
+
    images = frames;
-   emit deleteFrame(tempID);
-   emit setImageIcon(currentFrame->getImage(), currentFrame->ID, tempID);
+   emit deleteFrame(frameToBeDeletedID);
+   emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
    emit sendFrameToCanvas(currentFrame->getPixels());
    tick.start();
 }
 
 void Model::changeFrame(int ID){
-    int tempID = currentFrame->ID;
+    //  Used for highlighting active frame in frame selector preview
+    int lastFrameID = currentFrame->ID;
+
     for (int i = 0; i < frames.size(); i++){
         if (ID == frames[i].ID){
             currentFrame = &frames[i];
             emit sendFrameToCanvas(currentFrame->getPixels());
-            emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, tempID);
+            emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
             return;
         }
     }
-   // qDebug() << "Frame Request";
 }
