@@ -371,6 +371,7 @@ void Model::messageYesSelected(){
     //clear QImages once implemented
     frames.clear();
     imageIndex = 0;
+    images = frames;
     emit projectReset();
 }
 

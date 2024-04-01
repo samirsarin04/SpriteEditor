@@ -110,6 +110,10 @@ View::View(Model &model, QWidget *parent)
     connect(ui->playbackSpeedSpinBox, &QSpinBox::valueChanged, this, &View::imagePreviewSpinBoxChanged);
     connect(this, &View::fpsChanged, &model, &Model::updateFPS);
 
+
+    ui->playbackSpeedSlider->setEnabled(false);
+    ui->playbackSpeedSpinBox->setEnabled(false);
+
     //Connect frame stuff
     connect(ui->addFrameButton, &QPushButton::clicked, &model, &Model::addFrame);
 
@@ -210,6 +214,10 @@ void View::pixelDimensionSliderChanged(){
 void View::canvasSizeSelected(){
     ui->addFrameButton->setEnabled(true);
     ui->removeFrameButton->setEnabled(true);
+
+
+    ui->playbackSpeedSlider->setEnabled(true);
+    ui->playbackSpeedSpinBox->setEnabled(true);
 
     ui->transparentBackdrop->setVisible(true);
     ui->canvas->setVisible(true);
@@ -322,6 +330,10 @@ void View::projectReset(){
     ui->playbackSpeedSlider->setValue(0);
     emit fpsChanged(0);
 
+
+    ui->playbackSpeedSlider->setEnabled(false);
+    ui->playbackSpeedSpinBox->setEnabled(false);
+
     ui->transparentBackdrop->setVisible(false);
     ui->canvas->setVisible(false);
     ui->previewLabel->setVisible(false);
@@ -389,7 +401,7 @@ void View::addPressed(int ID) {
     FramePreviewButton *frame = new FramePreviewButton(ID);
     frame->setObjectName(QString::number(ID));
 
-    ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
+    ui->frameLayout->addWidget(frame, Qt::AlignHCenter);
     frame->setFixedSize(200,200);
     frame->setStyleSheet("border: 4px solid black;");
     frame->show();
