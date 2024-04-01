@@ -13,7 +13,7 @@ View::View(Model &model, QWidget *parent)
     ui->transparentBackdrop->setVisible(false);
 
     //Set Color Preview to default value
-    ui->colorPreview->setStyleSheet("background-color: rgb(255, 0, 255)");
+    ui->colorPreview->setStyleSheet("background-color: rgb(0, 0, 255)");
     connect(&model, &Model::updateColorPreview, this, &View::updateColorPreview);
 
     //Set Tool Icons
@@ -33,7 +33,7 @@ View::View(Model &model, QWidget *parent)
     connect(&model, &Model::togglePicker, this, &View::setPicker);
 
     //set all swatches to black on initialization
-    ui->swatch1->setStyleSheet("background-color: rgb(255, 0, 255)");
+    ui->swatch1->setStyleSheet("background-color: rgb(0, 0, 255)");
     ui->swatch2->setStyleSheet("background-color: rgb(0, 0, 0)");
     ui->swatch3->setStyleSheet("background-color: rgb(0, 0, 0)");
     ui->swatch4->setStyleSheet("background-color: rgb(0, 0, 0)");
