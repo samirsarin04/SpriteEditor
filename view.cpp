@@ -150,11 +150,14 @@ void View::setImagePreview(QImage image, bool trueSizePreview, int size){
 
 void View::setImageIcon(QImage image, int ID, int lastID){
     if (lastID != ID){
+        //Sets the color of the last selected frame button to black (inactive)
         FramePreviewButton* frameButton = this->findChild<FramePreviewButton*>(QString::number(lastID));
         if (frameButton){
             frameButton->setStyleSheet("border: 4px solid black;");
         }
     }
+    // sets the color of currently selected frame button to red (active)
+    // also sets the icon with the appropriate image
     FramePreviewButton* frameButton = this->findChild<FramePreviewButton*>(QString::number(ID));
     if (frameButton){
         frameButton->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));

@@ -35,10 +35,8 @@ void Canvas::setGridSize(int pixelDimension){
     canvasSize = pixelSize * pixelDimension;
     pixels.clear();
 
-    //Default initializes canvas to be white for now
-    // WILL BE CHANGED LATER
     for(int i = 0; i < (pixelDimension * pixelDimension); i++){
-        pixels.push_back(QColor(255, 255, 255, 0));
+        pixels.push_back(QColor(0, 0, 0, 0));
     }
 }
 
