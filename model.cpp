@@ -45,6 +45,7 @@ void Model::canvasClick(int x, int y, bool click){
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
         images = frames;
         //images.insert(currentFrame->ID, currentFrame->getImage());
+        emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
         lock.unlock();
         return;
     case dropper:
@@ -81,6 +82,7 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         case eraser:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
             images = frames;
+            emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
            // images.insert(currentFrame->ID, currentFrame->getImage());
              return;
         case dropper:
