@@ -18,6 +18,7 @@ Model::Model(QObject *parent)
     swatches[activeSwatch] = currentColor;
     fps = 0;
     //Frame::ID = 0;
+    playbackSize = false;
 
     connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
 }
@@ -162,12 +163,12 @@ void Model::generatePreview(){
        //  qDebug() << "0 val triggered/ reported";
       //  QImage temp = currentFrame->generateImage();
        // lock.unlock();
-        emit sendImage(currentFrame->getImage());
+        emit sendImage(currentFrame->getImage(), playbackSize);
      //   imgLock.unlock();
         return;
     }
 
-    emit sendImage(images[imageIndex++].getImage());
+    emit sendImage(images[imageIndex++].getImage(), playbackSize);
     //qDebug() << images.size();
     if (imageIndex >= images.size()){
         //qDebug() << "RESET";
@@ -364,6 +365,10 @@ void Model::loadPressed(QString& filename) {
 
 void Model::newProjectPressed(){
     emit messageBox();
+}
+
+void Model::fullSizePlayback(){
+    playbackSize = !playbackSize;
 }
 
 void Model::messageYesSelected(){

@@ -32,6 +32,23 @@
       <height>640</height>
      </rect>
     </property>
+    <widget class="QLabel" name="bigPreviewLabel">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>641</width>
+       <height>641</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 2px solid black;
+border-color: rgb(180, 180, 180);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
    <widget class="QSlider" name="pixelDimensionSlider">
     <property name="geometry">
@@ -542,7 +559,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
             <x>0</x>
             <y>0</y>
             <width>265</width>
-            <height>238</height>
+            <height>229</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -620,6 +637,19 @@ border-color: rgb(180, 180, 180);</string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="fullSizePlaybackButton">
+    <property name="geometry">
+     <rect>
+      <x>920</x>
+      <y>640</y>
+      <width>269</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Full Size Playback</string>
+    </property>
+   </widget>
    <zorder>transparentBackdrop</zorder>
    <zorder>canvas</zorder>
    <zorder>pixelDimensionSlider</zorder>
@@ -629,6 +659,7 @@ border-color: rgb(180, 180, 180);</string>
    <zorder>layoutWidget</zorder>
    <zorder>colorPreview</zorder>
    <zorder>previewLabel</zorder>
+   <zorder>fullSizePlaybackButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -124,9 +124,12 @@ View::View(Model &model, QWidget *parent)
 
     ui->addFrameButton->setEnabled(false);
     ui->removeFrameButton->setEnabled(false);
+    ui->fullSizePlaybackButton->setEnabled(false);
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
+
+    connect(ui->fullSizePlaybackButton,&QPushButton::clicked, &model, &Model::fullSizePlayback);
 
     //connect(this, &View::sendAddFrame, &model, &Model::addFrame);
 }
@@ -136,7 +139,13 @@ View::~View()
     delete ui;
 }
 
-void View::setImagePreview(QImage image){
+void View::setImagePreview(QImage image, bool bigPreview){
+
+    if (bigPreview){
+
+    }
+
+
     ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
 }
 
@@ -214,6 +223,7 @@ void View::pixelDimensionSliderChanged(){
 void View::canvasSizeSelected(){
     ui->addFrameButton->setEnabled(true);
     ui->removeFrameButton->setEnabled(true);
+    ui->fullSizePlaybackButton->setEnabled(true);
 
 
     ui->playbackSpeedSlider->setEnabled(true);
@@ -343,6 +353,7 @@ void View::projectReset(){
 
     ui->addFrameButton->setEnabled(false);
     ui->removeFrameButton->setEnabled(false);
+     ui->fullSizePlaybackButton->setEnabled(false);
 }
 
 void View::updateColorPreview(QString styleString){

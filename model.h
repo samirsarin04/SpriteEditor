@@ -24,7 +24,7 @@ signals:
     void toggleBrush(bool enabled);
     void toggleEraser(bool enabled);
     void togglePicker(bool enabled);
-    void sendImage(QImage image);
+    void sendImage(QImage image, bool bigPreview);
     void setImageIcon(QImage image, int ID, int lastFrame);
     void resizeCanvas(int size);
     void projectReset();
@@ -59,6 +59,7 @@ public slots:
     void changeFrame(int ID);
     void removeFrame();
     void cloneButton();
+    void fullSizePlayback();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
@@ -79,6 +80,7 @@ private:
     std::mutex lock;
     std::mutex imgLock;
     void save(const QString& filename);
+    bool playbackSize;
 };
 
 #endif // MODEL_H
