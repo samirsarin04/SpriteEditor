@@ -1,5 +1,4 @@
 #include "model.h"
-#include <QDebug>
 
 Model::Model(QObject *parent)
     : QObject{parent}, size(0), fps(0), activeSwatch(0), imageIndex(0), imageIndexCurrent(0), drawing(false), playbackSize(false),
@@ -215,14 +214,13 @@ void Model::canvasClick(int x, int y, bool click){
     lock.lock();
     drawing = click;
 
-
+    currentFrame->addToHistory(currentFrame->getPixels());
 
     if(!drawing){
         lock.unlock();
         return;
     }
 
-    currentFrame->addToHistory(currentFrame->getPixels());
 
     switch(currentTool){
     case paint:

@@ -84,7 +84,6 @@ void Frame::addToHistory(QVector<QColor> pixels){
 
 void Frame::clearHistory(){
     while (history.size() > 0){
-        qDebug() << "clearing hist";
         history.pop();
     }
 }
