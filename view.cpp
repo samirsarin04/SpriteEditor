@@ -57,8 +57,11 @@ View::View(Model &model, QWidget *parent)
     connect(ui->dropperButton, &QPushButton::clicked, &model, &Model::toolToDropper);
     connect(ui->undoButton, &QPushButton::clicked, &model, &Model::undoAction);
 
-
+    //clone
     connect(ui->cloneButton, &QPushButton::clicked, &model, &Model::cloneButton);
+
+    //help menu
+    connect(ui->helpDropDown, &QAction::triggered, this, &View::helpPressed);
 
     //json connections
     connect(ui->SaveToFile, &QAction::triggered, this, &View::savePressed);
@@ -128,8 +131,6 @@ View::View(Model &model, QWidget *parent)
     connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
 
     connect(ui->fullSizePlaybackButton,&QPushButton::clicked, &model, &Model::fullSizePlayback);
-
-    //connect(this, &View::sendAddFrame, &model, &Model::addFrame);
 }
 
 View::~View()
@@ -314,6 +315,19 @@ void View::loadPressed(){
     }
 }
 
+void View::helpPressed(){
+    QString message = "To start your project, choose and confirm your pixel dimensions.\nTools:\nColor Sliders- Slide the red, green, blue and alpha sliders to change the current color's values."
+                      "\nPaintbrush- Allows drawing with the color set by the rgba sliders.\nEraser- Allows for erasing of pixels drawn by the paintbrush, making them transparent."
+                      "\nDropper- Allows selecting of a pixel to set the current color to the same color as the pixel selected.\n"
+                      "Clone- Clones the current frame's contents onto a new frame.\nUndo- Reverts a frame's most recent change.\nColor Swatches- Allows for easy switching between presets of colors. The current"
+                      " selected swatch changes as you change the color values. To save the current swatch and set a new one, select a different swatch.\nAnimations: \nPreview- Small box in the top right that shows"
+                      " the preview of your current animation.\nPlayback Speed(FPS) Slider- Used to adjust the playback speed of the preview.\nFrames Window- Shows each of your frames in desecending order. To add a frame,"
+                      " press the add frame button (or clone). To delete a frame, press the delete frame button. To edit a frame, select it in the frames window.\n True Size Playback- Shows your frames playback relative to the true"
+                      " size of the screen.\nFile Menu: \nSave to file- Allows saving of your project to a custom .ssp file, which can then be loaded and edited.\nLoad from file- Allows loading and editing from a saved custom .ssp"
+                      " file.\nNew Project- Used to start a new project, allowing for resetting and resizing, if selected the current project will be completely deleted.";
+    QMessageBox::about(this, "Help", message);
+}
+
 void View::resizeCanvas(int size) {
     ui->canvas->setGridSize(size);
     int pixelSize = (640 / size);
@@ -420,10 +434,6 @@ void View::addPressed(int ID) {
     frame->show();
 
     connect(frame, &FramePreviewButton::frameClicked, modelPtr, &Model::changeFrame);
-}
-
-void View::handleDisplayFrame(){
-    //todo remove
 }
 
 void View::deletePressed(int ID){

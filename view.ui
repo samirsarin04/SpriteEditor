@@ -542,7 +542,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
             <x>0</x>
             <y>0</y>
             <width>265</width>
-            <height>229</height>
+            <height>225</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -650,7 +650,7 @@ border-color: rgb(180, 180, 180);</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -668,6 +668,7 @@ border-color: rgb(180, 180, 180);</string>
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="helpDropDown"/>
    </widget>
    <addaction name="menuSprite_Editor"/>
    <addaction name="menuHelp"/>
@@ -686,6 +687,16 @@ border-color: rgb(180, 180, 180);</string>
   <action name="NewProject">
    <property name="text">
     <string>New Project</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="helpDropDown">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

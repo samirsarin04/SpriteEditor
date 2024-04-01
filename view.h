@@ -52,7 +52,7 @@ public slots:
     void projectReset();
     void errorOccurred(const QString &message);
     void messageBox();
-    void handleDisplayFrame();
+    void helpPressed();
 
 signals:
     void colorValueChanged(Color color, int value);
