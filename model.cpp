@@ -174,7 +174,7 @@ void Model::generatePreview(){
         return;
     }
 
-    emit sendImage( images[imageIndex++].getImage());
+    emit sendImage(images[imageIndex++].getImage());
     //qDebug() << images.size();
     if (imageIndex >= images.size()){
         //qDebug() << "RESET";
@@ -359,13 +359,14 @@ void Model::loadPressed(QString& filename) {
     emit resizeCanvas(size);
     //imgLock.lock();
     images = frames;
+    imageIndex = 0;
   //  imgLock.unlock();
     //tick.start();
     //generatePreview();
     currentFrame = &frames[0];
     //currentFrame->generateImage();
     emit setImageIcon(frames[0].generateImage(), currentFrame->ID, prevFrame);
-    qDebug() << "MARKEER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+   // qDebug() << "MARKEER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
   //  lock.unlock();
    // tick.start();
 }
