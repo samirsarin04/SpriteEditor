@@ -25,11 +25,13 @@ signals:
     void toggleEraser(bool enabled);
     void togglePicker(bool enabled);
     void sendImage(QImage image);
+    void setImageIcon(QImage image, int ID);
     void resizeCanvas(int size);
     void projectReset();
     void errorOccurred(const QString &message);
     void messageBox();
     void createPreviewButton(int ID);
+    void deleteFrame(int ID);
 
 public slots:
     void canvasClick(int x, int y, bool click);
@@ -55,12 +57,15 @@ public slots:
     void displayFrame();
     void addFrame();
     void changeFrame(int ID);
+    void removeFrame();
+    void cloneButton();
 private:
     enum Tool {paint, eraser, dropper};
     Tool currentTool;
     int size;
     int fps;
     QVector<Frame> frames;
+    QVector<Frame> images;
     Frame* currentFrame;
     bool drawing;
     QColor currentColor;
@@ -70,8 +75,9 @@ private:
     QString getStyleString(QColor color);
     int activeSwatch;
     QTimer tick;
-    uint imageIndex;
+    int imageIndex;
     std::mutex lock;
+    std::mutex imgLock;
     void save(const QString& filename);
 };
 

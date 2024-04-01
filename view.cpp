@@ -6,6 +6,7 @@
 View::View(Model &model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::View),modelPtr(&model)
+    , tempID(-1)
 {
     ui->setupUi(this);
     this->setStyleSheet("background-color: rgb(200, 200, 200)");
@@ -58,6 +59,9 @@ View::View(Model &model, QWidget *parent)
     connect(ui->dropperButton, &QPushButton::clicked, &model, &Model::toolToDropper);
     connect(ui->undoButton, &QPushButton::clicked, &model, &Model::undoAction);
 
+
+    connect(ui->cloneButton, &QPushButton::clicked, &model, &Model::cloneButton);
+
     //json connections
     connect(ui->SaveToFile, &QAction::triggered, this, &View::savePressed);
     connect(this, &View::saveModel, &model, &Model::savePressed);
@@ -109,10 +113,13 @@ View::View(Model &model, QWidget *parent)
     //Connect frame stuff
     connect(ui->addFrameButton, &QPushButton::clicked, &model, &Model::addFrame);
 
+    connect(&model, &Model::setImageIcon, this, &View::setImageIcon);
+
     connect(&model,&Model::createPreviewButton, this, &View::addPressed);
+    connect(&model,&Model::deleteFrame, this, &View::deletePressed);
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    //connect(ui->removeFrameButton,&QPushButton::clicked,this, &View::deletePressed);
+    connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
 
     //connect(this, &View::sendAddFrame, &model, &Model::addFrame);
 }
@@ -124,6 +131,18 @@ View::~View()
 
 void View::setImagePreview(QImage image){
     ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
+}
+
+void View::setImageIcon(QImage image, int ID){
+    if (tempID != ID){
+        frameButtons[tempID]->setStyleSheet("border: 4px solid black;");
+    }
+  //  qDebug() << ID << "NEW ID;";
+ //   qDebug() << tempID << "okld ID;";
+    //
+    frameButtons[ID]->setStyleSheet("border: 4px solid red;");
+    tempID = ID;
+    frameButtons[ID]->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
 }
 
 
@@ -184,6 +203,7 @@ void View::pixelDimensionSliderChanged(){
 }
 
 void View::canvasSizeSelected(){
+    tempID = -1;
     ui->transparentBackdrop->setVisible(true);
     ui->canvas->setVisible(true);
     int size = ui->pixelDimensionSlider->value();
@@ -239,11 +259,24 @@ void View::savePressed() {
 }
 
 void View::loadPressed(){
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Save File"),
                                                     "/home/untitled.ssp",
                                                     tr("JSON (*.ssp)"));
     if (!fileName.isEmpty()) {
+        canvasSizeSelected();
+
+        for(auto image : frameButtons){
+            image->hide();
+        }
+        frameButtons.clear();
+
+        ui->playbackSpeedSpinBox->setValue(0);
+        ui->playbackSpeedSlider->setValue(0);
+
+
         emit loadModel(fileName);
+
     }
 }
 
@@ -306,8 +339,9 @@ void View::setPicker(bool enabled){
 
 void View::addPressed(int ID) {
 
-    qDebug() << "added frame (addPressed)";
+   // qDebug() << "added frame (addPressed)";
     //emit sendAddFrame();
+
 
     int vectorSize = frameButtons.size();
     QString frameString = QString("Frame %1").arg(vectorSize + 1);
@@ -317,10 +351,14 @@ void View::addPressed(int ID) {
     FramePreviewButton *frame = new FramePreviewButton(ID);
     frame->setObjectName(frameNumberString);
     frameButtons[ID] = frame;
-    frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    for (auto button : frameButtons){
+        button->setStyleSheet("border: 4px solid black;");
+    }
+    tempID = ID;
+    //frame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->frameLayout->addWidget(frame, Qt::AlignVCenter);
-    frame->setFixedSize(100,100);
-    frame->setText(frameString);
+    frame->setFixedSize(200,200);
+    frame->setStyleSheet("border: 4px solid red;");
     frame->show();
 
     connect(frame, &FramePreviewButton::frameClicked, modelPtr, &Model::changeFrame);
@@ -330,13 +368,13 @@ void View::handleDisplayFrame(){
     //todo remove
 }
 
-void View::deletePressed(){
+void View::deletePressed(int ID){
+    //frameButtons[ID].rem
+    frameButtons[ID]->hide();
+   // qDebug() << "delete";
+    //ui->frameLayout->removeWidget(frameButtons[ID]);
+    //ui->frameLayout->update();
 
-    if(frameButtons.size()>0)
-    {
-        frameButtons[frameButtons.size()-1]->hide();
-        //frameButtons.pop_back();
-    }
 }
 
 void View::errorOccurred(const QString &message){

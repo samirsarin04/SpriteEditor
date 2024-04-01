@@ -16,7 +16,7 @@ Model::Model(QObject *parent)
     imageIndex = 0;
 
     swatches[activeSwatch] = currentColor;
-
+    fps = 0;
     //Frame::ID = 0;
 
     connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
@@ -37,10 +37,14 @@ void Model::canvasClick(int x, int y, bool click){
     switch(currentTool){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+        images = frames;
+        emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
         lock.unlock();
         return;
     case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
+        images = frames;
+        //images.insert(currentFrame->ID, currentFrame->getImage());
         lock.unlock();
         return;
     case dropper:
@@ -54,10 +58,10 @@ void Model::canvasClick(int x, int y, bool click){
         lock.unlock();
         return;
     default:
-        lock.unlock();
+      lock.unlock();
         return;
     }
-    lock.unlock();
+   lock.unlock();
 }
 
 void Model::canvasMovement(int x, int y, bool offCanvas){
@@ -70,10 +74,15 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         switch(currentTool){
         case paint:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
+           // images.insert(currentFrame->ID, currentFrame->getImage());
+            images = frames;
+            emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
             return;
         case eraser:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-            return;
+            images = frames;
+           // images.insert(currentFrame->ID, currentFrame->getImage());
+             return;
         case dropper:
             return;
         default:
@@ -122,9 +131,10 @@ void Model::newCanvas(int size){
     this->size = size;
     //frames.push_back(Frame(size));
     // TEMPORARY FOR TESTING PREVIEW WINDOW WILL BE REMOVED
-    frames.push_back(Frame(size));
-    emit addFrame();
-    currentFrame = &frames[0];
+    //frames.push_back(Frame(size));
+   // emit addFrame();
+    addFrame();
+   // currentFrame = &frames[0];
     updateFPS(0);
 
 }
@@ -142,20 +152,39 @@ void Model::updateFPS(int fps){
 }
 
 void Model::generatePreview(){
-    if(frames.length() == 0)
-        return;
-    lock.lock();
-    // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
-    if(fps == 0 || frames.length() < 2){
-        QImage temp = currentFrame->generateImage();
-        lock.unlock();
-        emit sendImage(temp);
+  // imgLock.lock();
+    if(images.length() == 0){
+       // qDebug() << "empty images reported";
+      //  imgLock.unlock();
         return;
     }
-    imageIndex++;
+
+
+   // lock.lock();
+    // SOME LOGIC TO TRACK WHICH IMAGE TO SHOW
+    if(fps == 0 || images.length() < 2){
+        // qDebug() << "NO FPS";
+       //  qDebug() << "0 val triggered/ reported";
+      //  QImage temp = currentFrame->generateImage();
+       // lock.unlock();
+        emit sendImage(currentFrame->getImage());
+     //   imgLock.unlock();
+        return;
+    }
+
+    emit sendImage( images[imageIndex++].getImage());
+    //qDebug() << images.size();
+    if (imageIndex >= images.size()){
+        //qDebug() << "RESET";
+        imageIndex = 0;
+    }
+   // lock.unlock();
+    //images
+    //imageIndex++;
     //QImage temp = frames[imageIndex%frames.size()].generateImage();
-    lock.unlock();
+   // lock.unlock();
     //emit sendImage(temp);
+   // imgLock.unlock();
 }
 
 void Model::toolToPaint(){
@@ -274,6 +303,7 @@ void Model::savePressed(QString& filename) {
 
 
 void Model::loadPressed(QString& filename) {
+   // tick.stop();
     int prevSize = size;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -306,16 +336,32 @@ void Model::loadPressed(QString& filename) {
         frame.setPixels(framePixels);
         newFrames.append(frame);
     }
-    lock.lock();
+   // lock.lock();
     frames.clear();
     int i = 0;
     for(Frame frame: newFrames){
         frames.insert(i, frame);
+        frames[i].generateImage();
+        emit createPreviewButton(frames[i].ID);
+        emit setImageIcon(frames[i].generateImage(), frame.ID);
         i++;
     }
-    if(prevSize != size)
-        emit resizeCanvas(size);
-    lock.unlock();
+    // if(prevSize != size){
+    //     emit resizeCanvas(size);
+    // }
+
+    emit resizeCanvas(size);
+    //imgLock.lock();
+    images = frames;
+  //  imgLock.unlock();
+    //tick.start();
+    //generatePreview();
+    currentFrame = &frames[0];
+    //currentFrame->generateImage();
+    emit setImageIcon(frames[0].generateImage(), currentFrame->ID);
+    qDebug() << "MARKEER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+  //  lock.unlock();
+   // tick.start();
 }
 
 void Model::newProjectPressed(){
@@ -331,40 +377,98 @@ void Model::messageYesSelected(){
 }
 
 void Model::displayFrame(){
-    qDebug() << "SHOULD NOT BE CALLED YET";
-    bool flag;
-    int frameIndex = sender()->objectName().toInt(&flag);
-    if(!flag){
-        //conversion failed
-    }
-    //set current frame to frameIndex
+    // qDebug() << "SHOULD NOT BE CALLED YET";
+    // bool flag;
+    // int frameIndex = sender()->objectName().toInt(&flag);
+    // if(!flag){
+    //     //conversion failed
+    // }
+    // //set current frame to frameIndex
 
-    currentFrame = &frames[frameIndex];
+    // currentFrame = &frames[frameIndex];
+
+}
+
+void Model::cloneButton(){
+   Frame temp(size);
+   temp.setPixels(currentFrame->getPixels());
+   frames.push_back(temp);
+   int tempID = frames.indexOf(temp);
+  // qDebug() << tempID << ": TEMP ID CREATED";
+  //  lock.unlock();
+   currentFrame = &frames[tempID];
+  images = frames;
+  emit createPreviewButton(temp.ID);
+  emit sendFrameToCanvas(currentFrame->getPixels());
+  emit setImageIcon(currentFrame->generateImage(), currentFrame->ID);
 
 }
 
 void Model::addFrame(){
     //add lock
-    qDebug() << currentFrame;
-    lock.lock();
+    //qDebug() << currentFrame;
+    //lock.lock();
+  //  lock.lock();
     Frame temp(size);
+   // frames.push_back(temp);
+   // frames.insert(temp.ID, temp);
     frames.push_back(temp);
-    lock.unlock();
-    currentFrame = &frames[0];
+    int tempID = frames.indexOf(temp);
+   // qDebug() << tempID << ": TEMP ID CREATED";
+    //lock.unlock();
+    currentFrame = &frames[tempID];
+   //imgLock.lock();
+    images = frames;
+  // imgLock.unlock();
     emit createPreviewButton(temp.ID);
-    qDebug() << currentFrame;
-    qDebug() << "added frame. Total frames: " << frames.size();
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+  //  lock.unlock();
+   // qDebug() << currentFrame;
+  //  qDebug() << "added frame. Total frames: " << frames.size();
+}
+
+void Model::removeFrame(){
+    tick.stop();
+    // currentFrame->
+   int tempID = currentFrame->ID;
+   int start = frames.indexOf(*currentFrame);
+   imageIndex = 0;
+
+   frames.removeAt(start);
+  // lock.lock();
+   if (frames.size() == 0) {
+       emit deleteFrame(tempID);
+       addFrame();
+       tick.start();
+       emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+       return;
+   }
+   //lock.unlock();
+
+   //qDebug() << start << "START VAL";
+   if (start >= frames.size()){
+      // qDebug() << "last frame delted";
+       currentFrame = &frames[0];
+   } else {
+      //  qDebug() << "normal frame delete";
+       currentFrame = &frames[start];
+   }
+   images = frames;
+   emit deleteFrame(tempID);
+   emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+   emit sendFrameToCanvas(currentFrame->getPixels());
+   tick.start();
 }
 
 void Model::changeFrame(int ID){
-
-    for(Frame frame : frames)
-    {
-        if(ID == frame.ID)
-        {
-            qDebug() << "match";
-            currentFrame = &frame;
+    for (int i = 0; i < frames.size(); i++){
+        if (ID == frames[i].ID){
+            currentFrame = &frames[i];
+            emit sendFrameToCanvas(currentFrame->getPixels());
+            emit setImageIcon(currentFrame->generateImage(), currentFrame->ID);
+            return;
         }
     }
-    qDebug() << "Frame Request";
+   // qDebug() << "Frame Request";
 }

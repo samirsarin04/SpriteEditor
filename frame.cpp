@@ -8,7 +8,7 @@ Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pi
     //qDebug()<< ID;
     ID = globalID;
     ++globalID;
-    qDebug()<<"After: "<< ID;
+    //qDebug()<<"After: "<< ID;
     firstStroke = true;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
@@ -16,6 +16,24 @@ Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pi
     for(int i = 0; i < (pixelDimension * pixelDimension); i++){
         pixels.push_back(QColor(0, 0, 0, 0));
     }
+    generateImage();
+}
+
+// Frame::Frame(const Frame& other) : pixelDimension(other.pixelDimension), frameImage(other.pixelDimension, other.pixelDimension, QImage::Format_RGBA64){
+//     ID = globalID;
+//     ++globalID;
+//     firstStroke = true;
+//     pixelSize = (640 / other.pixelDimension);
+//     canvasSize = pixelSize * other.pixelDimension;
+//     pixels = other.pixels;
+//     generateImage();
+// }
+
+//
+
+
+bool Frame::operator==(const Frame& other)const{
+    return ID == other.ID;
 }
 
 QVector<QColor> Frame::getPixels() {
@@ -24,6 +42,7 @@ QVector<QColor> Frame::getPixels() {
 
 QVector<QColor> Frame::addNewPixel(int x, int y, QColor color){
     modifyPixel(pixels, x, y, color);
+    generateImage();
     return pixels;
 }
 
@@ -31,6 +50,10 @@ QVector<QColor> Frame::addTemporaryPixel(int x, int y, QColor color){
     QVector<QColor> tempPixels = pixels;
     modifyPixel(tempPixels, x, y, color);
     return tempPixels;
+}
+
+QImage Frame::getImage(){
+    return frameImage;
 }
 
 QImage Frame::generateImage(){
@@ -100,6 +123,6 @@ void Frame::setPixels(const QVector<QColor>& newPixels) {
     if (newPixels.size() == pixelDimension * pixelDimension) {
         pixels = newPixels;
     } else {
-        qDebug() << "Error: Pixel data size mismatch.";
+       // qDebug() << "Error: Pixel data size mismatch.";
     }
 }

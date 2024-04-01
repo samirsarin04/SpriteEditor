@@ -41,13 +41,14 @@ public slots:
     void setEraser(bool enabled);
     void setPicker(bool enabled);
     void setImagePreview(QImage image);
+    void setImageIcon(QImage image, int ID);
     void imagePreviewSliderChanged();
     void imagePreviewSpinBoxChanged();
     void savePressed();
     void loadPressed();
     void resizeCanvas(int size);
     void addPressed(int ID);
-    void deletePressed();
+    void deletePressed(int ID);
     void projectReset();
     void errorOccurred(const QString &message);
     void messageBox();
@@ -71,6 +72,7 @@ private:
     //QVector<FramePreviewButton*> frameButtons;
     Model *modelPtr;
     QMap<int,FramePreviewButton*> frameButtons;
+    int tempID;
 
 };
 #endif // VIEW_H

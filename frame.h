@@ -31,10 +31,11 @@ public:
     bool getFirstStroke();
     void setFirstStroke(bool firstStroke);
     QImage generateImage();
+    QImage getImage();
     void setPixels(const QVector<QColor>& newPixels);
     int ID;
     static int globalID;
-
+    bool operator==(const Frame& other) const;
 };
 
 #endif // FRAME_H
