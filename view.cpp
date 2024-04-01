@@ -1,7 +1,6 @@
 #include "view.h"
 #include "ui_view.h"
 #include "model.h"
-#include "button.h"
 
 View::View(Model &model, QWidget *parent)
     : QMainWindow(parent)

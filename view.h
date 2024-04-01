@@ -5,7 +5,6 @@
 #include <QFileDialog>
 #include "model.h"
 #include "canvas.h"
-#include "button.h"
 #include <QMessageBox>
 #include "framepreviewbutton.h"
 QT_BEGIN_NAMESPACE
