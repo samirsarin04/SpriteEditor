@@ -163,12 +163,12 @@ void Model::generatePreview(){
        //  qDebug() << "0 val triggered/ reported";
       //  QImage temp = currentFrame->generateImage();
        // lock.unlock();
-        emit sendImage(currentFrame->getImage(), playbackSize);
+        emit sendImage(currentFrame->getImage(), playbackSize, size);
      //   imgLock.unlock();
         return;
     }
 
-    emit sendImage(images[imageIndex++].getImage(), playbackSize);
+    emit sendImage(images[imageIndex++].getImage(), playbackSize, size);
     //qDebug() << images.size();
     if (imageIndex >= images.size()){
         //qDebug() << "RESET";
