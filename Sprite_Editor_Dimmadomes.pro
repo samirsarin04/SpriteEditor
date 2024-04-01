@@ -18,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     canvas.h \
+    color.h \
     frame.h \
     framepreviewbutton.h \
     model.h \

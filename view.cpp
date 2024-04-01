@@ -23,7 +23,6 @@ View::View(Model &model, QWidget *parent)
     ui->cloneButton->setIcon(QIcon(":/toolBarIcons/cloneIcon"));
     ui->undoButton->setIcon(QIcon(":/toolBarIcons/undoIcon"));
 
-
     //Set brush to active tool visually
     ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 
@@ -176,42 +175,42 @@ void View::imagePreviewSpinBoxChanged(){
 
 void View::redSliderValueChanged(){
     ui->redSpinBox->setValue(ui->redSlider->value());
-    emit colorValueChanged("red", ui->redSlider->value());
+    emit colorValueChanged(Color::red, ui->redSlider->value());
 }
 
 void View::greenSliderValueChanged(){
     ui->greenSpinBox->setValue(ui->greenSlider->value());
-    emit colorValueChanged("green", ui->greenSlider->value());
+    emit colorValueChanged(Color::green, ui->greenSlider->value());
 }
 
 void View::blueSliderValueChanged(){
     ui->blueSpinBox->setValue(ui->blueSlider->value());
-    emit colorValueChanged("blue", ui->blueSlider->value());
+    emit colorValueChanged(Color::blue, ui->blueSlider->value());
 }
 
 void View::alphaSliderValueChanged(){
     ui->alphaSpinBox->setValue(ui->alphaSlider->value());
-    emit colorValueChanged("alpha", ui->alphaSlider->value());
+    emit colorValueChanged(Color::alpha, ui->alphaSlider->value());
 }
 
 void View::redSpinBoxChanged(){
     ui->redSlider->setValue(ui->redSpinBox->value());
-    emit colorValueChanged("red", ui->redSpinBox->value());
+    emit colorValueChanged(Color::red, ui->redSpinBox->value());
 }
 
 void View::greenSpinBoxChanged(){
     ui->greenSlider->setValue(ui->greenSpinBox->value());
-    emit colorValueChanged("green", ui->greenSpinBox->value());
+    emit colorValueChanged(Color::green, ui->greenSpinBox->value());
 }
 
 void View::blueSpinBoxChanged(){
     ui->blueSlider->setValue(ui->blueSpinBox->value());
-    emit colorValueChanged("blue", ui->blueSpinBox->value());
+    emit colorValueChanged(Color::blue, ui->blueSpinBox->value());
 }
 
 void View::alphaSpinBoxChanged(){
     ui->alphaSlider->setValue(ui->alphaSpinBox->value());
-    emit colorValueChanged("alpha", ui->alphaSpinBox->value());
+    emit colorValueChanged(Color::alpha, ui->alphaSpinBox->value());
 }
 
 void View::pixelDimensionSliderChanged(){
@@ -254,22 +253,22 @@ void View::updateColorSliders(QColor currentColor){
 
 void View::updateSwatchColor(int swatch, QString styleString){
     switch(swatch){
-    case 1:
+    case 0:
         ui->swatch1->setStyleSheet(styleString);
         break;
-    case 2:
+    case 1:
         ui->swatch2->setStyleSheet(styleString);
         break;
-    case 3:
+    case 2:
         ui->swatch3->setStyleSheet(styleString);
         break;
-    case 4:
+    case 3:
         ui->swatch4->setStyleSheet(styleString);
         break;
-    case 5:
+    case 4:
         ui->swatch5->setStyleSheet(styleString);
         break;
-    case 6:
+    case 5:
         ui->swatch6->setStyleSheet(styleString);
     }
 }

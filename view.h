@@ -7,6 +7,8 @@
 #include "canvas.h"
 #include <QMessageBox>
 #include "framepreviewbutton.h"
+#include "color.h";
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class View;
@@ -53,7 +55,7 @@ public slots:
     void handleDisplayFrame();
 
 signals:
-    void colorValueChanged(QString color, int value);
+    void colorValueChanged(Color color, int value);
     void canvasSizeSignal(int size);
     void fpsChanged(int fps);
     void saveModel(QString& filename);

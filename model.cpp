@@ -47,7 +47,7 @@ void Model::canvasClick(int x, int y, bool click){
         emit updateColorPreview(getStyleString(currentColor));
         emit updateColorSliders(currentColor);
         swatches[activeSwatch] = currentColor;
-        emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
+        emit fillSwatch(activeSwatch, getStyleString(currentColor));
         toolToPaint();
         lock.unlock();
         return;
@@ -107,25 +107,25 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
         lock.unlock();
     }
 
-void Model::colorChanged(QString color, int value) {
+void Model::colorChanged(Color color, int value) {
     if(currentTool == dropper || currentTool == eraser){
         return;
     }
 
-    if (color == "red"){
+    if (color == Color::red){
         currentColor.setRed(value);
     }
-    else if (color == "green"){
+    else if (color == Color::green){
         currentColor.setGreen(value);
     }
-    else if (color == "blue"){
+    else if (color == Color::blue){
         currentColor.setBlue(value);
     }
-    else if (color == "alpha"){
+    else if (color == Color::alpha){
         currentColor.setAlpha(value);
     }
     swatches[activeSwatch] = currentColor;
-    emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
+    emit fillSwatch(activeSwatch, getStyleString(currentColor));
     emit updateColorPreview(getStyleString(currentColor));
 }
 
@@ -230,7 +230,7 @@ void Model::toolToPaint(){
     emit updateColorPreview(getStyleString(currentColor));
     emit updateColorSliders(currentColor);
     swatches[activeSwatch] = currentColor;
-    emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
+    emit fillSwatch(activeSwatch, getStyleString(currentColor));
     emit toggleBrush(true);
 }
 
@@ -276,7 +276,7 @@ void Model::addSwatch(int swatchNumber) {
     emit toggleBrush(true);
     emit updateColorSliders(swatches[activeSwatch]);
     emit updateColorPreview(getStyleString(swatches[activeSwatch]));
-    emit fillSwatch(activeSwatch+1, getStyleString(currentColor));
+    emit fillSwatch(activeSwatch, getStyleString(currentColor));
 }
 
 QString Model::getStyleString(QColor color){

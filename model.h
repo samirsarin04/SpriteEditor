@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include "color.h"
 
 
 class Model : public QObject
@@ -36,7 +37,7 @@ signals:
 public slots:
     void canvasClick(int x, int y, bool click);
     void canvasMovement(int x, int y, bool offCanvas);
-    void colorChanged(QString color, int value);
+    void colorChanged(Color color, int value);
     void newCanvas(int size);
     void updateFPS(int fps);
     void toolToPaint();
