@@ -25,7 +25,7 @@ signals:
     void toggleEraser(bool enabled);
     void togglePicker(bool enabled);
     void sendImage(QImage image);
-    void setImageIcon(QImage image, int ID);
+    void setImageIcon(QImage image, int ID, int lastFrame);
     void resizeCanvas(int size);
     void projectReset();
     void errorOccurred(const QString &message);

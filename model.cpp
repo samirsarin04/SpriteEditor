@@ -38,14 +38,14 @@ void Model::canvasClick(int x, int y, bool click){
     case paint:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
         images = frames;
-        emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+        emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
         lock.unlock();
         return;
     case eraser:
         emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
         images = frames;
         //images.insert(currentFrame->ID, currentFrame->getImage());
-        emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+        emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
         lock.unlock();
         return;
     case dropper:
@@ -77,12 +77,12 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
            // images.insert(currentFrame->ID, currentFrame->getImage());
             images = frames;
-            emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+            emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
             return;
         case eraser:
             emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
             images = frames;
-            emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+            emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
            // images.insert(currentFrame->ID, currentFrame->getImage());
              return;
         case dropper:
@@ -256,7 +256,7 @@ QString Model::getStyleString(QColor color){
 
 void Model::undoAction(){
     emit sendFrameToCanvas(currentFrame->undoAction());
-    emit setImageIcon(currentFrame->generateImage(), currentFrame->ID);
+    emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, currentFrame->ID);
     images = frames;
 }
 void Model::detoggleActiveButton(Tool tool){
@@ -343,11 +343,13 @@ void Model::loadPressed(QString& filename) {
    // lock.lock();
     frames.clear();
     int i = 0;
+    int prevFrame = 0;
     for(Frame frame: newFrames){
         frames.insert(i, frame);
         frames[i].generateImage();
         emit createPreviewButton(frames[i].ID);
-        emit setImageIcon(frames[i].generateImage(), frame.ID);
+        emit setImageIcon(frames[i].generateImage(), frame.ID, prevFrame);
+        prevFrame = frame.ID;
         i++;
     }
     // if(prevSize != size){
@@ -362,7 +364,7 @@ void Model::loadPressed(QString& filename) {
     //generatePreview();
     currentFrame = &frames[0];
     //currentFrame->generateImage();
-    emit setImageIcon(frames[0].generateImage(), currentFrame->ID);
+    emit setImageIcon(frames[0].generateImage(), currentFrame->ID, prevFrame);
     qDebug() << "MARKEER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
   //  lock.unlock();
    // tick.start();
@@ -400,11 +402,12 @@ void Model::cloneButton(){
    int tempID = frames.indexOf(temp);
   // qDebug() << tempID << ": TEMP ID CREATED";
   //  lock.unlock();
+   int prevID = currentFrame->ID;
    currentFrame = &frames[tempID];
   images = frames;
   emit createPreviewButton(temp.ID);
   emit sendFrameToCanvas(currentFrame->getPixels());
-  emit setImageIcon(currentFrame->generateImage(), currentFrame->ID);
+  emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, prevID);
 
 }
 
@@ -420,13 +423,14 @@ void Model::addFrame(){
     int tempID = frames.indexOf(temp);
    // qDebug() << tempID << ": TEMP ID CREATED";
     //lock.unlock();
+    int prevID = frames.size() > 1 ? currentFrame->ID: 0;
     currentFrame = &frames[tempID];
    //imgLock.lock();
     images = frames;
   // imgLock.unlock();
     emit createPreviewButton(temp.ID);
     emit sendFrameToCanvas(currentFrame->getPixels());
-    emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, prevID);
   //  lock.unlock();
    // qDebug() << currentFrame;
   //  qDebug() << "added frame. Total frames: " << frames.size();
@@ -445,7 +449,7 @@ void Model::removeFrame(){
        emit deleteFrame(tempID);
        addFrame();
        tick.start();
-       emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+       emit setImageIcon(currentFrame->getImage(), currentFrame->ID, tempID);
        return;
    }
    //lock.unlock();
@@ -460,17 +464,18 @@ void Model::removeFrame(){
    }
    images = frames;
    emit deleteFrame(tempID);
-   emit setImageIcon(currentFrame->getImage(), currentFrame->ID);
+   emit setImageIcon(currentFrame->getImage(), currentFrame->ID, tempID);
    emit sendFrameToCanvas(currentFrame->getPixels());
    tick.start();
 }
 
 void Model::changeFrame(int ID){
+    int tempID = currentFrame->ID;
     for (int i = 0; i < frames.size(); i++){
         if (ID == frames[i].ID){
             currentFrame = &frames[i];
             emit sendFrameToCanvas(currentFrame->getPixels());
-            emit setImageIcon(currentFrame->generateImage(), currentFrame->ID);
+            emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, tempID);
             return;
         }
     }

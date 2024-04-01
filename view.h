@@ -8,7 +8,6 @@
 #include "button.h"
 #include <QMessageBox>
 #include "framepreviewbutton.h"
-#include <map>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class View;
@@ -41,7 +40,7 @@ public slots:
     void setEraser(bool enabled);
     void setPicker(bool enabled);
     void setImagePreview(QImage image);
-    void setImageIcon(QImage image, int ID);
+    void setImageIcon(QImage image, int ID, int lastID);
     void imagePreviewSliderChanged();
     void imagePreviewSpinBoxChanged();
     void savePressed();
@@ -69,10 +68,8 @@ signals:
 
 private:
     Ui::View *ui;
-    //QVector<FramePreviewButton*> frameButtons;
     Model *modelPtr;
-    QMap<int,FramePreviewButton*> frameButtons;
-    int tempID;
+
 
 };
 #endif // VIEW_H
