@@ -138,9 +138,9 @@ View::~View()
     delete ui;
 }
 
-void View::setImagePreview(QImage image, bool bigPreview, int size){
+void View::setImagePreview(QImage image, bool trueSizePreview, int size){
 
-    if (bigPreview){
+    if (trueSizePreview){
      ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(size, size, Qt::KeepAspectRatio));
       return;
     }
@@ -353,7 +353,7 @@ void View::projectReset(){
 
     ui->addFrameButton->setEnabled(false);
     ui->removeFrameButton->setEnabled(false);
-     ui->fullSizePlaybackButton->setEnabled(false);
+    ui->fullSizePlaybackButton->setEnabled(false);
 }
 
 void View::updateColorPreview(QString styleString){
