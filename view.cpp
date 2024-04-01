@@ -103,7 +103,7 @@ View::View(Model &model, QWidget *parent)
 
 
     //Connect image preview signal/slot
-    connect(&model, &Model::sendImage, this, &View::setImagePreview);
+    connect(&model, &Model::sendImageToPreview, this, &View::setImagePreview);
     connect(ui->playbackSpeedSlider, &QSlider::valueChanged, this, &View::imagePreviewSliderChanged);
     connect(ui->playbackSpeedSpinBox, &QSpinBox::valueChanged, this, &View::imagePreviewSpinBoxChanged);
     connect(this, &View::fpsChanged, &model, &Model::updateFPS);
@@ -115,10 +115,10 @@ View::View(Model &model, QWidget *parent)
     //Connect frame stuff
     connect(ui->addFrameButton, &QPushButton::clicked, &model, &Model::addFrame);
 
-    connect(&model, &Model::setImageIcon, this, &View::setImageIcon);
+    connect(&model, &Model::setFrameSelectorIcon, this, &View::setImageIcon);
 
-    connect(&model,&Model::createPreviewButton, this, &View::addPressed);
-    connect(&model,&Model::deleteFrame, this, &View::deletePressed);
+    connect(&model,&Model::createFrameSelectorButton, this, &View::addPressed);
+    connect(&model,&Model::deleteFrameSelectorButton, this, &View::deletePressed);
 
     ui->addFrameButton->setEnabled(false);
     ui->removeFrameButton->setEnabled(false);
@@ -140,8 +140,8 @@ View::~View()
 void View::setImagePreview(QImage image, bool trueSizePreview, int size){
 
     if (trueSizePreview){
-     ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(size, size, Qt::KeepAspectRatio));
-      return;
+        ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(size, size, Qt::KeepAspectRatio));
+        return;
     }
 
 
@@ -157,7 +157,7 @@ void View::setImageIcon(QImage image, int ID, int lastID){
     }
     FramePreviewButton* frameButton = this->findChild<FramePreviewButton*>(QString::number(ID));
     if (frameButton){
-         frameButton->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
+        frameButton->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
         frameButton->setStyleSheet("border: 4px solid red;");
     }
 }
@@ -376,7 +376,7 @@ void View::enableColorSliders(bool enabled){
 
 void View::setBrush(bool enabled){
     // WE MAY NEED TO ADD A PORTION TO STYLE SHEET THAT EXPLICITLY SETS THE DIMENSIONS OF BUTTON EACH TIME
-    if (enabled){   
+    if (enabled){
         ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
         enableColorSliders(true);
         return;

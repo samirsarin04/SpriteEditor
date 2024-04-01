@@ -1,11 +1,10 @@
 #include "model.h"
 #include <QDebug>
-#include<iostream>
-
 
 Model::Model(QObject *parent)
-    : QObject{parent}, drawing(false), currentColor(0, 0, 255, 255), currentTool(paint),
-    size(0), fps(0), imageIndex(0), playbackSize(false), imageIndexCurrent(0), activeSwatch(0)
+    : QObject{parent}, size(0), fps(0), activeSwatch(0), imageIndex(0), imageIndexCurrent(0), drawing(false), playbackSize(false),
+    currentColor(0, 0, 255, 255), eraserColor(0, 0, 0 ,0), currentTool(paint)
+
 {
     QColor defaultSwatch(0,0,0);
     for(int i = 0; i < 6; i++) {
@@ -15,31 +14,223 @@ Model::Model(QObject *parent)
     connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
 }
 
+void Model::newCanvas(int size){
+    lock.lock();
+    frames.clear();
+    this->size = size;
+    updateFPS(0);
+    lock.unlock();
+    addFrame();
+}
+
+void Model::newProjectPressed(){
+    emit messageBox();
+}
+
+void Model::messageYesSelected(){
+    tick.stop();
+    frames.clear();
+    imageIndex = 0;
+    images = frames;
+    emit projectReset();
+}
+
+void Model::toolToPaint(){
+    detoggleActiveButton(paint);
+    //currentTool = paint;
+    emit updateColorPreview(getStyleString(currentColor));
+    emit updateColorSliders(currentColor);
+    swatches[activeSwatch] = currentColor;
+    emit fillSwatch(activeSwatch, getStyleString(currentColor));
+    emit toggleBrush(true);
+}
+
+void Model::toolToEraser(){
+    detoggleActiveButton(eraser);
+    emit updateColorSliders(QColor(0, 0, 0, 0));
+    emit toggleEraser(true);
+}
+
+void Model::toolToDropper(){
+    detoggleActiveButton(dropper);
+    emit togglePicker(true);
+}
+
+void Model::detoggleActiveButton(Tool tool){
+    if (tool == currentTool){
+        return;
+    }
+    switch(currentTool){
+    case paint:
+        emit toggleBrush(false);
+        break;
+    case eraser:
+        emit toggleEraser(false);
+        break;
+    case dropper:
+        emit togglePicker(false);
+        break;
+    default:
+        break;
+    }
+
+    currentTool = tool;
+}
+
+void Model::undoAction(){
+    lock.lock();
+    emit sendFrameToCanvas(currentFrame->undoAction());
+    emit setFrameSelectorIcon(currentFrame->generateImage(), currentFrame->ID, currentFrame->ID);
+    updateImageVector();
+    lock.unlock();
+}
+
+void Model::cloneButton(){
+    lock.lock();
+    Frame clonedFrame(size);
+    clonedFrame.setPixels(currentFrame->getPixels());
+    frames.push_back(clonedFrame);
+    int newFrameIndex = frames.indexOf(clonedFrame);
+    //Used to track which box is highlighted and unhighlighted
+    int lastFrameID = currentFrame->ID;
+    currentFrame = &frames[newFrameIndex];
+    updateImageVector();
+    emit createFrameSelectorButton(currentFrame->ID);
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    emit setFrameSelectorIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
+    lock.unlock();
+}
+
+void Model::addFrame(){
+    lock.lock();
+    Frame newFrame(size);
+    frames.push_back(newFrame);
+    int newFrameIndex = frames.indexOf(newFrame);
+    int lastFrameID = frames.size() > 1 ? currentFrame->ID: 0;
+    currentFrame = &frames[newFrameIndex];
+    updateImageVector();
+
+    emit createFrameSelectorButton(currentFrame->ID);
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    emit setFrameSelectorIcon(currentFrame->getImage(), currentFrame->ID, lastFrameID);
+    lock.unlock();
+}
+
+void Model::removeFrame(){
+    lock.lock();
+    int toBeDeletedID = currentFrame->ID;
+    int toBeDeletedIndex = frames.indexOf(*currentFrame);
+
+    // Resets the index of the image being previewed to avoid out of bounds rendering occurring
+    frames.removeAt(toBeDeletedIndex);
+
+    if (frames.size() == 0) {
+        lock.unlock();
+        addFrame();
+        emit deleteFrameSelectorButton(toBeDeletedID);
+        emit setFrameSelectorIcon(currentFrame->getImage(), currentFrame->ID, toBeDeletedID);
+        return;
+    }
+
+    // Default action is advance to next available frame when a frame is deleted
+    // If the last frame is deleted, the first frame in the sequence is toggled
+    if (toBeDeletedIndex >= frames.size()){
+        currentFrame = &frames[0];
+    } else {
+        currentFrame = &frames[toBeDeletedIndex];
+    }
+
+    emit deleteFrameSelectorButton(toBeDeletedID);
+    emit setFrameSelectorIcon(currentFrame->getImage(), currentFrame->ID, toBeDeletedID);
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    updateImageVector();
+    lock.unlock();
+}
+
+void Model::changeFrame(int ID){
+    //  Used for highlighting active frame in frame selector preview
+    lock.lock();
+    int lastFrameID = currentFrame->ID;
+
+    for (int i = 0; i < frames.size(); i++){
+        if (ID == frames[i].ID){
+            currentFrame = &frames[i];
+            updateImageVector();
+            emit sendFrameToCanvas(currentFrame->getPixels());
+            emit setFrameSelectorIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
+            lock.unlock();
+            return;
+        }
+    }
+    lock.unlock();
+}
+
+void Model::updateFPS(int fps){
+    tick.stop();
+    this->fps = fps;
+    if (fps == 0){
+        tick.setInterval(double(50));
+        tick.start();
+        return;
+    }
+    tick.setInterval(double(1000 / fps));
+    tick.start();
+}
+
+void Model::updateImageVector(){
+    tick.stop();
+    images = frames;
+    imageIndexCurrent = images.indexOf(*currentFrame);
+
+    for(int i = 0; i < images.size(); i++){
+        images[i].generateImage();
+    }
+
+    tick.start();
+}
+
+void Model::generatePreview(){
+    if(images.length() == 0){
+        return;
+    }
+
+    if(fps == 0){
+        emit sendImageToPreview(images[imageIndexCurrent].getImage(), playbackSize, size);
+        return;
+    }
+
+    emit sendImageToPreview(images[imageIndex++].getImage(), playbackSize, size);
+
+    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
+}
+
+void Model::fullSizePlayback(){
+    //Toggles between true size and larger size playback
+    tick.stop();
+    playbackSize = !playbackSize;
+    tick.start();
+}
+
 void Model::canvasClick(int x, int y, bool click){
     lock.lock();
     drawing = click;
 
-    //if we are not drawing and the first brush stroke is waiting to be made
-    if(drawing == false && currentFrame->getFirstStroke()){
-        currentFrame->addToHistory(currentFrame->getPixels());
-        currentFrame->setFirstStroke(false);
+
+
+    if(!drawing){
+        lock.unlock();
+        return;
     }
-    //add the frame as we start drawing to the frame's history stack
-    else if(drawing == true){
-        currentFrame->addToHistory(currentFrame->getPixels());
-    }
+
+    currentFrame->addToHistory(currentFrame->getPixels());
 
     switch(currentTool){
     case paint:
-        emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-        updateImageVector();
-        emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
+        draw(x, y, currentColor);
         lock.unlock();
         return;
     case eraser:
-        emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-        updateImageVector();
-        emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
+        draw(x, y, eraserColor);
         lock.unlock();
         return;
     case dropper:
@@ -55,11 +246,12 @@ void Model::canvasClick(int x, int y, bool click){
         lock.unlock();
         return;
     }
-   lock.unlock();
+    lock.unlock();
 }
 
 void Model::canvasMovement(int x, int y, bool offCanvas){
     lock.lock();
+
     if(offCanvas) {
         emit sendFrameToCanvas(currentFrame->getPixels());
         lock.unlock();
@@ -67,45 +259,57 @@ void Model::canvasMovement(int x, int y, bool offCanvas){
     }
 
     switch(currentTool){
-        case paint:
-            if (drawing){
-                emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, currentColor));
-                updateImageVector();
-                emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
-                lock.unlock();
-                return;
-            }
-            emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, currentColor));
-            lock.unlock();
-            return;
-        case eraser:
-            if (drawing){
-                emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, QColor(0, 0, 0, 0)));
-                updateImageVector();
-                emit setImageIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
-                lock.unlock();
-                return;
-            }
-            emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, QColor(0, 0, 0, 0)));
-            lock.unlock();
-            return;
-        case dropper:
-            if (drawing){
-                lock.unlock();
-                return;
-            }
-            emit updateColorSliders(currentFrame->getPixelColor(x, y));
-            emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
-            emit sendFrameToCanvas(currentFrame->getPixels());
-            lock.unlock();
-            return;
-        default:
-            emit errorOccurred("no tool selected");
+    case paint:
+        if (drawing){
+            draw(x, y, currentColor);
             lock.unlock();
             return;
         }
+        emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, currentColor));
         lock.unlock();
+        return;
+    case eraser:
+        if (drawing){
+            draw(x, y, eraserColor);
+            lock.unlock();
+            return;
+        }
+        emit sendFrameToCanvas(currentFrame->addTemporaryPixel(x, y, QColor(0, 0, 0, 0)));
+        lock.unlock();
+        return;
+    case dropper:
+        if (drawing){
+            lock.unlock();
+            return;
+        }
+        emit updateColorSliders(currentFrame->getPixelColor(x, y));
+        emit updateColorPreview(getStyleString(currentFrame->getPixelColor(x, y)));
+        emit sendFrameToCanvas(currentFrame->getPixels());
+        lock.unlock();
+        return;
+    default:
+        emit errorOccurred("no tool selected");
+        lock.unlock();
+        return;
     }
+    lock.unlock();
+}
+
+void Model::draw(int x, int y, QColor color){
+    emit sendFrameToCanvas(currentFrame->addNewPixel(x, y, color));
+    updateImageVector();
+    emit setFrameSelectorIcon(currentFrame->getImage(), currentFrame->ID, currentFrame->ID);
+}
+
+void Model::addSwatch(int swatchNumber) {
+    detoggleActiveButton(paint);
+    activeSwatch = swatchNumber;
+    currentColor = swatches[activeSwatch];
+    emit toggleBrush(true);
+    emit updateColorSliders(swatches[activeSwatch]);
+    emit updateColorPreview(getStyleString(swatches[activeSwatch]));
+    emit fillSwatch(activeSwatch, getStyleString(currentColor));
+}
 
 void Model::colorChanged(Color color, int value) {
     if(currentTool == dropper || currentTool == eraser){
@@ -129,120 +333,12 @@ void Model::colorChanged(Color color, int value) {
     emit updateColorPreview(getStyleString(currentColor));
 }
 
-void Model::newCanvas(int size){
-    lock.lock();
-    frames.clear();
-    this->size = size;
-    addFrame();  
-    updateFPS(0);
-    updateImageVector();
-    lock.unlock();
-}
-
-void Model::updateFPS(int fps){
-    tick.stop();
-    this->fps = fps;
-    if (fps == 0){
-        tick.setInterval(double(50));
-        tick.start();
-        return;
-    }
-    tick.setInterval(double(1000 / fps));
-    tick.start();
-}
-
-void Model::addFrame(){
-    // Add Frame is always called when a lock is active so no need for one in this method
-    Frame newFrame(size);
-    frames.push_back(newFrame);
-    int newFrameIndex = frames.indexOf(newFrame);
-    int lastFrameID = frames.size() > 1 ? currentFrame->ID: 0;
-    currentFrame = &frames[newFrameIndex];
-
-    emit createPreviewButton(currentFrame->ID);
-    emit sendFrameToCanvas(currentFrame->getPixels());
-    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, lastFrameID);
-}
-
-void Model::removeFrame(){
-    lock.lock();
-    int frameToBeDeletedID = currentFrame->ID;
-    int currentFrameIndex = frames.indexOf(*currentFrame);
-
-    // Resets the index of the image being previewed to avoid out of bounds rendering occurring
-    frames.removeAt(currentFrameIndex);
-
-    if (frames.size() == 0) {
-        addFrame();
-        emit deleteFrame(frameToBeDeletedID);
-        emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
-        updateImageVector();
-        lock.unlock();
-        return;
-    }
-
-    // Default action is advance to next available frame when a frame is deleted
-    // If the last frame is deleted, the first frame in the sequence is toggled
-    if (currentFrameIndex >= frames.size()){
-        currentFrame = &frames[0];
-    } else {
-        currentFrame = &frames[currentFrameIndex];
-    }
-
-    emit deleteFrame(frameToBeDeletedID);
-    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
-    emit sendFrameToCanvas(currentFrame->getPixels());
-    updateImageVector();
-    lock.unlock();
-}
-
-
-void Model::generatePreview(){
-    if(images.length() == 0){
-        return;
-    }
-
-    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
-
-    if(fps == 0 || images.length() == 1){
-        emit sendImage(images[imageIndexCurrent].getImage(), playbackSize, size);
-        return;
-    }
-
-    emit sendImage(images[imageIndex++].getImage(), playbackSize, size);
-}
-
-void Model::updateImageVector(){
-    tick.stop();
-    images = frames;
-    imageIndexCurrent = images.indexOf(*currentFrame);
-
-    for (auto frame: images){
-       frame.generateImage();
-    }
-
-    tick.start();
-}
-
-void Model::toolToPaint(){
-    detoggleActiveButton(paint);
-    //currentTool = paint;
-    emit updateColorPreview(getStyleString(currentColor));
-    emit updateColorSliders(currentColor);
-    swatches[activeSwatch] = currentColor;
-    emit fillSwatch(activeSwatch, getStyleString(currentColor));
-    emit toggleBrush(true);
-}
-
-void Model::toolToEraser(){
-    detoggleActiveButton(eraser);
-    emit updateColorSliders(QColor(0, 0, 0, 0));
-    emit toggleEraser(true);
-}
-
-void Model::toolToDropper(){
-    detoggleActiveButton(dropper);
-    emit togglePicker(true);
+QString Model::getStyleString(QColor color){
+    return QString("background-color: rgba("
+                   + QString::number(color.red()) + ","
+                   + QString::number(color.green()) + ","
+                   + QString::number(color.blue()) + ","
+                   + QString::number(color.alpha()) + ");");
 }
 
 void Model::swatch1Clicked(){
@@ -267,52 +363,6 @@ void Model::swatch5Clicked(){
 
 void Model::swatch6Clicked(){
     addSwatch(5);
-}
-
-void Model::addSwatch(int swatchNumber) {
-    detoggleActiveButton(paint);
-    activeSwatch = swatchNumber;
-    currentColor = swatches[activeSwatch];
-    emit toggleBrush(true);
-    emit updateColorSliders(swatches[activeSwatch]);
-    emit updateColorPreview(getStyleString(swatches[activeSwatch]));
-    emit fillSwatch(activeSwatch, getStyleString(currentColor));
-}
-
-QString Model::getStyleString(QColor color){
-    return QString("background-color: rgba("
-                   + QString::number(color.red()) + ","
-                   + QString::number(color.green()) + ","
-                   + QString::number(color.blue()) + ","
-                   + QString::number(color.alpha()) + ");");
-}
-
-void Model::undoAction(){
-    lock.lock();
-    emit sendFrameToCanvas(currentFrame->undoAction());
-    emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, currentFrame->ID);
-    updateImageVector();
-    lock.unlock();
-}
-void Model::detoggleActiveButton(Tool tool){
-    if (tool == currentTool){
-        return;
-    }
-    switch(currentTool){
-    case paint:
-        emit toggleBrush(false);
-        break;
-    case eraser:
-        emit toggleEraser(false);
-        break;
-    case dropper:
-        emit togglePicker(false);
-        break;
-    default:
-        break;
-    }
-
-    currentTool = tool;
 }
 
 void Model::savePressed(QString& filename) {
@@ -369,6 +419,7 @@ void Model::loadPressed(QString& filename) {
     QJsonArray framesArray = json["frames"].toArray();
     for (const auto& frameValue : framesArray) {
         Frame frame(size);
+        frame.clearHistory();
         QVector<QColor> framePixels;
         QJsonArray rgbaValues = frameValue.toObject()["RGBAValues"].toArray();
         for (int i = 0; i < rgbaValues.size(); i += 4) {
@@ -381,6 +432,7 @@ void Model::loadPressed(QString& filename) {
         }
         frame.setPixels(framePixels);
         newFrames.append(frame);
+        frame.addToHistory(framePixels);
     }
     frames.clear();
     int i = 0;
@@ -389,8 +441,8 @@ void Model::loadPressed(QString& filename) {
     for(auto frame: newFrames){
         frames.insert(i, frame);
         frames[i].generateImage();
-        emit createPreviewButton(frames[i].ID);
-        emit setImageIcon(frames[i].generateImage(), frame.ID, prevFrame);
+        emit createFrameSelectorButton(frames[i].ID);
+        emit setFrameSelectorIcon(frames[i].generateImage(), frame.ID, prevFrame);
         prevFrame = frame.ID;
         i++;
     }
@@ -399,60 +451,6 @@ void Model::loadPressed(QString& filename) {
     images = frames;
     imageIndex = 0;
     currentFrame = &frames[0];
-    emit setImageIcon(frames[0].generateImage(), currentFrame->ID, prevFrame);
-    lock.unlock();
-}
-
-void Model::newProjectPressed(){
-    emit messageBox();
-}
-
-void Model::fullSizePlayback(){
-    //Toggles between true size and larger size playback
-    tick.stop();
-    playbackSize = !playbackSize;
-    tick.start();
-}
-
-void Model::messageYesSelected(){
-    tick.stop();
-    frames.clear();
-    imageIndex = 0;
-    images = frames;
-    emit projectReset();
-}
-
-void Model::cloneButton(){
-    lock.lock();
-    Frame temp(size);
-    temp.setPixels(currentFrame->getPixels());
-    frames.push_back(temp);
-    int newFrameID = frames.indexOf(temp);
-    //Used to track which box is highlighted and unhighlighted
-    int lastFrameID = currentFrame->ID;
-    currentFrame = &frames[newFrameID];
-    updateImageVector();
-    emit createPreviewButton(temp.ID);
-    emit sendFrameToCanvas(currentFrame->getPixels());
-    emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
-    lock.unlock();
-}
-
-
-void Model::changeFrame(int ID){
-    //  Used for highlighting active frame in frame selector preview
-    lock.lock();
-    int lastFrameID = currentFrame->ID;
-
-    for (int i = 0; i < frames.size(); i++){
-        if (ID == frames[i].ID){
-            currentFrame = &frames[i];
-            updateImageVector();
-            emit sendFrameToCanvas(currentFrame->getPixels());
-            emit setImageIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
-            lock.unlock();
-            return;
-        }
-    }
+    emit setFrameSelectorIcon(frames[0].generateImage(), currentFrame->ID, prevFrame);
     lock.unlock();
 }

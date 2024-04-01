@@ -11,7 +11,7 @@
 class Frame
 {
 private:
-    bool firstStroke;
+    //bool firstStroke;
     QVector<QColor> pixels;
     int canvasSize;
     int pixelSize;
@@ -28,11 +28,10 @@ public:
     QColor getPixelColor(int x, int y);
     QVector<QColor> undoAction();
     void addToHistory(QVector<QColor> pixels);
-    bool getFirstStroke();
-    void setFirstStroke(bool firstStroke);
+    void clearHistory();
     QImage generateImage();
     QImage getImage();
-    void setPixels(const QVector<QColor>& newPixels);
+    void setPixels(QVector<QColor> newPixels);
     int ID;
     static int globalID;
     bool operator==(const Frame& other) const;

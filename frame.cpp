@@ -8,29 +8,15 @@ Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pi
     //qDebug()<< ID;
     ID = globalID;
     ++globalID;
-    //qDebug()<<"After: "<< ID;
-    firstStroke = true;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
     //Default initializes frame to white, will be changed later
     for(int i = 0; i < (pixelDimension * pixelDimension); i++){
         pixels.push_back(QColor(0, 0, 0, 0));
     }
+    addToHistory(pixels);
     generateImage();
 }
-
-// Frame::Frame(const Frame& other) : pixelDimension(other.pixelDimension), frameImage(other.pixelDimension, other.pixelDimension, QImage::Format_RGBA64){
-//     ID = globalID;
-//     ++globalID;
-//     firstStroke = true;
-//     pixelSize = (640 / other.pixelDimension);
-//     canvasSize = pixelSize * other.pixelDimension;
-//     pixels = other.pixels;
-//     generateImage();
-// }
-
-//
-
 
 bool Frame::operator==(const Frame& other)const{
     return ID == other.ID;
@@ -67,7 +53,6 @@ QImage Frame::generateImage(){
         } else {
             currentX += 1;
         }
-        //qDebug() << "i: " << i;
     }
     return frameImage;
 }
@@ -97,12 +82,11 @@ void Frame::addToHistory(QVector<QColor> pixels){
     history.push(pixels);
 }
 
-bool Frame::getFirstStroke(){
-    return firstStroke;
-}
-
-void Frame::setFirstStroke(bool firstStroke){
-    this->firstStroke = firstStroke;
+void Frame::clearHistory(){
+    while (history.size() > 0){
+        qDebug() << "clearing hist";
+        history.pop();
+    }
 }
 
 QVector<QColor> Frame::undoAction(){
@@ -119,10 +103,9 @@ QVector<QColor> Frame::undoAction(){
     }
 }
 
-void Frame::setPixels(const QVector<QColor>& newPixels) {
+void Frame::setPixels(QVector<QColor> newPixels) {
     if (newPixels.size() == pixelDimension * pixelDimension) {
         pixels = newPixels;
-    } else {
-       // qDebug() << "Error: Pixel data size mismatch.";
+        return;
     }
 }
