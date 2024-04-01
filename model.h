@@ -76,9 +76,10 @@ private:
     int activeSwatch;
     QTimer tick;
     int imageIndex;
+    int imageIndexCurrent;
     std::mutex lock;
-    std::mutex imgLock;
     void save(const QString& filename);
+    void updateImageVector();
     bool playbackSize;
 };
 
