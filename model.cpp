@@ -4,7 +4,7 @@
 
 
 Model::Model(QObject *parent)
-    : QObject{parent}, drawing(false), currentColor(255, 0, 255, 255), currentTool(paint),
+    : QObject{parent}, drawing(false), currentColor(0, 0, 255, 255), currentTool(paint),
     size(0), fps(0), imageIndex(0), playbackSize(false), imageIndexCurrent(0), activeSwatch(0)
 {
     QColor defaultSwatch(0,0,0);
@@ -12,7 +12,6 @@ Model::Model(QObject *parent)
         swatches[i] = defaultSwatch;
     }
     swatches[activeSwatch] = currentColor;
-
     connect(&tick, &QTimer::timeout, this, &Model::generatePreview);
 }
 
@@ -131,10 +130,13 @@ void Model::colorChanged(QString color, int value) {
 }
 
 void Model::newCanvas(int size){
+    lock.lock();
     frames.clear();
     this->size = size;
-    addFrame();
+    addFrame();  
     updateFPS(0);
+    updateImageVector();
+    lock.unlock();
 }
 
 void Model::updateFPS(int fps){
@@ -149,24 +151,74 @@ void Model::updateFPS(int fps){
     tick.start();
 }
 
+void Model::addFrame(){
+    // Add Frame is always called when a lock is active so no need for one in this method
+    Frame newFrame(size);
+    frames.push_back(newFrame);
+    int newFrameIndex = frames.indexOf(newFrame);
+    int lastFrameID = frames.size() > 1 ? currentFrame->ID: 0;
+    currentFrame = &frames[newFrameIndex];
+
+    emit createPreviewButton(currentFrame->ID);
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, lastFrameID);
+}
+
+void Model::removeFrame(){
+    lock.lock();
+    int frameToBeDeletedID = currentFrame->ID;
+    int currentFrameIndex = frames.indexOf(*currentFrame);
+
+    // Resets the index of the image being previewed to avoid out of bounds rendering occurring
+    frames.removeAt(currentFrameIndex);
+
+    if (frames.size() == 0) {
+        addFrame();
+        emit deleteFrame(frameToBeDeletedID);
+        emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
+        updateImageVector();
+        lock.unlock();
+        return;
+    }
+
+    // Default action is advance to next available frame when a frame is deleted
+    // If the last frame is deleted, the first frame in the sequence is toggled
+    if (currentFrameIndex >= frames.size()){
+        currentFrame = &frames[0];
+    } else {
+        currentFrame = &frames[currentFrameIndex];
+    }
+
+    emit deleteFrame(frameToBeDeletedID);
+    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
+    emit sendFrameToCanvas(currentFrame->getPixels());
+    updateImageVector();
+    lock.unlock();
+}
+
+
 void Model::generatePreview(){
-    if(fps == 0 || images.length() < 2){
+    if(images.length() == 0){
+        return;
+    }
+
+    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
+
+    if(fps == 0 || images.length() == 1){
         emit sendImage(images[imageIndexCurrent].getImage(), playbackSize, size);
         return;
     }
 
     emit sendImage(images[imageIndex++].getImage(), playbackSize, size);
-
-    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
 }
 
 void Model::updateImageVector(){
     tick.stop();
     images = frames;
-    imageIndexCurrent = currentFrame->ID;
+    imageIndexCurrent = images.indexOf(*currentFrame);
 
     for (auto frame: images){
-        frame.generateImage();
+       frame.generateImage();
     }
 
     tick.start();
@@ -386,57 +438,6 @@ void Model::cloneButton(){
     lock.unlock();
 }
 
-void Model::addFrame(){
-    lock.lock();
-    Frame temp(size);
-    frames.push_back(temp);
-    int newFrameID = frames.indexOf(temp);
-    int lastFrameID = frames.size() > 1 ? currentFrame->ID: 0;
-    currentFrame = &frames[newFrameID];
-
-    updateImageVector();
-
-    emit createPreviewButton(temp.ID);
-    emit sendFrameToCanvas(currentFrame->getPixels());
-    emit setImageIcon(currentFrame->getImage(), currentFrame->ID, lastFrameID);
-    lock.unlock();
-}
-
-void Model::removeFrame(){
-   tick.stop();
-   lock.lock();
-   int frameToBeDeletedID = currentFrame->ID;
-   int start = frames.indexOf(*currentFrame);
-
-   // Resets the index of the image being previewed to avoid out of bounds rendering occurring
-   imageIndex = 0;
-
-   frames.removeAt(start);
-  // lock.lock();
-   if (frames.size() == 0) {
-       emit deleteFrame(frameToBeDeletedID);
-       lock.unlock();
-       addFrame();
-       emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
-       tick.start();
-       return;
-   }
-   //lock.unlock();
-
-   // Default action is advance to next available frame when a frame is deleted
-   // If the last frame is deleted, the first frame in the sequence is toggled
-   if (start >= frames.size()){
-       currentFrame = &frames[0];
-   } else {
-       currentFrame = &frames[start];
-   }
-
-   updateImageVector();
-   emit deleteFrame(frameToBeDeletedID);
-   emit setImageIcon(currentFrame->getImage(), currentFrame->ID, frameToBeDeletedID);
-   emit sendFrameToCanvas(currentFrame->getPixels());
-   lock.unlock();
-}
 
 void Model::changeFrame(int ID){
     //  Used for highlighting active frame in frame selector preview
