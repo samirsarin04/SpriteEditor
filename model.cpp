@@ -191,6 +191,7 @@ void Model::generatePreview(){
     if(images.length() == 0){
         return;
     }
+    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
 
     if(fps == 0){
         emit sendImageToPreview(images[imageIndexCurrent].getImage(), trueSizePreview, size);
@@ -199,7 +200,6 @@ void Model::generatePreview(){
 
     emit sendImageToPreview(images[imageIndex++].getImage(), trueSizePreview, size);
 
-    imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
 }
 
 void Model::togglePreviewSize(){
