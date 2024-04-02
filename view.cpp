@@ -323,7 +323,7 @@ void View::helpPressed(){
                       " selected swatch changes as you change the color values. To save the current swatch and set a new one, select a different swatch.\nAnimations: \nPreview- Small box in the top right that shows"
                       " the preview of your current animation.\nPlayback Speed(FPS) Slider- Used to adjust the playback speed of the preview.\nFrames Window- Shows each of your frames in desecending order. To add a frame,"
                       " press the add frame button (or clone). To delete a frame, press the delete frame button. To edit a frame, select it in the frames window.\nTrue Size Playback- Shows your frames playback relative to the true"
-                      " size of the screen.\nFile Menu: \nSave to file- Allows saving of your project to a custom .ssp file, which can then be loaded and edited.\nLoad from file- Allows loading and editing from a saved custom .ssp"
+                      " size of the image.\nFile Menu: \nSave to file- Allows saving of your project to a custom .ssp file, which can then be loaded and edited.\nLoad from file- Allows loading and editing from a saved custom .ssp"
                       " file.\nNew Project- Used to start a new project, allowing for resetting and resizing, if selected the current project will be completely deleted.";
     QMessageBox::about(this, "Help", message);
 }
