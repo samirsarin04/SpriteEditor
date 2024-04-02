@@ -5,6 +5,7 @@
 #include <QVector>
 #include "canvas.h"
 
+/// Reviewed by: Ethan Heathcote
 Canvas::Canvas(QWidget *parent)
     : QWidget{parent}
 {
