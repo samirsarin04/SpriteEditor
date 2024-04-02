@@ -1,6 +1,12 @@
 #include "view.h"
 #include "ui_view.h"
+#include <QMainWindow>
+#include <QFileDialog>
 #include "model.h"
+#include "canvas.h"
+#include <QMessageBox>
+#include "framepreviewbutton.h"
+#include "color.h"
 
 ///@brief The cpp file for the view for this application. Provides implementation for the slots and methods.
 /// Reviewed by: Hudson Bowman

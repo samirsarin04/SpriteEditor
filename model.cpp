@@ -2,6 +2,14 @@
 ///Reviewed by: Arjun Sarkar
 
 #include "model.h"
+#include <QObject>
+#include "frame.h"
+#include <QTimer>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include "color.h"
 
 Model::Model(QObject *parent)
     : QObject{parent}, size(0), fps(0), activeSwatch(0), imageIndex(0), imageIndexCurrent(0), drawing(false), trueSizePreview(false),

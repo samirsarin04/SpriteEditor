@@ -2,6 +2,8 @@
 ///Reviewed by: Arjun Sarkar
 
 #include "framepreviewbutton.h"
+#include <QLabel>
+#include <QMouseEvent>
 
 FramePreviewButton::FramePreviewButton(int ID,QWidget *parent)
     : QLabel{parent}

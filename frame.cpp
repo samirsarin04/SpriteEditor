@@ -1,4 +1,9 @@
 #include "frame.h"
+#include <QVector>
+#include <QColor>
+#include <stack>
+#include <QImage>
+#include<mutex>
 
 
 int Frame::globalID = 0;
