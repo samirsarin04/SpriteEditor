@@ -120,27 +120,25 @@ View::View(Model &model, QWidget *parent)
     connect(ui->playbackSpeedSpinBox, &QSpinBox::valueChanged, this, &View::imagePreviewSpinBoxChanged);
     connect(this, &View::fpsChanged, &model, &Model::updateFPS);
 
-
-    ui->playbackSpeedSlider->setEnabled(false);
-    ui->playbackSpeedSpinBox->setEnabled(false);
-
-    //Connect frame stuff
+    //Connect frame preview signals/slots
+    ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     connect(ui->addFrameButton, &QPushButton::clicked, &model, &Model::addFrame);
-
+    connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
     connect(&model, &Model::setFrameSelectorIcon, this, &View::setImageIcon);
-
     connect(&model,&Model::createFrameSelectorButton, this, &View::addPressed);
     connect(&model,&Model::deleteFrameSelectorButton, this, &View::deletePressed);
 
+
+    //Disable buttons on startup
     ui->addFrameButton->setEnabled(false);
     ui->removeFrameButton->setEnabled(false);
     ui->fullSizePlaybackButton->setEnabled(false);
     ui->cloneButton->setEnabled(false);
     ui->undoButton->setEnabled(false);
+    ui->playbackSpeedSlider->setEnabled(false);
+    ui->playbackSpeedSpinBox->setEnabled(false);
 
-    ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
-
+    //Toggle playback size signal/slot
     connect(ui->fullSizePlaybackButton,&QPushButton::clicked, &model, &Model::togglePreviewSize);
 }
 
