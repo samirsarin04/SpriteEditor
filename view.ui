@@ -247,7 +247,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
            <item>
             <widget class="QSpinBox" name="redSpinBox">
              <property name="maximum">
-              <number>0</number>
+              <number>255</number>
              </property>
              <property name="value">
               <number>0</number>
@@ -542,7 +542,7 @@ font: 24pt &quot;OCR A Extended&quot;;</string>
             <x>0</x>
             <y>0</y>
             <width>265</width>
-            <height>225</height>
+            <height>229</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -650,7 +650,7 @@ border-color: rgb(180, 180, 180);</string>
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
