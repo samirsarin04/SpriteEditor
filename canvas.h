@@ -1,6 +1,5 @@
 #ifndef CANVAS_H
 #define CANVAS_H
-
 #include <QWidget>
 #include <QMouseEvent>
 #include <QPainter>
