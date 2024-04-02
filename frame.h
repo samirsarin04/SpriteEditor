@@ -46,7 +46,6 @@ public:
     /// @param pixelDimension
     Frame(int pixelDimension);
 
-
     ///
     /// @brief addNewPixel to the fram
     /// @param x location on the canvas

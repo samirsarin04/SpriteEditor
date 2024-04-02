@@ -1,3 +1,6 @@
+///@brief The main file used to build the sprite editor
+///Reviewed by: Peyton Jensen
+
 #include "view.h"
 #include "model.h"
 
