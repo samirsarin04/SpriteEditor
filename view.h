@@ -7,7 +7,7 @@
 #include "canvas.h"
 #include <QMessageBox>
 #include "framepreviewbutton.h"
-#include "color.h";
+#include "color.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,15 +24,25 @@ public:
     ~View();
 
 public slots:
+    ///@brief Handles when the red slider's values has changed updating the color
     void redSliderValueChanged();
+    ///@brief Handles when the green slider's values has changed updating the color
     void greenSliderValueChanged();
+    ///@brief Handles when the blue slider's value has changed updating the color
     void blueSliderValueChanged();
+    ///@brief Handles when the alpha slider's value has changed updating the color
     void alphaSliderValueChanged();
+    ///@brief Handles when the red spinbox's value has changed updating the color
     void redSpinBoxChanged();
+    ///@brief Handles when the green spinbox's value has changed updating the color
     void greenSpinBoxChanged();
+    ///@brief Handles when the blue spinbox's value has changed updating the color
     void blueSpinBoxChanged();
+    ///@brief Handles when the alpha spinbox's value has changed updating the color
     void alphaSpinBoxChanged();
+    ///@brief Handles when the canvas size has been confirmed for a new project
     void canvasSizeSelected();
+    ///@brief Handles when the pixel dimensions slider has been changed
     void pixelDimensionSliderChanged();
     void updateSwatchColor(int swatch, QString styleString);
     void updateColorSliders(QColor currentColor);
