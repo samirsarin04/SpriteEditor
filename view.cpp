@@ -126,6 +126,8 @@ View::View(Model &model, QWidget *parent)
     ui->addFrameButton->setEnabled(false);
     ui->removeFrameButton->setEnabled(false);
     ui->fullSizePlaybackButton->setEnabled(false);
+    ui->cloneButton->setEnabled(false);
+    ui->undoButton->setEnabled(false);
 
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
@@ -227,6 +229,10 @@ void View::canvasSizeSelected(){
     ui->addFrameButton->setEnabled(true);
     ui->removeFrameButton->setEnabled(true);
     ui->fullSizePlaybackButton->setEnabled(true);
+
+
+    ui->cloneButton->setEnabled(true);
+    ui->undoButton->setEnabled(true);
 
 
     ui->playbackSpeedSlider->setEnabled(true);
@@ -356,6 +362,8 @@ void View::projectReset(){
     ui->playbackSpeedSlider->setValue(0);
     emit fpsChanged(0);
 
+    ui->cloneButton->setEnabled(false);
+    ui->undoButton->setEnabled(false);
 
     ui->playbackSpeedSlider->setEnabled(false);
     ui->playbackSpeedSpinBox->setEnabled(false);
