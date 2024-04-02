@@ -130,7 +130,7 @@ View::View(Model &model, QWidget *parent)
     ui->frameLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     connect(ui->removeFrameButton,&QPushButton::clicked, &model, &Model::removeFrame);
 
-    connect(ui->fullSizePlaybackButton,&QPushButton::clicked, &model, &Model::fullSizePlayback);
+    connect(ui->fullSizePlaybackButton,&QPushButton::clicked, &model, &Model::togglePreviewSize);
 }
 
 View::~View()

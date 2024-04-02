@@ -58,7 +58,7 @@ public slots:
     void cloneButton();
 
     void generatePreview();
-    void fullSizePlayback();
+    void togglePreviewSize();
 
     void newProjectPressed();
     void messageYesSelected();
@@ -80,7 +80,7 @@ private:
     int imageIndex;
     int imageIndexCurrent;
     bool drawing;
-    bool playbackSize;
+    bool trueSizePreview;
 
     std::mutex lock;
     QTimer tick;

@@ -1,7 +1,7 @@
 #include "model.h"
 
 Model::Model(QObject *parent)
-    : QObject{parent}, size(0), fps(0), activeSwatch(0), imageIndex(0), imageIndexCurrent(0), drawing(false), playbackSize(false),
+    : QObject{parent}, size(0), fps(0), activeSwatch(0), imageIndex(0), imageIndexCurrent(0), drawing(false), trueSizePreview(false),
     currentColor(0, 0, 255, 255), eraserColor(0, 0, 0 ,0), currentTool(paint)
 
 {
@@ -36,7 +36,6 @@ void Model::messageYesSelected(){
 
 void Model::toolToPaint(){
     detoggleActiveButton(paint);
-    //currentTool = paint;
     emit updateColorPreview(getStyleString(currentColor));
     emit updateColorSliders(currentColor);
     swatches[activeSwatch] = currentColor;
@@ -194,19 +193,19 @@ void Model::generatePreview(){
     }
 
     if(fps == 0){
-        emit sendImageToPreview(images[imageIndexCurrent].getImage(), playbackSize, size);
+        emit sendImageToPreview(images[imageIndexCurrent].getImage(), trueSizePreview, size);
         return;
     }
 
-    emit sendImageToPreview(images[imageIndex++].getImage(), playbackSize, size);
+    emit sendImageToPreview(images[imageIndex++].getImage(), trueSizePreview, size);
 
     imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
 }
 
-void Model::fullSizePlayback(){
+void Model::togglePreviewSize(){
     //Toggles between true size and larger size playback
     tick.stop();
-    playbackSize = !playbackSize;
+    trueSizePreview = !trueSizePreview;
     tick.start();
 }
 
