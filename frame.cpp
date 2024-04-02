@@ -1,6 +1,4 @@
 #include "frame.h"
-#include <iostream>
-#include <QDebug>
 
 
 int Frame::globalID = 0;

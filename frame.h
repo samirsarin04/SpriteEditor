@@ -5,8 +5,7 @@
 #include <QColor>
 #include <stack>
 #include <QImage>
-#include<mutex>
-
+#include <mutex>
 
 class Frame
 {

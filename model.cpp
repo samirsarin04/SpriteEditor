@@ -5,6 +5,7 @@ Model::Model(QObject *parent)
     currentColor(0, 0, 255, 255), eraserColor(0, 0, 0 ,0), currentTool(paint)
 
 {
+    //init swatches to default
     QColor defaultSwatch(0,0,0);
     for(int i = 0; i < 6; i++) {
         swatches[i] = defaultSwatch;
@@ -14,6 +15,7 @@ Model::Model(QObject *parent)
 }
 
 void Model::newCanvas(int size){
+    //resets project
     lock.lock();
     frames.clear();
     this->size = size;
@@ -443,7 +445,6 @@ void Model::loadPressed(QString& filename) {
         prevFrame = frame.ID;
         i++;
     }
-
     emit resizeCanvas(size);
     images = frames;
     imageIndex = 0;
