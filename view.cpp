@@ -2,6 +2,9 @@
 #include "ui_view.h"
 #include "model.h"
 
+///@brief The cpp file for the view for this application. Provides implementation for the slots and methods.
+/// Reviewed by: Hudson Bowman
+
 View::View(Model &model, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::View)
@@ -135,11 +138,16 @@ View::View(Model &model, QWidget *parent)
     connect(ui->fullSizePlaybackButton,&QPushButton::clicked, &model, &Model::togglePreviewSize);
 }
 
+///@brief Deconstructs the view
 View::~View()
 {
     delete ui;
 }
 
+///@brief Changes the image in the preview window to the given image
+///@param image the image to display
+///@param trueSizePreview true to display the image as its true size, false to scale it to the size of the preview window
+///@param size the size of the image
 void View::setImagePreview(QImage image, bool trueSizePreview, int size){
 
     if (trueSizePreview){
@@ -151,6 +159,10 @@ void View::setImagePreview(QImage image, bool trueSizePreview, int size){
     ui->previewLabel->setPixmap(QPixmap::fromImage(image).scaled(200, 200, Qt::KeepAspectRatio));
 }
 
+///@brief changes the image preview for a frame
+///@param image the image to put in the frame preview
+///@param ID the id of the frame
+///@param lastID the id of the last frame
 void View::setImageIcon(QImage image, int ID, int lastID){
     if (lastID != ID){
         //Sets the color of the last selected frame button to black (inactive)
@@ -168,63 +180,74 @@ void View::setImageIcon(QImage image, int ID, int lastID){
     }
 }
 
-
+///@brief updates the fps when the preview fps slider is changed
 void View::imagePreviewSliderChanged(){
     ui->playbackSpeedSpinBox->setValue(ui->playbackSpeedSlider->value());
     emit fpsChanged(ui->playbackSpeedSlider->value());
 }
 
+///@brief updates the fps when the preview fps text box is changed
 void View::imagePreviewSpinBoxChanged(){
     ui->playbackSpeedSlider->setValue(ui->playbackSpeedSpinBox->value());
     emit fpsChanged(ui->playbackSpeedSpinBox->value());
 }
 
+///@brief updates the red value when the red slider is changed
 void View::redSliderValueChanged(){
     ui->redSpinBox->setValue(ui->redSlider->value());
     emit colorValueChanged(Color::red, ui->redSlider->value());
 }
 
+///@brief updates the green value when the green slider is changed
 void View::greenSliderValueChanged(){
     ui->greenSpinBox->setValue(ui->greenSlider->value());
     emit colorValueChanged(Color::green, ui->greenSlider->value());
 }
 
+///@brief updates the green value when the green slider is changed
 void View::blueSliderValueChanged(){
     ui->blueSpinBox->setValue(ui->blueSlider->value());
     emit colorValueChanged(Color::blue, ui->blueSlider->value());
 }
 
+///@brief updates the alpha value when the alpha slider is changed
 void View::alphaSliderValueChanged(){
     ui->alphaSpinBox->setValue(ui->alphaSlider->value());
     emit colorValueChanged(Color::alpha, ui->alphaSlider->value());
 }
 
+///@brief updates the red value when the red text box is changed
 void View::redSpinBoxChanged(){
     ui->redSlider->setValue(ui->redSpinBox->value());
     emit colorValueChanged(Color::red, ui->redSpinBox->value());
 }
 
+///@brief updates the green value when the green text box is changed
 void View::greenSpinBoxChanged(){
     ui->greenSlider->setValue(ui->greenSpinBox->value());
     emit colorValueChanged(Color::green, ui->greenSpinBox->value());
 }
 
+///@brief updates the blue value when the blue text box is changed
 void View::blueSpinBoxChanged(){
     ui->blueSlider->setValue(ui->blueSpinBox->value());
     emit colorValueChanged(Color::blue, ui->blueSpinBox->value());
 }
 
+///@brief updates the alpha value when the alpha text box is changed
 void View::alphaSpinBoxChanged(){
     ui->alphaSlider->setValue(ui->alphaSpinBox->value());
     emit colorValueChanged(Color::alpha, ui->alphaSpinBox->value());
 }
 
+///@brief updates the canvas/frame dimension when the slider is changed
 void View::pixelDimensionSliderChanged(){
     QString pixelLabel;
     pixelLabel += std::to_string(ui->pixelDimensionSlider->value()) + " x " + std::to_string(ui->pixelDimensionSlider->value()) + " Pixels";
     ui->pixelDimensionLabel->setText(pixelLabel);
 }
 
+///@brief sets up canvas and buttons when the size is selected
 void View::canvasSizeSelected(){
     ui->addFrameButton->setEnabled(true);
     ui->removeFrameButton->setEnabled(true);
@@ -252,6 +275,8 @@ void View::canvasSizeSelected(){
     emit canvasSizeSignal(ui->pixelDimensionSlider->value());
 }
 
+///@brief updates the values of the sliders to the RGBA values of a given color
+///@param currentColor the color to change the RGBA sliders to
 void View::updateColorSliders(QColor currentColor){
     ui->redSlider->setValue(currentColor.red());
     ui->greenSlider->setValue(currentColor.green());
@@ -259,8 +284,9 @@ void View::updateColorSliders(QColor currentColor){
     ui->alphaSlider->setValue(currentColor.alpha());
 }
 
-
-
+///@brief changes the qss of the given swatch to the given stleString
+///@param swatch the swatch number to change
+///@param styleString the qss to put in the swatch
 void View::updateSwatchColor(int swatch, QString styleString){
     switch(swatch){
     case 0:
@@ -283,8 +309,8 @@ void View::updateSwatchColor(int swatch, QString styleString){
     }
 }
 
+///@brief saves the sprite when the save button is pressed
 void View::savePressed() {
-
     if (ui->pixelDimensionSlider->isVisible()){
         return;
     }
@@ -297,8 +323,8 @@ void View::savePressed() {
     }
 }
 
+///@brief loads a sprite from json when the load button is pressed
 void View::loadPressed(){
-
     QString fileName = QFileDialog::getOpenFileName(this, tr("Save File"),
                                                     "/home/untitled.ssp",
                                                     tr("JSON (*.ssp)"));
@@ -315,12 +341,11 @@ void View::loadPressed(){
         ui->playbackSpeedSpinBox->setValue(0);
         ui->playbackSpeedSlider->setValue(0);
 
-
         emit loadModel(fileName);
-
     }
 }
 
+///@brief displays a text popup when the help button is pressed
 void View::helpPressed(){
     QString message = "To start your project, choose and confirm your pixel dimensions.\nTools:\nColor Sliders- Slide the red, green, blue and alpha sliders to change the current color's values."
                       "\nPaintbrush- Allows drawing with the color set by the rgba sliders.\nEraser- Allows for erasing of pixels drawn by the paintbrush, making them transparent."
@@ -334,6 +359,8 @@ void View::helpPressed(){
     QMessageBox::about(this, "Help", message);
 }
 
+///@brief resizes the canvas to a given size
+///@param size the new size of the canvas
 void View::resizeCanvas(int size) {
     ui->canvas->setGridSize(size);
     int pixelSize = (640 / size);
@@ -341,6 +368,7 @@ void View::resizeCanvas(int size) {
     ui->transparentBackdrop->setFixedSize(canvasSize, canvasSize);
 }
 
+///@brief displays a message box prompting the user to confirm if they want to reset the project
 void View::messageBox(){
     auto reply = QMessageBox::question(nullptr, "New Project", "Are you sure you want to reset the project?",
                                        QMessageBox::Yes | QMessageBox::No);
@@ -350,6 +378,7 @@ void View::messageBox(){
     }
 }
 
+///@brief resets the sprite editor
 void View::projectReset(){
 
     while (QLayoutItem *previewButton = ui->frameLayout->takeAt(0)){
@@ -380,10 +409,14 @@ void View::projectReset(){
     ui->fullSizePlaybackButton->setEnabled(false);
 }
 
+///@brief changes the qss of the color preview
+///@param styleString the new qss for the colorPreview
 void View::updateColorPreview(QString styleString){
     ui->colorPreview->setStyleSheet(styleString);
 }
 
+///@brief changes if the color sliders are enabled or disabled
+///@param enabled true to enable, false to disable
 void View::enableColorSliders(bool enabled){
 
     ui->redSlider->setEnabled(enabled);
@@ -399,18 +432,20 @@ void View::enableColorSliders(bool enabled){
     ui->alphaSlider->setEnabled(enabled);
 }
 
+///@brief highlights or un-highlights the brush tool
+///@param enabled true to highlight the button, false to un-highlight
 void View::setBrush(bool enabled){
-    // WE MAY NEED TO ADD A PORTION TO STYLE SHEET THAT EXPLICITLY SETS THE DIMENSIONS OF BUTTON EACH TIME
     if (enabled){
         ui->brushButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
         enableColorSliders(true);
         return;
     }
 
-
     ui->brushButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
+///@brief highlights or un-highlights the eraser tool
+///@param enabled true to highlight the button, false to un-highlight
 void View::setEraser(bool enabled){
     if (enabled){
         ui->eraseButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
@@ -421,6 +456,8 @@ void View::setEraser(bool enabled){
     ui->eraseButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
+///@brief highlights or un-highlights the dropper tool
+///@param enabled true to highlight the button, false to un-highlight
 void View::setPicker(bool enabled){
     if (enabled){
         ui->dropperButton->setStyleSheet("background-color: rgba(255, 255, 255, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
@@ -431,6 +468,8 @@ void View::setPicker(bool enabled){
     ui->dropperButton->setStyleSheet("background-color: rgba(200, 200, 200, 255);\nwidth: 40px;\nheight: 40px;\nmargin-left: auto;\nmargin-right: auto;");
 }
 
+///@brief adds a new frame button to the frame preview buttons
+///@param ID the id of the frame
 void View::addPressed(int ID) {
 
     FramePreviewButton *frame = new FramePreviewButton(ID);
@@ -444,6 +483,7 @@ void View::addPressed(int ID) {
     connect(frame, &FramePreviewButton::frameClicked, modelPtr, &Model::changeFrame);
 }
 
+///@brief deletes a frame button from the frame preview buttons
 void View::deletePressed(int ID){
     FramePreviewButton* frameButton = this->findChild<FramePreviewButton*>(QString::number(ID));
     if (frameButton){
@@ -452,6 +492,8 @@ void View::deletePressed(int ID){
     }
 }
 
+///@brief displays a message box with a given error message
+///@param message the erro message to display
 void View::errorOccurred(const QString &message){
     QMessageBox::critical(this, "Error", message);
 }
