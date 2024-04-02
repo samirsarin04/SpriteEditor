@@ -1,3 +1,6 @@
+///@brief The .cpp file for the model for this application. Gives method definitions for all of the members.
+///Reviewed by: Arjun Sarkar
+
 #include "model.h"
 
 Model::Model(QObject *parent)
@@ -5,7 +8,7 @@ Model::Model(QObject *parent)
     currentColor(0, 0, 255, 255), eraserColor(0, 0, 0 ,0), currentTool(paint)
 
 {
-    //init swatches to default
+    //initialize swatches to default
     QColor defaultSwatch(0,0,0);
     for(int i = 0; i < 6; i++) {
         swatches[i] = defaultSwatch;
@@ -29,6 +32,7 @@ void Model::newProjectPressed(){
 }
 
 void Model::messageYesSelected(){
+    //stop updating frame preview
     tick.stop();
     frames.clear();
     imageIndex = 0;
@@ -37,6 +41,7 @@ void Model::messageYesSelected(){
 }
 
 void Model::toolToPaint(){
+    //detoggle paint brush as selected tool, unhighlight in view
     detoggleActiveButton(paint);
     emit updateColorPreview(getStyleString(currentColor));
     emit updateColorSliders(currentColor);
@@ -86,6 +91,7 @@ void Model::undoAction(){
 }
 
 void Model::cloneButton(){
+    //lock the frames vector while accessing to prevent race condition
     lock.lock();
     Frame clonedFrame(size);
     clonedFrame.setPixels(currentFrame->getPixels());
@@ -98,14 +104,17 @@ void Model::cloneButton(){
     emit createFrameSelectorButton(currentFrame->ID);
     emit sendFrameToCanvas(currentFrame->getPixels());
     emit setFrameSelectorIcon(currentFrame->generateImage(), currentFrame->ID, lastFrameID);
+    //unlock frames vector
     lock.unlock();
 }
 
 void Model::addFrame(){
+    //lock the frames vector while accessing to prevent race condition
     lock.lock();
     Frame newFrame(size);
     frames.push_back(newFrame);
     int newFrameIndex = frames.indexOf(newFrame);
+    //set the current frame's last frame id to 0 if there is more than 1 frame
     int lastFrameID = frames.size() > 1 ? currentFrame->ID: 0;
     currentFrame = &frames[newFrameIndex];
     updateImageVector();
@@ -113,6 +122,7 @@ void Model::addFrame(){
     emit createFrameSelectorButton(currentFrame->ID);
     emit sendFrameToCanvas(currentFrame->getPixels());
     emit setFrameSelectorIcon(currentFrame->getImage(), currentFrame->ID, lastFrameID);
+    //unlock frames vector
     lock.unlock();
 }
 
@@ -121,7 +131,7 @@ void Model::removeFrame(){
     int toBeDeletedID = currentFrame->ID;
     int toBeDeletedIndex = frames.indexOf(*currentFrame);
 
-    // Resets the index of the image being previewed to avoid out of bounds rendering occurring
+    //Resets the index of the image being previewed to avoid out of bounds rendering occurring
     frames.removeAt(toBeDeletedIndex);
 
     if (frames.size() == 0) {
@@ -132,8 +142,8 @@ void Model::removeFrame(){
         return;
     }
 
-    // Default action is advance to next available frame when a frame is deleted
-    // If the last frame is deleted, the first frame in the sequence is toggled
+    //Default action is advance to next available frame when a frame is deleted
+    //If the last frame is deleted, the first frame in the sequence is toggled
     if (toBeDeletedIndex >= frames.size()){
         currentFrame = &frames[0];
     } else {
@@ -148,7 +158,7 @@ void Model::removeFrame(){
 }
 
 void Model::changeFrame(int ID){
-    //  Used for highlighting active frame in frame selector preview
+    //Used for highlighting active frame in frame selector preview
     lock.lock();
     int lastFrameID = currentFrame->ID;
 
@@ -166,6 +176,7 @@ void Model::changeFrame(int ID){
 }
 
 void Model::updateFPS(int fps){
+    //stop updating frame preview
     tick.stop();
     this->fps = fps;
     if (fps == 0){
@@ -174,6 +185,7 @@ void Model::updateFPS(int fps){
         return;
     }
     tick.setInterval(double(1000 / fps));
+    //continue updating preview
     tick.start();
 }
 
@@ -181,7 +193,7 @@ void Model::updateImageVector(){
     tick.stop();
     images = frames;
     imageIndexCurrent = images.indexOf(*currentFrame);
-
+    //regenerate images for all frames
     for(int i = 0; i < images.size(); i++){
         images[i].generateImage();
     }
@@ -190,11 +202,12 @@ void Model::updateImageVector(){
 }
 
 void Model::generatePreview(){
+    //if there are no frames, return
     if(images.length() == 0){
         return;
     }
     imageIndex = imageIndex >= images.size() ? 0 : imageIndex;
-
+    //if fps is 0, display current frame as still image
     if(fps == 0){
         emit sendImageToPreview(images[imageIndexCurrent].getImage(), trueSizePreview, size);
         return;
@@ -212,9 +225,11 @@ void Model::togglePreviewSize(){
 }
 
 void Model::canvasClick(int x, int y, bool click){
+    //locks image data while edits are made
     lock.lock();
     drawing = click;
 
+    //save current state of frame before changes are made to the image data
     currentFrame->addToHistory(currentFrame->getPixels());
 
     if(!drawing){
@@ -311,6 +326,7 @@ void Model::addSwatch(int swatchNumber) {
 }
 
 void Model::colorChanged(Color color, int value) {
+    //return if eraser or dropper are the current tool as they do not change the color value of a swatch
     if(currentTool == dropper || currentTool == eraser){
         return;
     }
@@ -369,11 +385,14 @@ void Model::savePressed(QString& filename) {
         return;
     }
     QJsonObject json;
+    //make the json object size the same as the pixel dimensions
     json["pixelDimension"] = size;
     QJsonArray framesArray;
+    //index through each frame
     for (Frame& frame : frames) {
         QJsonObject frameObject;
         QJsonArray rgbaValues;
+        //save each color value for each pixel in the frame to the rgba json array
         for (const QColor& color : frame.getPixels()) {
             rgbaValues.append(color.red());
             rgbaValues.append(color.green());
@@ -385,6 +404,7 @@ void Model::savePressed(QString& filename) {
     }
     json["frames"] = framesArray;
 
+    //Save JSON to file using filename
     QFile file(filename);
     if (file.open(QIODevice::WriteOnly)) {
         file.write(QJsonDocument(json).toJson());
@@ -413,14 +433,18 @@ void Model::loadPressed(QString& filename) {
         return;
     }
     QJsonObject json = doc.object();
+    //Get size from JSON object
     size = json["pixelDimension"].toInt();
     QVector<Frame> newFrames;
+    //Get frames from JSON object
     QJsonArray framesArray = json["frames"].toArray();
     for (const auto& frameValue : framesArray) {
         Frame frame(size);
+        //Clear frame stack to ensure undo is functioning correctly
         frame.clearHistory();
         QVector<QColor> framePixels;
         QJsonArray rgbaValues = frameValue.toObject()["RGBAValues"].toArray();
+        //Restores rgba values for each frame
         for (int i = 0; i < rgbaValues.size(); i += 4) {
             int red = rgbaValues[i].toInt();
             int green = rgbaValues[i + 1].toInt();
@@ -435,7 +459,7 @@ void Model::loadPressed(QString& filename) {
     }
     frames.clear();
     int i = 0;
-    // Used to track which box is highlighted in frame preview icons as they are loaded in
+    //Used to track which box is highlighted in frame preview icons as they are loaded in
     int prevFrame = 0;
     for(auto frame: newFrames){
         frames.insert(i, frame);
