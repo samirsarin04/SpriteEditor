@@ -3,12 +3,11 @@
 
 int Frame::globalID = 0;
 Frame::Frame(int pixelDimension) : pixelDimension(pixelDimension), frameImage(pixelDimension, pixelDimension, QImage::Format_RGBA64) {
-    //qDebug()<< ID;
+    //Default initializes everything
     ID = globalID;
     ++globalID;
     pixelSize = (640 / pixelDimension);
     canvasSize = pixelSize * pixelDimension;
-    //Default initializes frame to white, will be changed later
     for(int i = 0; i < (pixelDimension * pixelDimension); i++){
         pixels.push_back(QColor(0, 0, 0, 0));
     }
@@ -43,6 +42,7 @@ QImage Frame::getImage(){
 QImage Frame::generateImage(){
     int currentX = 0;
     int currentY = 0;
+    //loop through each pixel and set the pixel color
     for (int i = 0; i < pixelDimension * pixelDimension; i++){
         frameImage.setPixelColor(QPoint(currentX, currentY), pixels.at(i));
         if (currentX >= pixelDimension - 1){
@@ -59,9 +59,13 @@ void Frame::modifyPixel(QVector<QColor> &pixels, int x, int y, QColor color){
     if (x < 0 || x > canvasSize - 1 || y < 0 || y > canvasSize - 1) {
         return;
     }
+    //get the yPixel location on the canvas
     int xPixel = ((double)pixelDimension * ((double)x / canvasSize));
+
+    //get the xPixel location on the canvas
     int yPixel = ((double)pixelDimension * ((double)y / canvasSize));
 
+    //get the index of the pixel
     int location = xPixel + (yPixel * pixelDimension);
 
     pixels[location] = color;
@@ -88,6 +92,7 @@ void Frame::clearHistory(){
 
 QVector<QColor> Frame::undoAction(){
     if(history.size() > 1){
+        //if the history is up to date undo the action
         while(history.top() == pixels && history.size() > 1){
             history.pop();
         }
