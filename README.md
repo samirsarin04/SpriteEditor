@@ -1,0 +1,1 @@
+This is a feature-rich sprite editor and pixel art tool enabling users to paint, create animation frames, and design pixel art with ease, including functionalities for layering, frame-by-frame animation, and export options for game development and digital art projects
